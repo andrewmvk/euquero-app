@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "euquero-android",
+    "slug": "euquero-android",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
