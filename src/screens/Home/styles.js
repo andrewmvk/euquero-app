@@ -1,4 +1,4 @@
-import styled from "styled-components/native";
+import styled from 'styled-components/native';
 
 export const Container = styled.SafeAreaView`
   background: #6a426e;
@@ -17,7 +17,7 @@ export const LogoView = styled.View`
 export const Subtitle = styled.Text`
   color: #fff;
   margin-top: 15px;
-  font-family: "Spartan-Regular";
+  font-family: 'Spartan_400Regular';
   font-size: 14px;
 `;
 
@@ -62,14 +62,14 @@ export const SobreProjetoBtn = styled.TouchableOpacity`
 
 export const TxtBtn = styled.Text`
   color: #fff;
-  font-family: "Spartan-Regular";
-  font-size: 20px;
+  font-family: 'Spartan_400Regular';
+  font-size: 17px;
 `;
 
 export const TxtBtn2 = styled.Text`
   color: #fff;
-  font-family: "Spartan-Regular";
-  font-size: 16px;
+  font-family: 'Spartan_400Regular';
+  font-size: 13px;
 `;
 
 export const Icon = styled.View`
