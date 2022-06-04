@@ -16,7 +16,6 @@ export const Header = styled.SafeAreaView`
 `;
 
 export const HeaderText = styled.Text`
-  /* font-family: 'Spartan_700Bold'; */
   font-size: 15px;
   color: #c4c4c4;
   margin-left: 10px;
@@ -24,17 +23,18 @@ export const HeaderText = styled.Text`
 
 export const ManageText = styled.Text`
   padding-top: 10px;
-  font-size: 20px;
+  font-size: 17px;
   color: #7f7f7f;
-  /* font-family: 'Spartan_400Regular'; */
 `;
 
 export const ManageTouchableBox = styled.TouchableOpacity`
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   background: #fff;
   border-radius: 5px;
   width: 300px;
   height: 160px;
   justify-content: center;
   align-items: center;
+  border-bottom-width: 4px;
+  border-color: #c4c4c4;
 `;
