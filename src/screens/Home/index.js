@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Dimensions, Text } from "react-native";
+import React from 'react';
+import { View, Dimensions, Text } from 'react-native';
 
 import {
   Container,
@@ -13,17 +13,17 @@ import {
   TxtBtn,
   TxtBtn2,
   TextInput,
-} from "./styles";
+} from './styles';
 
-import { Icon } from "@rneui/themed";
-import Logo from "../../../assets/images/euquero-logo.svg";
+import { Icon } from '@rneui/themed';
+import Logo from '../../../assets/images/euquero-logo.svg';
 
 export default () => {
   return (
     <Container>
       <View
         style={{
-          position: "absolute",
+          position: 'absolute',
           left: 0,
           bottom: 60,
           zIndex: 100,
@@ -35,7 +35,7 @@ export default () => {
           color="#56A8C5"
           size={40}
           style={{
-            backgroundColor: "white",
+            backgroundColor: 'white',
             borderTopRightRadius: 20,
             borderBottomRightRadius: 20,
             paddingBottom: 8,
@@ -43,16 +43,16 @@ export default () => {
             paddingLeft: 10,
             paddingRight: 15,
             borderBottomWidth: 5,
-            borderColor: "#c4c4c4",
+            borderColor: '#c4c4c4',
             borderEndWidth: 3,
           }}
         />
       </View>
       <View
         style={{
-          alignItems: "center",
-          height: Dimensions.get("window").height * 0.6,
-          justifyContent: "space-evenly",
+          alignItems: 'center',
+          height: Dimensions.get('window').height * 0.6,
+          justifyContent: 'space-evenly',
         }}
       >
         <LogoView>
@@ -75,7 +75,7 @@ export default () => {
         </Btns>
         <View
           style={{
-            alignItems: "center",
+            alignItems: 'center',
             paddingVertical: 5,
             flexGrow: 1,
           }}
