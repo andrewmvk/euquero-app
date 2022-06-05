@@ -76,3 +76,10 @@ export const Icon = styled.View`
   background-color: #fff;
   color: blue;
 `;
+
+export const AdminBtn = styled.TouchableOpacity`
+  position: absolute;
+  left: 0;
+  bottom: 60px;
+  z-index: 100;
+`;

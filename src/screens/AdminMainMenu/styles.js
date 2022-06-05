@@ -1,7 +1,6 @@
 import styled from 'styled-components/native';
 
 export const Container = styled.SafeAreaView`
-  background: #f8f8f8;
   flex: 1;
   align-items: center;
   padding-top: 5%;
@@ -15,10 +14,16 @@ export const Header = styled.SafeAreaView`
   align-items: center;
 `;
 
+export const TouchableArrow = styled.TouchableOpacity`
+  height: 100%;
+  width: 30px;
+`;
+
 export const HeaderText = styled.Text`
   font-size: 15px;
   color: #c4c4c4;
   margin-left: 10px;
+  font-family: 'Spartan_400Regular';
 `;
 
 export const ManageText = styled.Text`
