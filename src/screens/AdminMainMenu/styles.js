@@ -33,13 +33,18 @@ export const ManageText = styled.Text`
 `;
 
 export const ManageTouchableBox = styled.TouchableOpacity`
-  margin-bottom: 20px;
   background: #fff;
   border-radius: 5px;
   width: 300px;
   height: 160px;
   justify-content: center;
   align-items: center;
-  border-bottom-width: 4px;
-  border-color: #c4c4c4;
 `;
+
+export const ManageBoxShadow = {
+  distance: 0,
+  startColor: 'rgba(0,0,0,0.25)',
+  offset: [0, 4],
+  radius: 5,
+  containerViewStyle: { marginBottom: 20 },
+};
