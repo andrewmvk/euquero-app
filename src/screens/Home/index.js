@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, Dimensions, Text } from 'react-native';
+import { View, Dimensions, StyleSheet } from 'react-native';
 
 import {
   Container,
   LogoView,
-  InputArea,
   Subtitle,
   Btns,
   BuscarBtn,
@@ -12,42 +11,24 @@ import {
   SobreProjetoBtn,
   TxtBtn,
   TxtBtn2,
-  TextInput,
+  AdminBtn,
 } from './styles';
 
 import { Icon } from '@rneui/themed';
 import Logo from '../../../assets/images/euquero-logo.svg';
 
-export default () => {
+export default (props) => {
   return (
     <Container>
-      <View
-        style={{
-          position: 'absolute',
-          left: 0,
-          bottom: 60,
-          zIndex: 100,
-        }}
-      >
+      <AdminBtn activeOpacity={0.6} onPress={() => props.navigation.navigate('AdminLogin')}>
         <Icon
           name="shield-account"
           type="material-community"
           color="#56A8C5"
           size={40}
-          style={{
-            backgroundColor: 'white',
-            borderTopRightRadius: 20,
-            borderBottomRightRadius: 20,
-            paddingBottom: 8,
-            paddingTop: 8,
-            paddingLeft: 10,
-            paddingRight: 15,
-            borderBottomWidth: 5,
-            borderColor: '#c4c4c4',
-            borderEndWidth: 3,
-          }}
+          style={styles.adminIcon}
         />
-      </View>
+      </AdminBtn>
       <View
         style={{
           alignItems: 'center',
@@ -84,3 +65,18 @@ export default () => {
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  adminIcon: {
+    backgroundColor: 'white',
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
+    paddingBottom: 8,
+    paddingTop: 8,
+    paddingLeft: 10,
+    paddingRight: 15,
+    borderBottomWidth: 5,
+    borderColor: '#c4c4c4',
+    borderEndWidth: 3,
+  },
+});
