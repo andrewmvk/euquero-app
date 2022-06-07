@@ -1,6 +1,7 @@
 import React from 'react';
 import { Icon } from 'react-native-elements';
 import { View } from 'react-native';
+import { Shadow } from 'react-native-shadow-2';
 
 import MainBackground from '../../components/MainBackground';
 import {
@@ -10,10 +11,9 @@ import {
   ManageBoxShadow,
   HeaderText,
   ManageText,
-  TouchableArrow,
 } from './styles';
 
-import { Shadow } from 'react-native-shadow-2';
+import { TouchableArrow, buttonOpacity } from '../../defaultStyles';
 
 export default (props) => {
   return (
@@ -22,22 +22,20 @@ export default (props) => {
 
       <Container>
         <Header>
-          <TouchableArrow activeOpacity={0.6} onPress={() => props.navigation.goBack()}>
-            <Icon name="chevron-back-outline" type="ionicon" color="#FF6B0F" />
-          </TouchableArrow>
+          <TouchableArrow activeOpacity={buttonOpacity} onPress={() => props.navigation.goBack()} />
           <HeaderText style={{ fontFamily: 'Spartan_700Bold' }}>Administrativo</HeaderText>
         </Header>
 
         <View style={{ alignItems: 'center', marginTop: 50 }}>
           <Shadow {...ManageBoxShadow}>
-            <ManageTouchableBox activeOpacity={0.6}>
+            <ManageTouchableBox activeOpacity={buttonOpacity}>
               <Icon name="account-cog" size={70} type="material-community" color="#c4c4c4" />
               <ManageText style={{ fontFamily: 'Spartan_400Regular' }}>Gerenciar Contas</ManageText>
             </ManageTouchableBox>
           </Shadow>
 
           <Shadow {...ManageBoxShadow}>
-            <ManageTouchableBox activeOpacity={0.6}>
+            <ManageTouchableBox activeOpacity={buttonOpacity}>
               <Icon name="bank" size={70} type="material-community" color="#c4c4c4" />
               <ManageText style={{ fontFamily: 'Spartan_400Regular' }}>Gerenciar UBS</ManageText>
             </ManageTouchableBox>

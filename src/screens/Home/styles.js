@@ -1,7 +1,8 @@
 import styled from 'styled-components/native';
+import * as defaultS from '../../defaultStyles';
 
 export const Container = styled.SafeAreaView`
-  background: #6a426e;
+  background: ${defaultS.colors.backgroundMain};
   flex: 1;
   align-items: center;
   justify-content: center;
@@ -15,61 +16,17 @@ export const LogoView = styled.View`
 `;
 
 export const Subtitle = styled.Text`
-  color: #fff;
+  color: ${defaultS.colors.titleSubtitle};
   margin-top: 15px;
-  font-family: 'Spartan_400Regular';
-  font-size: 14px;
+  margin-bottom: 30px;
+  font-family: ${defaultS.fonts.spartanR};
+  font-size: ${defaultS.fontSize.subtitle};
 `;
 
 export const Btns = styled.View`
   height: 30%;
   justify-content: center;
-`;
-
-export const BuscarBtn = styled.TouchableOpacity`
-  width: 250px;
-  height: 50px;
-  background-color: #ff6b0f;
-  border-radius: 99px;
   align-items: center;
-  justify-content: center;
-  padding-bottom: 2px;
-  margin-bottom: 35px;
-`;
-
-export const ComoUsarBtn = styled.TouchableOpacity`
-  width: 200px;
-  height: 40px;
-  background-color: #ff6b0f;
-  border-radius: 20px;
-  align-items: center;
-  justify-content: center;
-  margin-left: 26px;
-  padding-bottom: 2px;
-  margin-bottom: 20px;
-`;
-
-export const SobreProjetoBtn = styled.TouchableOpacity`
-  width: 200px;
-  height: 40px;
-  background-color: #ff6b0f;
-  border-radius: 20px;
-  align-items: center;
-  justify-content: center;
-  margin-left: 26px;
-  padding-bottom: 2px;
-`;
-
-export const TxtBtn = styled.Text`
-  color: #fff;
-  font-family: 'Spartan_400Regular';
-  font-size: 17px;
-`;
-
-export const TxtBtn2 = styled.Text`
-  color: #fff;
-  font-family: 'Spartan_400Regular';
-  font-size: 13px;
 `;
 
 export const Icon = styled.View`
@@ -83,3 +40,18 @@ export const AdminBtn = styled.TouchableOpacity`
   bottom: 60px;
   z-index: 100;
 `;
+
+export const extraStyles = {
+  adminIcon: {
+    backgroundColor: 'white',
+    borderTopRightRadius: 15,
+    borderBottomRightRadius: 15,
+    paddingBottom: 8,
+    paddingTop: 8,
+    paddingLeft: 10,
+    paddingRight: 15,
+    borderBottomWidth: 5,
+    borderColor: '#c4c4c4',
+    borderEndWidth: 3,
+  },
+};
