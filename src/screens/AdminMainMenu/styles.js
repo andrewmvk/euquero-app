@@ -1,35 +1,30 @@
 import styled from 'styled-components/native';
+import * as defaultS from '../../defaultStyles';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
   align-items: center;
-  padding-top: 5%;
 `;
 
 export const Header = styled.SafeAreaView`
   height: 30px;
   width: 90%;
-  margin-top: 20px;
+  margin-top: 40px;
   flex-direction: row;
   align-items: center;
 `;
 
-export const TouchableArrow = styled.TouchableOpacity`
-  height: 100%;
-  width: 30px;
-`;
-
 export const HeaderText = styled.Text`
-  font-size: 15px;
-  color: #c4c4c4;
+  font-size: ${defaultS.fontSize.header};
+  color: ${defaultS.colors.gray};
   margin-left: 10px;
-  font-family: 'Spartan_400Regular';
+  font-family: ${defaultS.fonts.spartanR};
 `;
 
 export const ManageText = styled.Text`
   padding-top: 10px;
-  font-size: 17px;
-  color: #7f7f7f;
+  font-size: ${defaultS.fontSize.title};
+  color: ${defaultS.colors.text};
 `;
 
 export const ManageTouchableBox = styled.TouchableOpacity`

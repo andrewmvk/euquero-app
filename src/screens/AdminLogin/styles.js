@@ -1,7 +1,23 @@
-import styled from "styled-components/native";
+import styled from 'styled-components/native';
+import { Dimensions } from 'react-native';
+import * as defaultS from '../../defaultStyles';
+
+export const Background = styled.View`
+  background: ${defaultS.colors.backgroundMain};
+  flex: 1;
+  align-items: center;
+`;
+
+export const Header = styled.SafeAreaView`
+  position: absolute;
+  height: 30px;
+  width: 90%;
+  margin-top: 40px;
+  flex-direction: row;
+  align-items: flex-start;
+`;
 
 export const Container = styled.SafeAreaView`
-  background: #63c2d1;
   flex: 1;
   align-items: center;
   justify-content: center;
@@ -32,17 +48,15 @@ export const TextInput = styled.TextInput`
   padding-left: 18px;
 `;
 
-export const CustomButton = styled.TouchableOpacity`
-  width: 200px;
-  height: 40px;
-  background-color: #ff6b0f;
-  border-radius: 20px;
-  align-items: center;
-  justify-content: center;
-  padding-bottom: 2px;
-`;
+export const CustomButtonShadow = {
+  distance: 0,
+  startColor: 'rgba(0,0,0,0.1)',
+  offset: [0, 4],
+  radius: 20,
+};
 
-export const CustomButtonText = styled.Text`
-  color: #fff;
-  font-size: 16px;
-`;
+export const extraStyles = {
+  alignItems: 'center',
+  height: Dimensions.get('window').height * 0.6,
+  justifyContent: 'space-evenly',
+};
