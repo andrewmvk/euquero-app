@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dimensions } from 'react-native';
 
-import { DashedCircle } from './styles';
+import { DashedCircleC } from './styles';
 
 export default () => {
   let circleDiameter = Dimensions.get('window').width * 0.78;
@@ -9,7 +9,7 @@ export default () => {
   let leftPostion = Dimensions.get('window').width * 0.695;
 
   return (
-    <DashedCircle
+    <DashedCircleC
       style={{
         width: circleDiameter,
         height: circleDiameter,

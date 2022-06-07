@@ -46,20 +46,14 @@ const customButtonShadow = {
     startColor: 'rgba(0,0,0,0.1)',
     offset: [0, 4],
     radius: 20,
-    containerViewStyle: {
-      marginBottom: 20,
-      paddingBottom: 2,
-    },
+    containerViewStyle: { paddingBottom: 2 },
   },
   large: {
     distance: 0,
     startColor: 'rgba(0,0,0,0.1)',
     offset: [0, 4],
     radius: 25,
-    containerViewStyle: {
-      marginBottom: 35,
-      paddingBottom: 2,
-    },
+    containerViewStyle: { paddingBottom: 2 },
   },
 };
 

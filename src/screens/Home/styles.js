@@ -23,7 +23,7 @@ export const Subtitle = styled.Text`
   font-size: ${defaultS.fontSize.subtitle};
 `;
 
-export const Btns = styled.View`
+export const Buttons = styled.View`
   height: 30%;
   justify-content: center;
   align-items: center;
