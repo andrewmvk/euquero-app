@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import MainStack from './src/stacks/MainStack';
+import * as SplashScreen from 'expo-splash-screen';
+import * as Font from 'expo-font';
 
 import {
   Spartan_300Light,
@@ -8,23 +10,43 @@ import {
   Spartan_700Bold,
   Spartan_900Black,
 } from '@expo-google-fonts/spartan';
-import AppLoading from 'expo-app-loading';
-import { useFonts } from 'expo-font';
 
 export default () => {
-  let [fontsLoaded] = useFonts({
-    Spartan_300Light,
-    Spartan_400Regular,
-    Spartan_700Bold,
-    Spartan_900Black,
-  });
+  const [appIsReady, setAppIsReady] = useState(false);
 
-  if (!fontsLoaded) {
-    return <AppLoading />;
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+
+        await Font.loadAsync({
+          Spartan_300Light,
+          Spartan_400Regular,
+          Spartan_700Bold,
+          Spartan_900Black,
+        });
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer onReady={onLayoutRootView}>
       <MainStack />
     </NavigationContainer>
   );
