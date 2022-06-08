@@ -29,9 +29,10 @@ export const LogoView = styled.View`
 `;
 
 export const Subtitle = styled.Text`
-  color: #fff;
-  margin-top: 25px;
-  font-size: 17px;
+  color: ${defaultS.colors.titleSubtitle};
+  font-family: ${defaultS.fonts.spartanR};
+  margin-top: 20px;
+  font-size: ${defaultS.fontSize.subtitle};
 `;
 
 export const InputArea = styled.View`
@@ -41,6 +42,7 @@ export const InputArea = styled.View`
 `;
 
 export const TextInput = styled.TextInput`
+  font-family: ${defaultS.fonts.spartanR};
   height: 28%;
   width: 100%;
   background-color: #fff;

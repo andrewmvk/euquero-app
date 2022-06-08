@@ -3,7 +3,6 @@ import { Icon } from 'react-native-elements';
 import { View } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 
-import MainBackground from '../../components/MainBackground';
 import {
   Container,
   Header,
@@ -12,13 +11,13 @@ import {
   HeaderText,
   ManageText,
 } from './styles';
-
+import DashedCircle from '../../components/DashedCircle';
 import { TouchableArrow, buttonOpacity } from '../../defaultStyles';
 
 export default (props) => {
   return (
     <>
-      <MainBackground />
+      <DashedCircle />
 
       <Container>
         <Header>

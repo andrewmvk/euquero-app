@@ -1,24 +1,15 @@
 import React from 'react';
 import { View, Dimensions } from 'react-native';
 
-import { Container, LogoView, Subtitle, Btns, AdminBtn, extraStyles } from './styles';
+import { Container, LogoView, Subtitle, Buttons, AdminBtn, extraStyles } from './styles';
 
 import { Icon } from '@rneui/themed';
 import Logo from '../../../assets/images/euquero-logo.svg';
-import { LargeButton, SmallButton } from '../../defaultStyles';
+import { LargeButton, SmallButton, buttonOpacity } from '../../defaultStyles';
 
 export default (props) => {
   return (
     <Container>
-      <AdminBtn activeOpacity={0.6} onPress={() => props.navigation.navigate('AdminLogin')}>
-        <Icon
-          name="shield-account"
-          type="material-community"
-          color="#56A8C5"
-          size={40}
-          style={{ ...extraStyles.adminIcon }}
-        />
-      </AdminBtn>
       <View
         style={{
           alignItems: 'center',
@@ -31,19 +22,31 @@ export default (props) => {
           <Subtitle>Encontre a UBS perfeita para o seu caso!</Subtitle>
         </LogoView>
 
-        <Btns>
-          <LargeButton text="Buscar UBS" />
-          <SmallButton text="Como usar o App" />
-          <SmallButton text="Sobre o Projeto" />
-        </Btns>
-        <View
-          style={{
-            alignItems: 'center',
-            paddingVertical: 5,
-            flexGrow: 1,
-          }}
-        ></View>
+        <Buttons>
+          <View style={{ marginBottom: 35 }}>
+            <LargeButton text="Buscar UBS" />
+          </View>
+          <View style={{ marginBottom: 20 }}>
+            <SmallButton text="Como usar o App" />
+          </View>
+          <View style={{ marginBottom: 20 }}>
+            <SmallButton text="Sobre o Projeto" />
+          </View>
+        </Buttons>
       </View>
+
+      <AdminBtn
+        activeOpacity={buttonOpacity}
+        onPress={() => props.navigation.navigate('AdminLogin')}
+      >
+        <Icon
+          name="shield-account"
+          type="material-community"
+          color="#56A8C5"
+          size={40}
+          style={{ ...extraStyles.adminIcon }}
+        />
+      </AdminBtn>
     </Container>
   );
 };
