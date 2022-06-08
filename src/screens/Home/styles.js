@@ -12,7 +12,7 @@ export const LogoView = styled.View`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 50%;
+  flex: 1.2;
 `;
 
 export const Subtitle = styled.Text`
@@ -24,9 +24,9 @@ export const Subtitle = styled.Text`
 `;
 
 export const Buttons = styled.View`
-  height: 30%;
   justify-content: center;
   align-items: center;
+  flex: 2;
 `;
 
 export const Icon = styled.View`

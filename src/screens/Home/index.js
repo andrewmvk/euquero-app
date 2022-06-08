@@ -10,18 +10,6 @@ import { LargeButton, SmallButton, buttonOpacity } from '../../defaultStyles';
 export default (props) => {
   return (
     <Container>
-      <AdminBtn
-        activeOpacity={buttonOpacity}
-        onPress={() => props.navigation.navigate('AdminLogin')}
-      >
-        <Icon
-          name="shield-account"
-          type="material-community"
-          color="#56A8C5"
-          size={40}
-          style={{ ...extraStyles.adminIcon }}
-        />
-      </AdminBtn>
       <View
         style={{
           alignItems: 'center',
@@ -45,14 +33,20 @@ export default (props) => {
             <SmallButton text="Sobre o Projeto" />
           </View>
         </Buttons>
-        <View
-          style={{
-            alignItems: 'center',
-            paddingVertical: 5,
-            flexGrow: 1,
-          }}
-        ></View>
       </View>
+
+      <AdminBtn
+        activeOpacity={buttonOpacity}
+        onPress={() => props.navigation.navigate('AdminLogin')}
+      >
+        <Icon
+          name="shield-account"
+          type="material-community"
+          color="#56A8C5"
+          size={40}
+          style={{ ...extraStyles.adminIcon }}
+        />
+      </AdminBtn>
     </Container>
   );
 };
