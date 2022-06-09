@@ -1,20 +1,13 @@
-import React from "react";
-import { View, Dimensions } from "react-native";
+import React from 'react';
+import { View, Dimensions } from 'react-native';
 
-import {
-  Container,
-  LogoView,
-  Subtitle,
-  Buttons,
-  AdminBtn,
-  extraStyles,
-} from "./styles";
+import { Container, LogoView, Subtitle, Buttons, AdminBtn, extraStyles } from './styles';
 
-import DoubleDashedCircle from "../../components/DoubleDashedCircle";
+import DoubleDashedCircle from '../../components/DoubleDashedCircle';
 
-import { Icon } from "@rneui/themed";
-import Logo from "../../../assets/images/euquero-logo.svg";
-import { LargeButton, SmallButton, buttonOpacity } from "../../defaultStyles";
+import { Icon } from '@rneui/themed';
+import Logo from '../../../assets/images/euquero-logo.svg';
+import { LargeButton, SmallButton, buttonOpacity } from '../../defaultStyles';
 
 export default (props) => {
   return (
@@ -23,9 +16,9 @@ export default (props) => {
       <Container>
         <View
           style={{
-            alignItems: "center",
-            height: Dimensions.get("window").height * 0.6,
-            justifyContent: "space-evenly",
+            alignItems: 'center',
+            height: Dimensions.get('window').height * 0.6,
+            justifyContent: 'space-evenly',
           }}
         >
           <LogoView>
@@ -41,7 +34,7 @@ export default (props) => {
               <SmallButton
                 text="Como usar o App"
                 activeOpacity={buttonOpacity}
-                onPress={() => props.navigation.navigate("ComoUsarOApp")}
+                onPress={() => props.navigation.navigate('ComoUsarOApp')}
               />
             </View>
             <View style={{ marginBottom: 20 }}>
@@ -52,7 +45,7 @@ export default (props) => {
 
         <AdminBtn
           activeOpacity={buttonOpacity}
-          onPress={() => props.navigation.navigate("AdminLogin")}
+          onPress={() => props.navigation.navigate('AdminLogin')}
         >
           <Icon
             name="shield-account"
