@@ -1,6 +1,6 @@
 # Eu Quero App Android
 
-This is the Android version of the mobile application "Eu Quero", a brazilian's developed app to simplify the Basic Health Unit (BHU) in Brazil, developed with **[Expo](https://expo.dev)** and **[Yarn](https://yarnpkg.com)**.
+This is the Android version of the mobile application ["Eu Quero"](https://euquero.ufma.br), a brazilian's developed app to simplify the Basic Health Unit (BHU) in Brazil, developed with **[Expo](https://expo.dev)** and **[Yarn](https://yarnpkg.com)**.
 
 <p align="center">
   <br>
@@ -9,7 +9,10 @@ This is the Android version of the mobile application "Eu Quero", a brazilian's 
 <p/>
 
 ## Why develop such an application ?
-In Brazil the Heath Service is public and we have a lot of BHU, but most of the people dont know about one or other BHU specificaly, like the location or the service rating (Google just rate the BHU at all, not just a service). The Eu Quero App will simplify the user location's search and rating's service preview.
+In Brazil the Health Service is public and we have a lot of BHU, but most of the people dont know about one or other BHU specificaly, like the location or the service rating (Google just rate the BHU at all, not just a service). The Eu Quero App will simplify the user location's search and rating's service preview. 
+
+More than this, the app aims mostly to strengthening the maternal and child health care system over the first 1000 days in Brazil with more information about the quality in their local health centre through scorecards as said before. <br/>
+Click [here](https://euquero.ufma.br) to see more information about the Eu Quero (in portuguese).
 
 ## Status: 🟡 Developing
 The App is under development, in this stage (06/01/2022) we have the design almost defined, and some pages 😂.
