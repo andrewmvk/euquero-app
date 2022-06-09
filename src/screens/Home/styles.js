@@ -1,5 +1,5 @@
-import styled from 'styled-components/native';
-import * as defaultS from '../../defaultStyles';
+import styled from "styled-components/native";
+import * as defaultS from "../../defaultStyles";
 
 export const Container = styled.SafeAreaView`
   background: ${defaultS.colors.backgroundMain};
@@ -43,7 +43,7 @@ export const AdminBtn = styled.TouchableOpacity`
 
 export const extraStyles = {
   adminIcon: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderTopRightRadius: 15,
     borderBottomRightRadius: 15,
     paddingBottom: 8,
@@ -51,7 +51,7 @@ export const extraStyles = {
     paddingLeft: 10,
     paddingRight: 15,
     borderBottomWidth: 5,
-    borderColor: '#c4c4c4',
+    borderColor: "#c4c4c4",
     borderEndWidth: 3,
   },
 };
