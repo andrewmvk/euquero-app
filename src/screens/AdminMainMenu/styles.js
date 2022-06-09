@@ -1,5 +1,5 @@
-import styled from 'styled-components/native';
-import * as defaultS from '../../defaultStyles';
+import styled from "styled-components/native";
+import * as defaultS from "../../defaultStyles";
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -9,7 +9,7 @@ export const Container = styled.SafeAreaView`
 export const Header = styled.SafeAreaView`
   height: 30px;
   width: 90%;
-  margin-top: 40px;
+  margin-top: 50px;
   flex-direction: row;
   align-items: center;
 `;
@@ -38,7 +38,7 @@ export const ManageTouchableBox = styled.TouchableOpacity`
 
 export const ManageBoxShadow = {
   distance: 0,
-  startColor: 'rgba(0,0,0,0.25)',
+  startColor: "rgba(0,0,0,0.25)",
   offset: [0, 4],
   radius: 5,
   containerViewStyle: { marginBottom: 20 },
