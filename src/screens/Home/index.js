@@ -38,7 +38,11 @@ export default (props) => {
               <LargeButton text="Buscar UBS" />
             </View>
             <View style={{ marginBottom: 20 }}>
-              <SmallButton text="Como usar o App" />
+              <SmallButton
+                text="Como usar o App"
+                activeOpacity={buttonOpacity}
+                onPress={() => props.navigation.navigate("ComoUsarOApp")}
+              />
             </View>
             <View style={{ marginBottom: 20 }}>
               <SmallButton text="Sobre o Projeto" />
