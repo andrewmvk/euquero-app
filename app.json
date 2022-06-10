@@ -3,6 +3,12 @@
     "name": "euquero-android",
     "slug": "euquero-android",
     "version": "1.0.0",
+    "icon": "./assets/images/icon.png",
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png"
+      }
+    },
     "assetBundlePatterns": [
       "**/*"
     ]

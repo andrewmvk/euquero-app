@@ -10,7 +10,7 @@ export const colors = {
   orange: '#FF6B0F',
   text: '#7F7F7F',
   titleSubtitle: '#fff',
-  backgroundMain: '#6a426e',
+  backgroundMain: '#353FBA',
   backgroundSecond: '#F8F8F8',
   gray: '#C4C4C4',
 };
