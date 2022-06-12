@@ -13,13 +13,11 @@ import {
 } from './styles';
 import { TouchableArrow, SmallButton, buttonOpacity, colors } from '../../defaultStyles';
 import Logo from '../../../assets/images/euquero-logo.svg';
-import DoubleDashedCircle from '../../components/DoubleDashedCircle';
 
 export default (props) => {
   return (
     <>
       <Background>
-        <DoubleDashedCircle />
         <Header>
           <TouchableArrow activeOpacity={buttonOpacity} onPress={() => props.navigation.goBack()} />
         </Header>
