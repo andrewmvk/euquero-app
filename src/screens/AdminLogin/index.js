@@ -11,7 +11,7 @@ import {
   Background,
   extraStyles,
 } from './styles';
-import { TouchableArrow, SmallButton, buttonOpacity, colors } from '../../defaultStyles';
+import { TouchableArrow, SmallButton, buttonOpacity, colors, goToHome } from '../../defaultStyles';
 import Logo from '../../../assets/images/euquero-logo.svg';
 
 export default (props) => {
@@ -19,7 +19,10 @@ export default (props) => {
     <>
       <Background>
         <Header>
-          <TouchableArrow activeOpacity={buttonOpacity} onPress={() => props.navigation.goBack()} />
+          <TouchableArrow
+            activeOpacity={buttonOpacity}
+            onPress={() => goToHome(props.navigation)}
+          />
         </Header>
         <Container>
           <View style={{ ...extraStyles }}>

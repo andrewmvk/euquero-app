@@ -111,3 +111,7 @@ export function LargeButton(props) {
     </Shadow>
   );
 }
+
+export function goToHome(navigation) {
+  navigation.navigate('Home', { n: true, type: 'from' });
+}
