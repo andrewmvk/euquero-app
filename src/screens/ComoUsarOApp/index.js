@@ -3,7 +3,7 @@ import { View, Image } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 
 import { Header, Title, PhaseText, extraStyles } from './styles';
-import { TouchableArrow, buttonOpacity, colors } from '../../defaultStyles';
+import { TouchableArrow, buttonOpacity, colors, goToHome } from '../../defaultStyles';
 
 const slides = [
   {
@@ -42,7 +42,7 @@ export default (props) => {
   return (
     <>
       <Header>
-        <TouchableArrow activeOpacity={buttonOpacity} onPress={() => props.navigation.goBack()} />
+        <TouchableArrow activeOpacity={buttonOpacity} onPress={() => goToHome(props.navigation)} />
       </Header>
 
       <AppIntroSlider

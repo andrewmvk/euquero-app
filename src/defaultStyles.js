@@ -10,7 +10,7 @@ export const colors = {
   orange: '#FF6B0F',
   text: '#7F7F7F',
   titleSubtitle: '#fff',
-  backgroundMain: '#353FBA',
+  backgroundMain: '#2C3196',
   backgroundSecond: '#F8F8F8',
   gray: '#C4C4C4',
 };
@@ -89,7 +89,7 @@ const SmallButtonText = styled.Text`
 export function SmallButton(props) {
   return (
     <Shadow {...customButtonShadow.small}>
-      <TouchableOpacity style={{ ...buttonStyles.small }} {...props}>
+      <TouchableOpacity activeOpacity={buttonOpacity} style={{ ...buttonStyles.small }} {...props}>
         <SmallButtonText>{props.text ? props.text : 'TEXT'}</SmallButtonText>
       </TouchableOpacity>
     </Shadow>
@@ -105,9 +105,13 @@ const LargeButtonText = styled.Text`
 export function LargeButton(props) {
   return (
     <Shadow {...customButtonShadow.large}>
-      <TouchableOpacity style={{ ...buttonStyles.large }} {...props}>
+      <TouchableOpacity activeOpacity={buttonOpacity} style={{ ...buttonStyles.large }} {...props}>
         <LargeButtonText>{props.text ? props.text : 'TEXT'}</LargeButtonText>
       </TouchableOpacity>
     </Shadow>
   );
+}
+
+export function goToHome(navigation) {
+  navigation.navigate('Home', { n: true, type: 'from' });
 }
