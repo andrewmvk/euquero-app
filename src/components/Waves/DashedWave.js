@@ -5,7 +5,8 @@ import Svg, { Path } from 'react-native-svg';
 const { width, height } = Dimensions.get('screen');
 
 export default (props) => {
-  const chartHeight = height * props.size;
+  let size = 0.18;
+  const chartHeight = height * size;
 
   const firstCHeight = chartHeight * 0.5;
   const secondCHeight = chartHeight * 0.25;
