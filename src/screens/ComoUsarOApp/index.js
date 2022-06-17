@@ -13,21 +13,39 @@ import {
 const slides = [
   {
     key: 1,
-    image: require("../../../assets/images/passo.png"),
+    image: require("../../../assets/images/passo1Img.png"),
     title: "PASSO 1",
     text: "Para encontrar a UBS, clique no botão “Buscar UBS” da tela inicial;",
   },
   {
     key: 2,
-    image: require("../../../assets/images/passo.png"),
+    image: require("../../../assets/images/passo2Img.png"),
     title: "PASSO 2",
     text: "Selecione o Estado ao qual sua Cidade pertence;",
   },
   {
     key: 3,
-    image: require("../../../assets/images/passo.png"),
+    image: require("../../../assets/images/passo3Img.png"),
     title: "PASSO 3",
     text: "Selecione a Cidade para encontrar uma UBS;",
+  },
+  {
+    key: 4,
+    image: require("../../../assets/images/passo4Img.png"),
+    title: "PASSO 4",
+    text: "Selecione a UBS para ver seus serviços e localização;",
+  },
+  {
+    key: 5,
+    image: require("../../../assets/images/passo5Img.png"),
+    title: "PASSO 5",
+    text: "Selecione o serviço prestado pela UBS;",
+  },
+  {
+    key: 6,
+    image: require("../../../assets/images/passo1Img.svg"),
+    title: "PASSO 6",
+    text: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
   },
 ];
 
@@ -47,7 +65,10 @@ export default (props) => {
   return (
     <>
       <Header>
-        <TouchableArrow activeOpacity={buttonOpacity} onPress={() => props.navigation.goBack()} />
+        <TouchableArrow
+          activeOpacity={buttonOpacity}
+          onPress={() => props.navigation.goBack()}
+        />
       </Header>
 
       <AppIntroSlider
