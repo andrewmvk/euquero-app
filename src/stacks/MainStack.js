@@ -1,5 +1,8 @@
-import React from 'react';
-import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import React from "react";
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+} from "@react-navigation/stack";
 
 import Home from "../screens/Home";
 import AdminLogin from "../screens/AdminLogin";
@@ -15,7 +18,7 @@ const pop = () => ({
 
 export default () => (
   <Stack.Navigator
-    initialRouteName="SobreOProjeto"
+    initialRouteName="Home"
     screenOptions={{
       headerShown: false,
       cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,

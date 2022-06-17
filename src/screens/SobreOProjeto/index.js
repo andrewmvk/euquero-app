@@ -51,7 +51,7 @@ export default (props) => {
       <Header>
         <TouchableArrow
           activeOpacity={buttonOpacity}
-          onPress={() => goToHome(props.navigation)}
+          onPress={() => props.navigation.goBack()}
         />
       </Header>
 

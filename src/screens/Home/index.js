@@ -18,20 +18,19 @@ import Logo from "../../../assets/images/euquero-logo.svg";
 import { LargeButton, SmallButton, buttonOpacity } from "../../defaultStyles";
 import { useRoute } from "@react-navigation/native";
 
-
 export default (props) => {
-  const [transition, setTransition] = useState({ n: false, type: '' });
+  const [transition, setTransition] = useState({ n: false, type: "" });
 
   const [viewOpacity, setViewOpacity] = useState(100);
 
   useEffect(() => {
-    props.navigation.addListener('focus', () => {
-      setTransition({ n: true, type: 'from' });
+    props.navigation.addListener("focus", () => {
+      setTransition({ n: true, type: "from" });
     });
   }, []);
 
   function handleNavigateTo(page) {
-    setTransition({ n: true, type: 'to' });
+    setTransition({ n: true, type: "to" });
     setTimeout(() => {
       props.navigation.navigate(page);
     }, 400);
@@ -60,7 +59,7 @@ export default (props) => {
               <SmallButton
                 text="Como usar o App"
                 onPress={() => {
-                  handleNavigateTo('ComoUsarOApp');
+                  handleNavigateTo("ComoUsarOApp");
                 }}
               />
             </View>
@@ -68,7 +67,7 @@ export default (props) => {
               <SmallButton
                 text="Sobre o Projeto"
                 onPress={() => {
-                  handleNavigationTo("SobreOProjeto");
+                  handleNavigateTo("SobreOProjeto");
                 }}
               />
             </View>
@@ -77,7 +76,7 @@ export default (props) => {
 
         <AdminBtn
           activeOpacity={buttonOpacity}
-          onPress={() => props.navigation.navigate('AdminLogin')}
+          onPress={() => props.navigation.navigate("AdminLogin")}
         >
           <Icon
             name="shield-account"
