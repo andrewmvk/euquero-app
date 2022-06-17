@@ -33,8 +33,12 @@ export const PhaseText = styled.Text`
   width: 90%;
   align-self: center;
   font-family: ${defaultS.fonts.spartanR};
-  max-height: 50%;
   line-height: 25px;
+  height: 100%;
+`;
+
+export const TextScroll = styled.ScrollView`
+  max-height: 50%;
 `;
 
 export const extraStyles = {
@@ -46,7 +50,7 @@ export const extraStyles = {
     resizeMode: "contain",
     height: "30%",
     width: "100%",
-    marginTop: 60,
+    marginTop: 0,
   },
   containerIn: {
     height: "60%",

@@ -71,7 +71,7 @@ export default (props) => {
               <SmallButton
                 text="Sobre o Projeto"
                 onPress={() => {
-                  handleNavigationTo("ComoUsarOApp");
+                  handleNavigationTo("SobreOProjeto");
                 }}
               />
             </View>
