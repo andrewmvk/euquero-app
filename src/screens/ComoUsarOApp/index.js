@@ -1,28 +1,33 @@
-import React from 'react';
-import { View, Image } from 'react-native';
-import AppIntroSlider from 'react-native-app-intro-slider';
+import React from "react";
+import { View, Image } from "react-native";
+import AppIntroSlider from "react-native-app-intro-slider";
 
-import { Header, Title, PhaseText, extraStyles } from './styles';
-import { TouchableArrow, buttonOpacity, colors, goToHome } from '../../defaultStyles';
+import { Header, Title, PhaseText, extraStyles } from "./styles";
+import {
+  TouchableArrow,
+  buttonOpacity,
+  colors,
+  goToHome,
+} from "../../defaultStyles";
 
 const slides = [
   {
     key: 1,
-    image: require('../../../assets/images/passo.png'),
-    title: 'PASSO 1',
-    text: 'Para encontrar a UBS, clique no botão “Buscar UBS” da tela inicial;',
+    image: require("../../../assets/images/passo.png"),
+    title: "PASSO 1",
+    text: "Para encontrar a UBS, clique no botão “Buscar UBS” da tela inicial;",
   },
   {
     key: 2,
-    image: require('../../../assets/images/passo.png'),
-    title: 'PASSO 2',
-    text: 'Selecione o Estado ao qual sua Cidade pertence;',
+    image: require("../../../assets/images/passo.png"),
+    title: "PASSO 2",
+    text: "Selecione o Estado ao qual sua Cidade pertence;",
   },
   {
     key: 3,
-    image: require('../../../assets/images/passo.png'),
-    title: 'PASSO 3',
-    text: 'Selecione a Cidade para encontrar uma UBS;',
+    image: require("../../../assets/images/passo.png"),
+    title: "PASSO 3",
+    text: "Selecione a Cidade para encontrar uma UBS;",
   },
 ];
 
@@ -42,7 +47,10 @@ export default (props) => {
   return (
     <>
       <Header>
-        <TouchableArrow activeOpacity={buttonOpacity} onPress={() => goToHome(props.navigation)} />
+        <TouchableArrow
+          activeOpacity={buttonOpacity}
+          onPress={() => goToHome(props.navigation)}
+        />
       </Header>
 
       <AppIntroSlider
@@ -52,7 +60,7 @@ export default (props) => {
           backgroundColor: colors.orange,
           width: 30,
         }}
-        onDone={() => props.navigation.goBack()}
+        onDone={() => props.navigation.goToHome(props.navigation)}
       />
     </>
   );

@@ -1,19 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { View } from "react-native";
 
-import { Container, LogoView, Subtitle, Buttons, AdminBtn, extraStyles } from './styles';
+import {
+  Container,
+  LogoView,
+  Subtitle,
+  Buttons,
+  AdminBtn,
+  extraStyles,
+} from "./styles";
 
-import Wave from '../../components/Waves/Wave';
-import DashedWave from '../../components/Waves/DashedWave';
+import Wave from "../../components/Waves/Wave";
+import DashedWave from "../../components/Waves/DashedWave";
 
-import { Icon } from '@rneui/themed';
-import Logo from '../../../assets/images/euquero-logo.svg';
-import { LargeButton, SmallButton, buttonOpacity } from '../../defaultStyles';
-import { useRoute } from '@react-navigation/native';
+import { Icon } from "@rneui/themed";
+import Logo from "../../../assets/images/euquero-logo.svg";
+import { LargeButton, SmallButton, buttonOpacity } from "../../defaultStyles";
+import { useRoute } from "@react-navigation/native";
 
 export default (props) => {
   const route = useRoute();
-  const [navigate, setNavigate] = useState({ n: false, type: 'to' });
+  const [navigate, setNavigate] = useState({ n: false, type: "to" });
   const [viewOpacity, setViewOpacity] = useState(100);
 
   useEffect(() => {
@@ -26,7 +33,7 @@ export default (props) => {
   }, [route.params]);
 
   function handleNavigationTo(page) {
-    setNavigate({ n: true, type: 'to' });
+    setNavigate({ n: true, type: "to" });
     setViewOpacity(0);
     setTimeout(() => {
       props.navigation.navigate(page, { navigate: navigate });
@@ -56,17 +63,25 @@ export default (props) => {
               <SmallButton
                 text="Como usar o App"
                 onPress={() => {
-                  handleNavigationTo('ComoUsarOApp');
+                  handleNavigationTo("ComoUsarOApp");
                 }}
               />
             </View>
             <View style={{ opacity: viewOpacity }}>
-              <SmallButton text="Sobre o Projeto" />
+              <SmallButton
+                text="Sobre o Projeto"
+                onPress={() => {
+                  handleNavigationTo("ComoUsarOApp");
+                }}
+              />
             </View>
           </Buttons>
         </View>
 
-        <AdminBtn activeOpacity={buttonOpacity} onPress={() => handleNavigationTo('AdminLogin')}>
+        <AdminBtn
+          activeOpacity={buttonOpacity}
+          onPress={() => handleNavigationTo("AdminLogin")}
+        >
           <Icon
             name="shield-account"
             type="material-community"
