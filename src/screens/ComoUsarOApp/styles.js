@@ -1,9 +1,9 @@
-import styled from 'styled-components/native';
-import { Dimensions } from 'react-native';
+import styled from "styled-components/native";
+import { Dimensions } from "react-native";
 
-import * as defaultS from '../../defaultStyles';
+import * as defaultS from "../../defaultStyles";
 
-let titleDistanceTop = Dimensions.get('window').height * 0.025;
+let titleDistanceTop = Dimensions.get("window").height * 0.025;
 let titleDistanceBottom = titleDistanceTop * 0.85;
 
 export const Header = styled.SafeAreaView`
@@ -29,25 +29,26 @@ export const PhaseText = styled.Text`
   color: ${defaultS.colors.text};
   padding-left: 25px;
   padding-right: 25px;
-  font-size: ${defaultS.fontSize.title};
+  font-size: 15px;
   width: 80%;
   align-self: center;
   font-family: ${defaultS.fonts.spartanR};
+  line-height: 30px;
 `;
 
 export const extraStyles = {
   containerOut: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   tutorialImage: {
-    resizeMode: 'contain',
-    height: '60%',
-    width: '100%',
+    resizeMode: "contain",
+    height: "60%",
+    width: "100%",
     marginTop: 60,
   },
   containerIn: {
-    height: '40%',
+    height: "40%",
     marginTop: 15,
   },
 };

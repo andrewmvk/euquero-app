@@ -29,7 +29,7 @@ export const PhaseText = styled.Text`
   color: ${defaultS.colors.text};
   padding-left: 25px;
   padding-right: 25px;
-  font-size: ${defaultS.fontSize.title};
+  font-size: 15px;
   width: 90%;
   align-self: center;
   font-family: ${defaultS.fonts.spartanR};
