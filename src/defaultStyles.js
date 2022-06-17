@@ -39,7 +39,11 @@ export function TouchableArrow(props) {
       {...props}
       style={{ height: '100%', width: 30, justifyContent: 'center', zIndex: 5 }}
     >
-      <Icon name="chevron-back-outline" type="ionicon" color={colors.orange} />
+      <Icon
+        name="chevron-back-outline"
+        type="ionicon"
+        color={props.color ? props.color : colors.orange}
+      />
     </TouchableOpacity>
   );
 }
@@ -110,8 +114,4 @@ export function LargeButton(props) {
       </TouchableOpacity>
     </Shadow>
   );
-}
-
-export function goToHome(navigation) {
-  navigation.navigate('Home', { n: true, type: 'from' });
 }

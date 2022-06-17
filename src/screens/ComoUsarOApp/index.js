@@ -47,10 +47,7 @@ export default (props) => {
   return (
     <>
       <Header>
-        <TouchableArrow
-          activeOpacity={buttonOpacity}
-          onPress={() => goToHome(props.navigation)}
-        />
+        <TouchableArrow activeOpacity={buttonOpacity} onPress={() => props.navigation.goBack()} />
       </Header>
 
       <AppIntroSlider

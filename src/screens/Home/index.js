@@ -18,36 +18,33 @@ import Logo from "../../../assets/images/euquero-logo.svg";
 import { LargeButton, SmallButton, buttonOpacity } from "../../defaultStyles";
 import { useRoute } from "@react-navigation/native";
 
+
 export default (props) => {
-  const route = useRoute();
-  const [navigate, setNavigate] = useState({ n: false, type: "to" });
+  const [transition, setTransition] = useState({ n: false, type: '' });
+
   const [viewOpacity, setViewOpacity] = useState(100);
 
   useEffect(() => {
-    if (route.params != undefined) {
-      setNavigate(route.params);
-      setTimeout(() => {
-        setViewOpacity(100);
-      }, 300);
-    }
-  }, [route.params]);
+    props.navigation.addListener('focus', () => {
+      setTransition({ n: true, type: 'from' });
+    });
+  }, []);
 
-  function handleNavigationTo(page) {
-    setNavigate({ n: true, type: "to" });
-    setViewOpacity(0);
+  function handleNavigateTo(page) {
+    setTransition({ n: true, type: 'to' });
     setTimeout(() => {
-      props.navigation.navigate(page, { navigate: navigate });
-    }, 300);
+      props.navigation.navigate(page);
+    }, 400);
   }
 
   return (
     <>
       <Container>
-        <Wave size={0.2} top={true} navigate={navigate} />
-        <Wave size={0.2} navigate={navigate} />
+        <Wave top={true} transition={transition} />
+        <Wave transition={transition} />
 
-        <DashedWave size={0.18} />
-        <DashedWave size={0.18} bottom={true} />
+        <DashedWave />
+        <DashedWave bottom={true} />
 
         <View style={{ ...extraStyles.viewBody }}>
           <LogoView>
@@ -63,7 +60,7 @@ export default (props) => {
               <SmallButton
                 text="Como usar o App"
                 onPress={() => {
-                  handleNavigationTo("ComoUsarOApp");
+                  handleNavigateTo('ComoUsarOApp');
                 }}
               />
             </View>
@@ -80,7 +77,7 @@ export default (props) => {
 
         <AdminBtn
           activeOpacity={buttonOpacity}
-          onPress={() => handleNavigationTo("AdminLogin")}
+          onPress={() => props.navigation.navigate('AdminLogin')}
         >
           <Icon
             name="shield-account"
