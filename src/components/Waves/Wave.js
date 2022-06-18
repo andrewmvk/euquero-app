@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Dimensions } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { LinearGradient, Path, Defs, Stop } from 'react-native-svg';
 import Animated, {
   Easing,
   useAnimatedProps,
@@ -17,7 +17,7 @@ const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
 export default (props) => {
   let size = 0.2;
-  const initialHeight = height * size;
+  const initialHeight = height * size + 5;
 
   const waveAnimated = useSharedValue(props.transition.type === 'nothing' ? 1 : 0.1);
   const heightAnimated = useSharedValue(
@@ -35,12 +35,12 @@ export default (props) => {
     };
   });
 
-  const bottomWaveProps = useAnimatedProps(() => {
+  const waveProps = useAnimatedProps(() => {
     const waveHeight = size * height * waveAnimated.value;
 
     const firstCHeight = waveHeight * 0.55;
     const secondCHeight = waveHeight * 0.7;
-    const thirdCHeight = 1 * Math.pow(waveAnimated.value, 3);
+    const thirdCHeight = 5 * Math.pow(waveAnimated.value, 3);
 
     const pathStart = `0, ${waveHeight * 0.68}`;
 
@@ -113,7 +113,14 @@ export default (props) => {
 
   return (
     <AnimatedSvg animatedProps={svgProps}>
-      <AnimatedPath animatedProps={bottomWaveProps} fill={colors.orange} />
+      <Defs>
+        <LinearGradient id="grad" x1="50%" y1="100%" x2="0%" y2="0%">
+          <Stop offset="0%" stopColor="#000" stopOpacity="0.3" />
+          <Stop offset="100%" stopColor="#000" stopOpacity="0" />
+        </LinearGradient>
+      </Defs>
+      <AnimatedPath animatedProps={waveProps} fill={'url(#grad)'} translateY={-5} />
+      <AnimatedPath animatedProps={waveProps} fill={colors.orange} />
     </AnimatedSvg>
   );
 };
