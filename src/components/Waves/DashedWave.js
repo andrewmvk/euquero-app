@@ -1,8 +1,8 @@
-import React from "react";
-import { Dimensions } from "react-native";
-import Svg, { Path } from "react-native-svg";
+import React from 'react';
+import { Dimensions } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 
-const { width, height } = Dimensions.get("screen");
+const { width, height } = Dimensions.get('screen');
 
 export default (props) => {
   let size = 0.18;
@@ -31,11 +31,11 @@ export default (props) => {
   const rotateStyle =
     props.bottom != null
       ? {
-          transform: [{ translateX: -(width * 0.15) }, { rotate: "185deg" }],
+          transform: [{ translateX: -(width * 0.15) }, { rotate: '185deg' }],
           bottom: -chartHeight / 2.5,
         }
       : {
-          transform: [{ translateX: width * 0.15 }, { rotate: "5deg" }],
+          transform: [{ translateX: width * 0.15 }, { rotate: '5deg' }],
           top: -chartHeight / 2.5,
         };
 
@@ -43,7 +43,7 @@ export default (props) => {
     <Svg
       width={width}
       height={chartHeight}
-      style={[{ position: "absolute" }, rotateStyle]}
+      style={[{ position: 'absolute', zIndex: 3 }, rotateStyle]}
     >
       <Path
         d={`

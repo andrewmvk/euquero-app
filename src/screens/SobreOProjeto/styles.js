@@ -1,19 +1,10 @@
-import styled from "styled-components/native";
-import { Dimensions } from "react-native";
+import styled from 'styled-components/native';
+import { Dimensions } from 'react-native';
 
-import * as defaultS from "../../defaultStyles";
+import * as defaultS from '../../defaultStyles';
 
-let titleDistanceTop = Dimensions.get("window").height * 0.025;
+let titleDistanceTop = Dimensions.get('window').height * 0.025;
 let titleDistanceBottom = titleDistanceTop * 0.85;
-
-export const Header = styled.SafeAreaView`
-  height: 30px;
-  width: 90%;
-  margin-top: 50px;
-  flex-direction: row;
-  align-items: center;
-  margin-left: 20px;
-`;
 
 export const Title = styled.Text`
   text-align: center;
@@ -44,16 +35,16 @@ export const TextScroll = styled.ScrollView`
 export const extraStyles = {
   containerOut: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   tutorialImage: {
-    resizeMode: "contain",
-    height: "30%",
-    width: "100%",
+    resizeMode: 'contain',
+    height: '30%',
+    width: '100%',
     marginTop: 0,
   },
   containerIn: {
-    height: "60%",
+    height: '60%',
     marginTop: 15,
   },
 };

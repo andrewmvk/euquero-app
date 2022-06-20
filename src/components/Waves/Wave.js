@@ -19,7 +19,7 @@ export default (props) => {
   let size = 0.2;
   const initialHeight = height * size + 5;
 
-  const waveAnimated = useSharedValue(props.transition.type === 'nothing' ? 1 : 0.1);
+  const waveAnimated = useSharedValue(props.transition.type === 'nothing' ? 1 : 0.3);
   const heightAnimated = useSharedValue(
     props.transition.type === 'nothing' ? initialHeight : initialHeight * 1.8,
   );
@@ -31,7 +31,7 @@ export default (props) => {
     return {
       width: width,
       height: heightAnimated.value,
-      style: [{ position: 'absolute' }, rotateStyle],
+      style: [{ position: 'absolute', zIndex: 2 }, rotateStyle],
     };
   });
 
