@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "icon": "./assets/images/icon.png",
     "splash": {
-      "image": "./assets/images/splash-screen.png",
+      "image": "./assets/images/splash-loading.png",
       "resizeMode": "contain",
       "backgroundColor": "#FF6B0F"
     },

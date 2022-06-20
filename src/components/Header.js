@@ -29,12 +29,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: '5%',
     flexDirection: 'row',
     alignItems: 'center',
+    zIndex: 5,
   },
   arrowBack: {
     height: '100%',
     width: 30,
     justifyContent: 'center',
-    zIndex: 5,
   },
   text: {
     fontFamily: fonts.spartanR,
