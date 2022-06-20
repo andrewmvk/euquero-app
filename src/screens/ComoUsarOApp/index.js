@@ -112,6 +112,7 @@ export default props => {
           backgroundColor: colors.orange,
           width: 30
         }}
+        showPrevButton={true}
         onDone={() => goToHome(props.navigation)}
         renderDoneButton={this._renderDoneButton}
         renderNextButton={this._renderNextButton}
