@@ -5,7 +5,8 @@ import Svg, { Path } from 'react-native-svg';
 const { width, height } = Dimensions.get('screen');
 
 export default (props) => {
-  const chartHeight = height * props.size;
+  let size = 0.18;
+  const chartHeight = height * size;
 
   const firstCHeight = chartHeight * 0.5;
   const secondCHeight = chartHeight * 0.25;
@@ -33,10 +34,17 @@ export default (props) => {
           transform: [{ translateX: -(width * 0.15) }, { rotate: '185deg' }],
           bottom: -chartHeight / 2.5,
         }
-      : { transform: [{ translateX: width * 0.15 }, { rotate: '5deg' }], top: -chartHeight / 2.5 };
+      : {
+          transform: [{ translateX: width * 0.15 }, { rotate: '5deg' }],
+          top: -chartHeight / 2.5,
+        };
 
   return (
-    <Svg width={width} height={chartHeight} style={[{ position: 'absolute' }, rotateStyle]}>
+    <Svg
+      width={width}
+      height={chartHeight}
+      style={[{ position: 'absolute', zIndex: 3 }, rotateStyle]}
+    >
       <Path
         d={`
           M${pathStart} 

@@ -21,10 +21,15 @@ export const PhaseText = styled.Text`
   padding-left: 25px;
   padding-right: 25px;
   font-size: 15px;
-  width: 80%;
+  width: 90%;
   align-self: center;
   font-family: ${defaultS.fonts.spartanR};
-  line-height: 30px;
+  line-height: 25px;
+  height: 100%;
+`;
+
+export const TextScroll = styled.ScrollView`
+  max-height: 50%;
 `;
 
 export const extraStyles = {
@@ -34,12 +39,12 @@ export const extraStyles = {
   },
   tutorialImage: {
     resizeMode: 'contain',
-    height: '60%',
+    height: '30%',
     width: '100%',
-    marginTop: 60,
+    marginTop: 0,
   },
   containerIn: {
-    height: '40%',
+    height: '60%',
     marginTop: 15,
   },
 };

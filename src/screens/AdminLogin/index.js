@@ -1,63 +1,73 @@
-import React from 'react'
-import { View } from 'react-native'
+import React, { useState, useEffect } from 'react';
+import { View } from 'react-native';
 
 import {
   Container,
-  Header,
   LogoView,
   InputArea,
   Subtitle,
   TextInput,
   Background,
-  extraStyles
-} from './styles'
-import {
-  TouchableArrow,
-  SmallButton,
-  buttonOpacity,
-  colors,
-  goToHome
-} from '../../defaultStyles'
-import Logo from '../../../assets/images/euquero-logo.svg'
+  extraStyles,
+} from './styles';
+import Header from '../../components/Header';
+import { SmallButton, buttonOpacity, colors } from '../../defaultStyles';
+import Logo from '../../../assets/images/euquero-logo.svg';
 
-export default props => {
+import Wave from '../../components/Waves/Wave';
+import DashedWave from '../../components/Waves/DashedWave';
+
+export default (props) => {
+  const [transition, setTransition] = useState({ n: false, type: 'nothing' });
+
+  useEffect(() => {
+    props.navigation.addListener('focus', () => {
+      setTransition({ n: true, type: 'from' });
+    });
+  }, []);
+
+  function handleNavigateTo(page) {
+    setTransition({ n: true, type: 'to' });
+    setTimeout(() => {
+      props.navigation.navigate(page);
+    }, 400);
+  }
+
   return (
-    <>
-      <Background>
-        <Header>
-          <TouchableArrow
-            activeOpacity={buttonOpacity}
-            onPress={() => goToHome(props.navigation)}
-          />
-        </Header>
-        <Container>
-          <View style={{ ...extraStyles }}>
-            <LogoView>
-              <Logo />
-              <Subtitle>Acesso Administrativo</Subtitle>
-            </LogoView>
+    <Background>
+      <Wave top={true} transition={transition} />
+      <Wave transition={transition} />
 
-            <InputArea>
-              <TextInput
-                placeholder="Nome de usuário"
-                placerholderTextColor={colors.text}
-              />
-              <TextInput
-                placeholder="Senha"
-                placerholderTextColor={colors.text}
-                secureTextEntry={true}
-              />
-            </InputArea>
+      <DashedWave />
+      <DashedWave bottom={true} />
 
-            <View style={{ height: '15%' }}>
-              <SmallButton
-                onPress={() => props.navigation.navigate('AdminMainMenu')}
-                text="Acessar"
-              />
-            </View>
+      <Header
+        activeOpacity={buttonOpacity}
+        onPress={() => props.navigation.goBack()}
+        absolute={true}
+        color={'white'}
+      />
+      <Container>
+        <View style={{ ...extraStyles }}>
+          <LogoView>
+            <Logo />
+            <Subtitle>Acesso Administrativo</Subtitle>
+          </LogoView>
+
+          <InputArea>
+            <TextInput placeholder="Nome de usuário" placerholderTextColor={colors.text} />
+            <TextInput
+              placeholder="Senha"
+              placerholderTextColor={colors.text}
+              secureTextEntry={true}
+            />
+          </InputArea>
+
+          <View style={{ height: '15%' }}>
+            <SmallButton onPress={() => handleNavigateTo('AdminMainMenu')} text="Acessar" />
           </View>
-        </Container>
-      </Background>
-    </>
-  )
-}
+        </View>
+      </Container>
+    </Background>
+  );
+};

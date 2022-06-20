@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { Dimensions } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { LinearGradient, Path, Defs, Stop } from 'react-native-svg';
 import Animated, {
   Easing,
   useAnimatedProps,
   useSharedValue,
+  withSpring,
   withTiming,
 } from 'react-native-reanimated';
 
@@ -15,9 +16,13 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
 export default (props) => {
-  const waveAnimated = useSharedValue(0.1);
-  const initialHeight = height * props.size;
-  const heightAnimated = useSharedValue(initialHeight * 1.8);
+  let size = 0.2;
+  const initialHeight = height * size + 5;
+
+  const waveAnimated = useSharedValue(props.transition.type === 'nothing' ? 1 : 0.3);
+  const heightAnimated = useSharedValue(
+    props.transition.type === 'nothing' ? initialHeight : initialHeight * 1.8,
+  );
 
   const rotateStyle =
     props.top != null ? { transform: [{ rotate: '180deg' }], top: -10 } : { bottom: -10 };
@@ -26,16 +31,16 @@ export default (props) => {
     return {
       width: width,
       height: heightAnimated.value,
-      style: [{ position: 'absolute' }, rotateStyle],
+      style: [{ position: 'absolute', zIndex: 2 }, rotateStyle],
     };
   });
 
-  const bottomWaveProps = useAnimatedProps(() => {
-    const waveHeight = props.size * height * waveAnimated.value;
+  const waveProps = useAnimatedProps(() => {
+    const waveHeight = size * height * waveAnimated.value;
 
-    const firstCHeight = waveHeight * 0.5;
+    const firstCHeight = waveHeight * 0.55;
     const secondCHeight = waveHeight * 0.7;
-    const thirdCHeight = 1 * Math.pow(waveAnimated.value, 3);
+    const thirdCHeight = 5 * Math.pow(waveAnimated.value, 3);
 
     const pathStart = `0, ${waveHeight * 0.68}`;
 
@@ -48,7 +53,7 @@ export default (props) => {
 
     const cPointA2 = `${width * 0.6} ${secondCHeight}`;
     const cPointB2 = `${width * 0.57} ${thirdCHeight}`;
-    const cPointC2 = `${width * 0.78} ${thirdCHeight}`;
+    const cPointC2 = `${width * 0.82} ${thirdCHeight}`;
 
     const qPointA2 = `${width * 0.9} ${thirdCHeight}`;
     const qPointB2 = `${width} ${waveHeight * 0.2}`;
@@ -66,46 +71,40 @@ export default (props) => {
   });
 
   useEffect(() => {
-    if (!props.navigate.n) {
+    if (!props.transition.n && props.transition.type === '') {
       setTimeout(() => {
         waveAnimated.value = 0.3;
 
-        heightAnimated.value = withTiming(heightAnimated.value / 1.8, {
-          duration: 700,
-          easing: Easing.linear,
-        });
+        heightAnimated.value = withSpring(heightAnimated.value / 1.8);
 
-        waveAnimated.value = withTiming(1, {
-          duration: 700,
-          easing: Easing.linear,
-        });
+        waveAnimated.value = withSpring(1);
       }, 500);
-    } else {
-      navigationTypeAnimation(props.navigate.type);
+    } else if (!(props.transition.type === 'nothing')) {
+      navigationTypeAnimation(props.transition.type);
     }
-  }, [props.navigate]);
+  }, [props.transition]);
 
   function navigationTypeAnimation(nType) {
     if (props.top === undefined) {
       if (nType === 'to' && heightAnimated.value == initialHeight) {
         const animationDirection = heightAnimated.value * 6;
-        animation(animationDirection);
+        transtionAnimation(animationDirection);
       } else if (nType === 'from' && heightAnimated.value == initialHeight * 6) {
         const animationDirection = heightAnimated.value / 6;
-        animation(animationDirection);
+        transtionAnimation(animationDirection);
       }
     } else {
       if (nType === 'to' && heightAnimated.value == initialHeight) {
         const animationDirection = heightAnimated.value / 6;
-        animation(animationDirection);
+        transtionAnimation(animationDirection);
       } else if (nType === 'from' && heightAnimated.value == initialHeight / 6) {
         const animationDirection = heightAnimated.value * 6;
-        animation(animationDirection);
+        transtionAnimation(animationDirection);
       }
     }
   }
 
-  function animation(animationD) {
+  function transtionAnimation(animationD) {
     heightAnimated.value = withTiming(animationD, {
       duration: 500,
       easing: Easing.ease,
@@ -114,7 +113,14 @@ export default (props) => {
 
   return (
     <AnimatedSvg animatedProps={svgProps}>
-      <AnimatedPath animatedProps={bottomWaveProps} fill={colors.orange} />
+      <Defs>
+        <LinearGradient id="grad" x1="50%" y1="100%" x2="0%" y2="0%">
+          <Stop offset="0%" stopColor="#000" stopOpacity="0.3" />
+          <Stop offset="100%" stopColor="#000" stopOpacity="0" />
+        </LinearGradient>
+      </Defs>
+      <AnimatedPath animatedProps={waveProps} fill={'url(#grad)'} translateY={-5} />
+      <AnimatedPath animatedProps={waveProps} fill={colors.orange} />
     </AnimatedSvg>
   );
 };
