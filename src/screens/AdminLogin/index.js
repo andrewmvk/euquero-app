@@ -1,5 +1,5 @@
-import React from 'react';
-import { View } from 'react-native';
+import React from 'react'
+import { View } from 'react-native'
 
 import {
   Container,
@@ -9,12 +9,18 @@ import {
   Subtitle,
   TextInput,
   Background,
-  extraStyles,
-} from './styles';
-import { TouchableArrow, SmallButton, buttonOpacity, colors, goToHome } from '../../defaultStyles';
-import Logo from '../../../assets/images/euquero-logo.svg';
+  extraStyles
+} from './styles'
+import {
+  TouchableArrow,
+  SmallButton,
+  buttonOpacity,
+  colors,
+  goToHome
+} from '../../defaultStyles'
+import Logo from '../../../assets/images/euquero-logo.svg'
 
-export default (props) => {
+export default props => {
   return (
     <>
       <Background>
@@ -32,7 +38,10 @@ export default (props) => {
             </LogoView>
 
             <InputArea>
-              <TextInput placeholder="Nome de usuário" placerholderTextColor={colors.text} />
+              <TextInput
+                placeholder="Nome de usuário"
+                placerholderTextColor={colors.text}
+              />
               <TextInput
                 placeholder="Senha"
                 placerholderTextColor={colors.text}
@@ -50,5 +59,5 @@ export default (props) => {
         </Container>
       </Background>
     </>
-  );
-};
+  )
+}
