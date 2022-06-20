@@ -34,7 +34,7 @@ export default (props) => {
   }
 
   return (
-    <Background>
+    <>
       <Wave top={true} transition={transition} />
       <Wave transition={transition} />
 
@@ -47,27 +47,29 @@ export default (props) => {
         absolute={true}
         color={'white'}
       />
-      <Container>
-        <View style={{ ...extraStyles }}>
-          <LogoView>
-            <Logo />
-            <Subtitle>Acesso Administrativo</Subtitle>
-          </LogoView>
+      <Background>
+        <Container>
+          <View style={{ ...extraStyles }}>
+            <LogoView>
+              <Logo />
+              <Subtitle>Acesso Administrativo</Subtitle>
+            </LogoView>
 
-          <InputArea>
-            <TextInput placeholder="Nome de usuário" placerholderTextColor={colors.text} />
-            <TextInput
-              placeholder="Senha"
-              placerholderTextColor={colors.text}
-              secureTextEntry={true}
-            />
-          </InputArea>
+            <InputArea>
+              <TextInput placeholder="Nome de usuário" placerholderTextColor={colors.text} />
+              <TextInput
+                placeholder="Senha"
+                placerholderTextColor={colors.text}
+                secureTextEntry={true}
+              />
+            </InputArea>
 
-          <View style={{ height: '15%' }}>
-            <SmallButton onPress={() => handleNavigateTo('AdminMainMenu')} text="Acessar" />
+            <View style={{ height: '15%' }}>
+              <SmallButton onPress={() => handleNavigateTo('AdminMainMenu')} text="Acessar" />
+            </View>
           </View>
-        </View>
-      </Container>
-    </Background>
+        </Container>
+      </Background>
+    </>
   );
 };
