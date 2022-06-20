@@ -10,7 +10,7 @@ import AdminMainMenu from "../screens/AdminMainMenu";
 import ComoUsarOApp from "../screens/ComoUsarOApp";
 import SobreOProjeto from "../screens/SobreOProjeto";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator()
 
 const pop = () => ({
   cardStyle: {},
@@ -34,4 +34,4 @@ export default () => (
     <Stack.Screen name="ComoUsarOApp" component={ComoUsarOApp} />
     <Stack.Screen name="SobreOProjeto" component={SobreOProjeto} />
   </Stack.Navigator>
-);
+)
