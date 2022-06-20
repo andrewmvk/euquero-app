@@ -1,51 +1,47 @@
-import React from "react";
-import { View, Image } from "react-native";
-import AppIntroSlider from "react-native-app-intro-slider";
+import React from 'react';
+import { View, Image } from 'react-native';
+import AppIntroSlider from 'react-native-app-intro-slider';
 
-import { Header, Title, PhaseText, extraStyles } from "./styles";
-import {
-  TouchableArrow,
-  buttonOpacity,
-  colors,
-  goToHome,
-} from "../../defaultStyles";
+import { Title, PhaseText, extraStyles } from './styles';
+import Header from '../../components/Header';
+import { buttonOpacity, colors } from '../../defaultStyles';
 
 const slides = [
   {
     key: 1,
-    image: require("../../../assets/images/passo1Img.png"),
-    title: "PASSO 1",
-    text: "Para encontrar a UBS, clique no botão “Buscar UBS” da tela inicial;",
+    image: require('../../../assets/images/passo1Img.png'),
+    title: 'PASSO 1',
+    text: 'Para encontrar a UBS, clique no botão “Buscar UBS” da tela inicial;',
   },
   {
     key: 2,
-    image: require("../../../assets/images/passo2Img.png"),
-    title: "PASSO 2",
-    text: "Selecione o Estado ao qual sua Cidade pertence;",
+    image: require('../../../assets/images/passo2Img.png'),
+    title: 'PASSO 2',
+    text: 'Selecione o Estado ao qual sua Cidade pertence;',
   },
   {
     key: 3,
-    image: require("../../../assets/images/passo3Img.png"),
-    title: "PASSO 3",
-    text: "Selecione a Cidade para encontrar uma UBS;",
+    image: require('../../../assets/images/passo3Img.png'),
+    title: 'PASSO 3',
+    text: 'Selecione a Cidade para encontrar uma UBS;',
   },
   {
     key: 4,
-    image: require("../../../assets/images/passo4Img.png"),
-    title: "PASSO 4",
-    text: "Selecione a UBS para ver seus serviços e localização;",
+    image: require('../../../assets/images/passo4Img.png'),
+    title: 'PASSO 4',
+    text: 'Selecione a UBS para ver seus serviços e localização;',
   },
   {
     key: 5,
-    image: require("../../../assets/images/passo5Img.png"),
-    title: "PASSO 5",
-    text: "Selecione o serviço prestado pela UBS;",
+    image: require('../../../assets/images/passo5Img.png'),
+    title: 'PASSO 5',
+    text: 'Selecione o serviço prestado pela UBS;',
   },
   {
     key: 6,
-    image: require("../../../assets/images/passo1Img.svg"),
-    title: "PASSO 6",
-    text: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    image: require('../../../assets/images/passo1Img.svg'),
+    title: 'PASSO 6',
+    text: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
   },
 ];
 
@@ -64,12 +60,7 @@ export default (props) => {
 
   return (
     <>
-      <Header>
-        <TouchableArrow
-          activeOpacity={buttonOpacity}
-          onPress={() => props.navigation.goBack()}
-        />
-      </Header>
+      <Header activeOpacity={buttonOpacity} onPress={() => props.navigation.goBack()} />
 
       <AppIntroSlider
         renderItem={renderSlides}
@@ -78,7 +69,7 @@ export default (props) => {
           backgroundColor: colors.orange,
           width: 30,
         }}
-        onDone={() => props.navigation.goToHome(props.navigation)}
+        onDone={() => props.navigation.goBack()}
       />
     </>
   );

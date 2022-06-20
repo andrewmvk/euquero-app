@@ -3,7 +3,6 @@ import { View } from 'react-native';
 
 import {
   Container,
-  Header,
   LogoView,
   InputArea,
   Subtitle,
@@ -11,7 +10,8 @@ import {
   Background,
   extraStyles,
 } from './styles';
-import { TouchableArrow, SmallButton, buttonOpacity, colors } from '../../defaultStyles';
+import Header from '../../components/Header';
+import { SmallButton, buttonOpacity, colors } from '../../defaultStyles';
 import Logo from '../../../assets/images/euquero-logo.svg';
 
 import Wave from '../../components/Waves/Wave';
@@ -40,13 +40,13 @@ export default (props) => {
 
       <DashedWave />
       <DashedWave bottom={true} />
-      <Header>
-        <TouchableArrow
-          activeOpacity={buttonOpacity}
-          color={'white'}
-          onPress={() => props.navigation.goBack()}
-        />
-      </Header>
+
+      <Header
+        activeOpacity={buttonOpacity}
+        onPress={() => props.navigation.goBack()}
+        absolute={true}
+        color={'white'}
+      />
       <Container>
         <View style={{ ...extraStyles }}>
           <LogoView>
