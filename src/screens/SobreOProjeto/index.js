@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Linking } from 'react-native';
+import { View, Image, Linking, Dimensions } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 
 import { Title, PhaseText, extraStyles, TextScroll } from './styles';
@@ -31,6 +31,7 @@ const slides = [
 
 export default (props) => {
   function renderSlides({ item }) {
+    let windowHeight = Dimensions.get('window').height;
     return (
       <View style={{ ...extraStyles.containerOut }}>
         <Image source={item.image} style={{ ...extraStyles.tutorialImage }} />
@@ -39,7 +40,7 @@ export default (props) => {
           <TextScroll>
             <PhaseText>{item.text}</PhaseText>
           </TextScroll>
-          <View style={{ alignItems: 'center', marginTop: 50 }}>
+          <View style={{ alignItems: 'center', marginTop: windowHeight * 0.036 }}>
             <SmallButton
               text="Saiba Mais"
               onPress={() => Linking.openURL('https://euquero.ufma.br')}
