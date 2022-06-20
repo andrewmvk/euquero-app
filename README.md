@@ -57,7 +57,7 @@ When in localhost choose how you want to open the APP: <br/>
 2. Run Web (another localhost with the aplication) <br/>
 3. Use the QrCode to run remotely in your device as a mobile APP **([ExpoGO App](https://expo.dev/client) needed)** <br/>
 
-***OBS:The APP is under development, the [TEAM](#team---contributors) are updating it right NOW, the APP is in ALPHA as we can say.***
+***OBS: The APP is under development, the [TEAM](#team---contributors) are updating it right NOW, the APP is in ALPHA as we can say.***
 ## Team - Contributors
 
 [![Vitória_J](https://user-images.githubusercontent.com/78929443/171479037-b702cb75-7a8d-4cc6-b534-d20e3576398c.png)](https://github.com/vitoriamj)
