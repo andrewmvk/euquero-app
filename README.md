@@ -30,8 +30,10 @@ The project is created with:
 * _[Native Swiper](https://www.npmjs.com/package/react-native-swiper) - 1.6.0_
 * _[Native SVG Transformer](https://github.com/kristerkari/react-native-svg-transformer) - 1.0.0_
 * _[Native Elements](https://reactnativeelements.com/docs/1.2.0/getting_started) - 3.0.4_
-* _[Expo App Loading](https://docs.expo.dev/versions/latest/sdk/app-loading/) - 2.0.0_
+* _[Native Intro Slider](https://github.com/Jacse/react-native-app-intro-slider) - 4.0.4_
+* _[Expo Splash Screen](https://docs.expo.dev/versions/latest/sdk/splash-screen/) - 0.15.1_
 * _[Expo Font](https://docs.expo.dev/guides/using-custom-fonts/) - 10.1.0_
+* _[Styled Components](https://styled-components.com/docs/basics) - 5.3.5_
 
 **MAIN dependecies** <br>
 _Other dependecies_ (comes with ```yarn```)
