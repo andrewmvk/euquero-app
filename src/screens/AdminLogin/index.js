@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { View, KeyboardAvoidingView } from 'react-native';
 
 import {
   Container,
@@ -11,7 +11,7 @@ import {
   extraStyles,
 } from './styles';
 import Header from '../../components/Header';
-import { SmallButton, buttonOpacity, colors } from '../../defaultStyles';
+import { SmallButton, colors } from '../../defaultStyles';
 import Logo from '../../../assets/images/euquero-logo.svg';
 
 import Wave from '../../components/Waves/Wave';
@@ -34,42 +34,40 @@ export default (props) => {
   }
 
   return (
-    <>
-      <Wave top={true} transition={transition} />
-      <Wave transition={transition} />
+    <Background>
+      <Header onPress={() => props.navigation.goBack()} absolute={true} color={'white'} />
+      <KeyboardAvoidingView
+        style={{ ...extraStyles.keyboardAvoidView }}
+        pointerEvents="none"
+        enabled={false}
+      >
+        <Wave top={true} transition={transition} />
+        <Wave transition={transition} />
 
-      <DashedWave />
-      <DashedWave bottom={true} />
+        <DashedWave />
+        <DashedWave bottom={true} />
+      </KeyboardAvoidingView>
+      <Container>
+        <View style={{ ...extraStyles.containerView }}>
+          <LogoView>
+            <Logo />
+            <Subtitle>Acesso Administrativo</Subtitle>
+          </LogoView>
 
-      <Header
-        activeOpacity={buttonOpacity}
-        onPress={() => props.navigation.goBack()}
-        absolute={true}
-        color={'white'}
-      />
-      <Background>
-        <Container>
-          <View style={{ ...extraStyles }}>
-            <LogoView>
-              <Logo />
-              <Subtitle>Acesso Administrativo</Subtitle>
-            </LogoView>
+          <InputArea>
+            <TextInput placeholder="Nome de usuário" placerholderTextColor={colors.text} />
+            <TextInput
+              placeholder="Senha"
+              placerholderTextColor={colors.text}
+              secureTextEntry={true}
+            />
+          </InputArea>
 
-            <InputArea>
-              <TextInput placeholder="Nome de usuário" placerholderTextColor={colors.text} />
-              <TextInput
-                placeholder="Senha"
-                placerholderTextColor={colors.text}
-                secureTextEntry={true}
-              />
-            </InputArea>
-
-            <View style={{ height: '15%' }}>
-              <SmallButton onPress={() => handleNavigateTo('AdminMainMenu')} text="Acessar" />
-            </View>
+          <View style={{ height: '15%' }}>
+            <SmallButton onPress={() => handleNavigateTo('AdminMainMenu')} text="Acessar" />
           </View>
-        </Container>
-      </Background>
-    </>
+        </View>
+      </Container>
+    </Background>
   );
 };

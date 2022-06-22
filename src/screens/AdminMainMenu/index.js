@@ -13,11 +13,7 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header
-          activeOpacity={buttonOpacity}
-          text={'Administrativo'}
-          onPress={() => props.navigation.goBack()}
-        />
+        <Header text={'Administrativo'} onPress={() => props.navigation.goBack()} />
 
         <View style={{ alignItems: 'center', marginTop: 50 }}>
           <Shadow {...ManageBoxShadow}>
