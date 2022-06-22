@@ -2,14 +2,14 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet, SafeAreaView, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
 
-import { colors, fonts } from '../defaultStyles';
+import { colors, fonts, buttonOpacity } from '../defaultStyles';
 
 export default (props) => {
   return (
     <SafeAreaView
       style={[styles.container, { position: props.absolute ? 'absolute' : 'relative' }]}
     >
-      <TouchableOpacity {...props} style={styles.arrowBack}>
+      <TouchableOpacity {...props} activeOpacity={buttonOpacity} style={styles.arrowBack}>
         <Icon
           name="chevron-back-outline"
           type="ionicon"
