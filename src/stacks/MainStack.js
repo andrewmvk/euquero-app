@@ -9,8 +9,9 @@ import AdminLogin from "../screens/AdminLogin";
 import AdminMainMenu from "../screens/AdminMainMenu";
 import ComoUsarOApp from "../screens/ComoUsarOApp";
 import SobreOProjeto from "../screens/SobreOProjeto";
+import StateSelection from "../screens/StateSelection";
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator();
 
 const pop = () => ({
   cardStyle: {},
@@ -18,7 +19,7 @@ const pop = () => ({
 
 export default () => (
   <Stack.Navigator
-    initialRouteName="Home"
+    initialRouteName="StateSelection"
     screenOptions={{
       headerShown: false,
       cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
@@ -33,5 +34,6 @@ export default () => (
     <Stack.Screen name="AdminMainMenu" component={AdminMainMenu} />
     <Stack.Screen name="ComoUsarOApp" component={ComoUsarOApp} />
     <Stack.Screen name="SobreOProjeto" component={SobreOProjeto} />
+    <Stack.Screen name="StateSelection" component={StateSelection} />
   </Stack.Navigator>
-)
+);
