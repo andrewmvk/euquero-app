@@ -23,3 +23,12 @@ export const SearchInputText = styled.TextInput`
   font-size: 18px;
   color: #7f7f7f;
 `;
+
+export const Card1 = styled.TouchableOpacity`
+  width: 100%;
+  height: 70px;
+  background-color: white;
+  justify-content: center;
+  border-radius: 5px;
+  margin: 7px 0;
+`;

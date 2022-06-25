@@ -1,14 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Icon } from "react-native-elements";
-import { View, TextInput, ScrollView } from "react-native";
-import { Shadow } from "react-native-shadow-2";
-import { Container, SearchInput, SearchInputText } from "./styles";
+
 import Header from "../../components/Header";
 import DashedCircle from "../../components/DashedCircle";
-import Card1 from "../../components/Card1";
-import { buttonOpacity } from "../../defaultStyles";
+import {
+  View,
+  TextInput,
+  ScrollView,
+  FlatList,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import { Container, SearchInput, SearchInputText, Card1 } from "./styles";
 
 export default (props) => {
+  const [brazilianStateR, setBrazilianStateR] = useState([]);
+
+  //api request to list states
+  useEffect(() => {
+    async function fetchData() {
+      const response = await axios.get(
+        "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
+      );
+      setData(response.brazilianStateR);
+    }
+    fetchData();
+  }, []);
+
+  //reversing the order from brazilianStateR
+  const brazilianState = brazilianStateR.reverse();
+
+  //item to render in flatlist (stateCard)
+  const stateCard = ({ item }) => {
+    return (
+      <Card1
+        key={item.id}
+        activeOpacity={0.7}
+        style={{ borderLeftColor: "#c4c4c4", borderLeftWidth: 7 }}
+      >
+        <Text
+          style={{
+            textAlign: "left",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 20,
+            marginLeft: 22,
+            color: "#7F7F7F",
+          }}
+          key={item.id}
+        >
+          {item.nome}
+        </Text>
+        <Text
+          style={{
+            position: "absolute",
+            textAlign: "right",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 13,
+            bottom: 10,
+            right: 22,
+            color: "#7F7F7F",
+          }}
+        >
+          00 UBS
+        </Text>
+      </Card1>
+    );
+  };
+
   return (
     <>
       <DashedCircle />
@@ -27,29 +88,12 @@ export default (props) => {
             }}
           />
         </SearchInput>
-
-        <ScrollView
-          style={{
-            marginTop: 30,
-            height: 100,
-            width: "85%",
-          }}
-        >
-          <Card1 />
-          <Card1 />
-          <Card1 />
-          <Card1 />
-          <Card1 />
-          <Card1 />
-          <Card1 />
-          <Card1 />
-          <Card1 />
-          <Card1 />
-          <Card1 />
-          <Card1 />
-          <Card1 />
-          <Card1 />
-        </ScrollView>
+        <FlatList
+          style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
+          data={brazilianState}
+          renderItem={stateCard}
+          keyExtractor={(item) => item.id}
+        />
       </Container>
     </>
   );

@@ -19,7 +19,7 @@ const pop = () => ({
 
 export default () => (
   <Stack.Navigator
-    initialRouteName="StateSelection"
+    initialRouteName="Home"
     screenOptions={{
       headerShown: false,
       cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
