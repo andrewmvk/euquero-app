@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Icon } from "react-native-elements";
-
-import Header from "../../components/Header";
-import DashedCircle from "../../components/DashedCircle";
 import {
   View,
   TextInput,
@@ -13,25 +9,31 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Container, SearchInput, SearchInputText, Card1 } from "./styles";
+import Header from "../../components/Header";
+import DashedCircle from "../../components/DashedCircle";
+
+import axios from "axios";
 
 export default (props) => {
-  const [brazilianStateR, setBrazilianStateR] = useState([]);
+  const [data, setData] = useState([]);
 
-  //api request to list states
+  //api request
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get(
         "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
       );
-      setData(response.brazilianStateR);
+
+      setData(response.data);
     }
+
     fetchData();
   }, []);
 
-  //reversing the order from brazilianStateR
-  const brazilianState = brazilianStateR.reverse();
+  //reversing order for data
+  const brazilianStates = data.reverse();
 
-  //item to render in flatlist (stateCard)
+  //render item from flatlist
   const stateCard = ({ item }) => {
     return (
       <Card1
@@ -90,7 +92,7 @@ export default (props) => {
         </SearchInput>
         <FlatList
           style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
-          data={brazilianState}
+          data={brazilianStates}
           renderItem={stateCard}
           keyExtractor={(item) => item.id}
         />
