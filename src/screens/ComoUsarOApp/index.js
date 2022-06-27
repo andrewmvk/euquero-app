@@ -91,7 +91,7 @@ export default (props) => {
         data={slides}
         activeDotStyle={{
           backgroundColor: colors.orange,
-          width: 30,
+          width: 29,
         }}
         showPrevButton={true}
         onDone={() => goToHome(props.navigation)}
