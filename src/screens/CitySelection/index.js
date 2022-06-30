@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+
 import { Icon } from "react-native-elements";
 import {
   View,
@@ -7,42 +9,35 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
+
 import { Container, SearchInput, SearchInputText, Card1 } from "./styles";
 import Header from "../../components/Header";
 import DashedCircle from "../../components/DashedCircle";
 
-import axios from "axios";
-
 export default (props) => {
-  const [brazilianStates, setBrazilianStates] = useState([]);
+  const [cities, setCities] = useState([]);
 
   //api request
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get(
-        "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`
       );
 
-      setBrazilianStates(response.data);
+      setCities(response.data);
     }
 
     fetchData();
   }, []);
 
   //render card from flatlist
-  const stateCard = ({ item }) => {
+  const cityCard = ({ item }) => {
     return (
       <Card1
-        value={item.id}
         key={item.id}
         activeOpacity={0.7}
         style={{ borderLeftColor: "#c4c4c4", borderLeftWidth: 7 }}
-        onPress={() =>
-          props.navigation.navigate("CitySelection", {
-            stateID: item.id,
-            stateName: item.nome,
-          })
-        }
+        onPress={() => props.navigation.navigate("#")}
       >
         <Text
           style={{
@@ -57,7 +52,6 @@ export default (props) => {
         >
           {item.nome}
         </Text>
-
         <Text
           style={{
             position: "absolute",
@@ -80,9 +74,12 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header onPress={() => props.navigation.goBack()} />
+        <Header
+          text={props.route.params.stateName}
+          onPress={() => props.navigation.goBack()}
+        />
         <SearchInput>
-          <SearchInputText placeholder="Buscar estado" />
+          <SearchInputText placeholder="Buscar cidade" />
           <Icon
             name="search-outline"
             type="ionicon"
@@ -95,8 +92,8 @@ export default (props) => {
         </SearchInput>
         <FlatList
           style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
-          data={brazilianStates}
-          renderItem={stateCard}
+          data={cities}
+          renderItem={cityCard}
           keyExtractor={(item) => item.id}
         />
       </Container>

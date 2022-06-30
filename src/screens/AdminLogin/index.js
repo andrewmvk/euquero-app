@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, KeyboardAvoidingView } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, KeyboardAvoidingView } from "react-native";
 
 import {
   Container,
@@ -9,25 +9,28 @@ import {
   TextInput,
   Background,
   extraStyles,
-} from './styles';
-import Header from '../../components/Header';
-import { SmallButton, colors } from '../../defaultStyles';
-import Logo from '../../../assets/images/euquero-logo.svg';
+  SearchInput,
+  SearchInputText,
+} from "./styles";
+import Header from "../../components/Header";
+import { SmallButton, colors } from "../../defaultStyles";
+import Logo from "../../../assets/images/euquero-logo.svg";
+import { Icon } from "react-native-elements";
 
-import Wave from '../../components/Waves/Wave';
-import DashedWave from '../../components/Waves/DashedWave';
+import Wave from "../../components/Waves/Wave";
+import DashedWave from "../../components/Waves/DashedWave";
 
 export default (props) => {
-  const [transition, setTransition] = useState({ n: false, type: 'nothing' });
+  const [transition, setTransition] = useState({ n: false, type: "nothing" });
 
   useEffect(() => {
-    props.navigation.addListener('focus', () => {
-      setTransition({ n: true, type: 'from' });
+    props.navigation.addListener("focus", () => {
+      setTransition({ n: true, type: "from" });
     });
   }, []);
 
   function handleNavigateTo(page) {
-    setTransition({ n: true, type: 'to' });
+    setTransition({ n: true, type: "to" });
     setTimeout(() => {
       props.navigation.navigate(page);
     }, 400);
@@ -35,7 +38,11 @@ export default (props) => {
 
   return (
     <Background>
-      <Header onPress={() => props.navigation.goBack()} absolute={true} color={'white'} />
+      <Header
+        onPress={() => props.navigation.goBack()}
+        absolute={true}
+        color={"white"}
+      />
       <KeyboardAvoidingView
         style={{ ...extraStyles.keyboardAvoidView }}
         pointerEvents="none"
@@ -53,18 +60,44 @@ export default (props) => {
             <Logo />
             <Subtitle>Acesso Administrativo</Subtitle>
           </LogoView>
-
           <InputArea>
-            <TextInput placeholder="Nome de usuário" placerholderTextColor={colors.text} />
-            <TextInput
-              placeholder="Senha"
-              placerholderTextColor={colors.text}
-              secureTextEntry={true}
-            />
+            <SearchInput>
+              <Icon
+                name="person-outline"
+                type="ionicon"
+                color="#c4c4c4"
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 15,
+                }}
+              />
+              <SearchInputText
+                placeholder="Nome de usuário"
+                placerholderTextColor={colors.text}
+              />
+            </SearchInput>
+            <SearchInput>
+              <Icon
+                name="lock-closed-outline"
+                type="ionicon"
+                color="#c4c4c4"
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 15,
+                }}
+              />
+              <SearchInputText
+                placeholder="Senha"
+                placerholderTextColor={colors.text}
+                secureTextEntry={true}
+              />
+            </SearchInput>
           </InputArea>
-
-          <View style={{ height: '15%' }}>
-            <SmallButton onPress={() => handleNavigateTo('AdminMainMenu')} text="Acessar" />
+          <View style={{ height: "15%" }}>
+            <SmallButton
+              onPress={() => handleNavigateTo("AdminMainMenu")}
+              text="Acessar"
+            />
           </View>
         </View>
       </Container>
