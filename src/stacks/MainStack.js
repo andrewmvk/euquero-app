@@ -10,6 +10,7 @@ import AdminMainMenu from "../screens/AdminMainMenu";
 import ComoUsarOApp from "../screens/ComoUsarOApp";
 import SobreOProjeto from "../screens/SobreOProjeto";
 import StateSelection from "../screens/StateSelection";
+import CitySelection from "../screens/CitySelection";
 
 const Stack = createStackNavigator();
 
@@ -35,5 +36,6 @@ export default () => (
     <Stack.Screen name="ComoUsarOApp" component={ComoUsarOApp} />
     <Stack.Screen name="SobreOProjeto" component={SobreOProjeto} />
     <Stack.Screen name="StateSelection" component={StateSelection} />
+    <Stack.Screen name="CitySelection" component={CitySelection} />
   </Stack.Navigator>
 );
