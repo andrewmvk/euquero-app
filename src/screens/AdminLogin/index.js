@@ -1,36 +1,43 @@
-import React, { useState, useEffect } from "react";
-import { View, KeyboardAvoidingView } from "react-native";
+import React, { useState, useEffect } from 'react';
+import { View, Keyboard } from 'react-native';
 
 import {
   Container,
   LogoView,
   InputArea,
   Subtitle,
-  TextInput,
   Background,
   extraStyles,
   SearchInput,
   SearchInputText,
-} from "./styles";
-import Header from "../../components/Header";
-import { SmallButton, colors } from "../../defaultStyles";
-import Logo from "../../../assets/images/euquero-logo.svg";
-import { Icon } from "react-native-elements";
+} from './styles';
+import Header from '../../components/Header';
+import { SmallButton, colors } from '../../defaultStyles';
+import Logo from '../../../assets/images/euquero-logo.svg';
+import { Icon } from 'react-native-elements';
 
-import Wave from "../../components/Waves/Wave";
-import DashedWave from "../../components/Waves/DashedWave";
+import Wave from '../../components/Waves/Wave';
+import DashedWave from '../../components/Waves/DashedWave';
 
 export default (props) => {
-  const [transition, setTransition] = useState({ n: false, type: "nothing" });
+  const [animationType, setAnimationType] = useState({ n: false, type: 'nothing' });
+  const [waveVisibility, setWaveVisibility] = useState(100);
 
   useEffect(() => {
-    props.navigation.addListener("focus", () => {
-      setTransition({ n: true, type: "from" });
+    Keyboard.addListener('keyboardDidShow', () => {
+      setAnimationType({ n: true, type: 'away' });
+    });
+    Keyboard.addListener('keyboardDidHide', () => {
+      setAnimationType({ n: true, type: 'away' });
+    });
+
+    props.navigation.addListener('focus', () => {
+      setAnimationType({ n: true, type: 'from' });
     });
   }, []);
 
   function handleNavigateTo(page) {
-    setTransition({ n: true, type: "to" });
+    setAnimationType({ n: true, type: 'to' });
     setTimeout(() => {
       props.navigation.navigate(page);
     }, 400);
@@ -38,22 +45,17 @@ export default (props) => {
 
   return (
     <Background>
-      <Header
-        onPress={() => props.navigation.goBack()}
-        absolute={true}
-        color={"white"}
-      />
-      <KeyboardAvoidingView
-        style={{ ...extraStyles.keyboardAvoidView }}
+      <Header onPress={() => props.navigation.goBack()} absolute={true} color={'white'} />
+      <View
+        style={[{ ...extraStyles.keyboardAvoidView }, { opacity: waveVisibility }]}
         pointerEvents="none"
-        enabled={false}
       >
-        <Wave top={true} transition={transition} />
-        <Wave transition={transition} />
+        <Wave top={true} transition={animationType} />
+        <Wave transition={animationType} />
 
         <DashedWave />
         <DashedWave bottom={true} />
-      </KeyboardAvoidingView>
+      </View>
       <Container>
         <View style={{ ...extraStyles.containerView }}>
           <LogoView>
@@ -71,10 +73,7 @@ export default (props) => {
                   paddingVertical: 15,
                 }}
               />
-              <SearchInputText
-                placeholder="Nome de usuário"
-                placerholderTextColor={colors.text}
-              />
+              <SearchInputText placeholder="Nome de usuário" placerholderTextColor={colors.text} />
             </SearchInput>
             <SearchInput>
               <Icon
@@ -93,11 +92,8 @@ export default (props) => {
               />
             </SearchInput>
           </InputArea>
-          <View style={{ height: "15%" }}>
-            <SmallButton
-              onPress={() => handleNavigateTo("AdminMainMenu")}
-              text="Acessar"
-            />
+          <View style={{ height: '15%' }}>
+            <SmallButton onPress={() => handleNavigateTo('AdminMainMenu')} text="Acessar" />
           </View>
         </View>
       </Container>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions } from 'react-native';
 import Svg, { LinearGradient, Path, Defs, Stop } from 'react-native-svg';
 import Animated, {
@@ -70,6 +70,9 @@ export default (props) => {
     };
   });
 
+  const [waveFirstState, setWaveFirstState] = useState(false);
+  const [awayWave, setAwayWave] = useState(false);
+
   useEffect(() => {
     if (!props.transition.n && props.transition.type === '') {
       setTimeout(() => {
@@ -80,35 +83,50 @@ export default (props) => {
         waveAnimated.value = withSpring(1);
       }, 500);
     } else if (!(props.transition.type === 'nothing')) {
-      navigationTypeAnimation(props.transition.type);
+      waveFirstState ? navigationTypeAnimation(props.transition.type) : setWaveFirstState(true);
     }
   }, [props.transition]);
 
   function navigationTypeAnimation(nType) {
-    if (props.top === undefined) {
-      if (nType === 'to' && heightAnimated.value == initialHeight) {
-        const animationDirection = heightAnimated.value * 6;
-        transtionAnimation(animationDirection);
-      } else if (nType === 'from' && heightAnimated.value == initialHeight * 6) {
-        const animationDirection = heightAnimated.value / 6;
-        transtionAnimation(animationDirection);
+    let awayFactor = 3;
+    let factor = awayWave ? 6 * awayFactor : 6;
+    let animationDirection = initialHeight;
+    let isSpring = false;
+
+    if (props.top === undefined || nType === 'away') {
+      if (nType === 'to') {
+        animationDirection = initialHeight * factor;
+      } else if (nType === 'from') {
+        animationDirection = initialHeight;
+      } else if (nType === 'away') {
+        if (awayWave) {
+          animationDirection = initialHeight;
+        } else {
+          animationDirection = initialHeight / awayFactor;
+        }
+        setAwayWave(!awayWave);
+        isSpring = true;
       }
     } else {
-      if (nType === 'to' && heightAnimated.value == initialHeight) {
-        const animationDirection = heightAnimated.value / 6;
-        transtionAnimation(animationDirection);
-      } else if (nType === 'from' && heightAnimated.value == initialHeight / 6) {
-        const animationDirection = heightAnimated.value * 6;
-        transtionAnimation(animationDirection);
+      if (nType === 'to') {
+        animationDirection = initialHeight / factor;
+      } else if (nType === 'from') {
+        animationDirection = initialHeight;
       }
     }
+    transtionAnimation(animationDirection, isSpring);
+    isSpring = false;
   }
 
-  function transtionAnimation(animationD) {
-    heightAnimated.value = withTiming(animationD, {
-      duration: 500,
-      easing: Easing.ease,
-    });
+  function transtionAnimation(animationD, spring) {
+    if (spring) {
+      heightAnimated.value = withSpring(animationD);
+    } else {
+      heightAnimated.value = withTiming(animationD, {
+        duration: 500,
+        easing: Easing.ease,
+      });
+    }
   }
 
   return (
