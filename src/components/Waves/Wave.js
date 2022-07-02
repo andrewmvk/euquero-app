@@ -89,30 +89,35 @@ export default (props) => {
 
   function navigationTypeAnimation(nType) {
     let awayFactor = 3;
-    let factor = awayWave ? 6 * awayFactor : 6;
+    let factor = awayWave ? 3 * awayFactor : 6;
     let animationDirection = initialHeight;
     let isSpring = false;
 
-    if (props.top === undefined || nType === 'away') {
+    if (props.top === undefined && !(nType === 'away')) {
+      //Bottom Wave animation values
       if (nType === 'to') {
         animationDirection = initialHeight * factor;
+        awayWave ? setAwayWave(!awayWave) : null;
       } else if (nType === 'from') {
         animationDirection = initialHeight;
-      } else if (nType === 'away') {
-        if (awayWave) {
-          animationDirection = initialHeight;
-        } else {
-          animationDirection = initialHeight / awayFactor;
-        }
-        setAwayWave(!awayWave);
-        isSpring = true;
       }
-    } else {
+    } else if (!(nType === 'away')) {
+      //Top Wave animation values
       if (nType === 'to') {
         animationDirection = initialHeight / factor;
+        awayWave ? setAwayWave(!awayWave) : null;
       } else if (nType === 'from') {
         animationDirection = initialHeight;
       }
+    } else {
+      //Both Waves animation values when the InputText is selected
+      if (awayWave) {
+        animationDirection = initialHeight;
+      } else {
+        animationDirection = initialHeight / awayFactor;
+      }
+      setAwayWave(!awayWave);
+      isSpring = true;
     }
     transtionAnimation(animationDirection, isSpring);
     isSpring = false;
