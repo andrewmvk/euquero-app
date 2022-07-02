@@ -21,19 +21,27 @@ import DashedWave from '../../components/Waves/DashedWave';
 
 export default (props) => {
   const [animationType, setAnimationType] = useState({ n: false, type: 'nothing' });
-  const [waveVisibility, setWaveVisibility] = useState(100);
 
   useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setAnimationType({ n: true, type: 'away' });
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setAnimationType({ n: true, type: 'away' });
-    });
-
-    props.navigation.addListener('focus', () => {
+    const unsubscribeFocus = props.navigation.addListener('focus', () => {
+      Keyboard.addListener('keyboardDidShow', () => {
+        setAnimationType({ n: true, type: 'away' });
+      });
+      Keyboard.addListener('keyboardDidHide', () => {
+        setAnimationType({ n: true, type: 'away' });
+      });
       setAnimationType({ n: true, type: 'from' });
     });
+
+    const unsubscribeBlur = props.navigation.addListener('blur', () => {
+      Keyboard.removeAllListeners('keyboardDidShow');
+      Keyboard.removeAllListeners('keyboardDidHide');
+    });
+
+    return () => {
+      unsubscribeFocus();
+      unsubscribeBlur();
+    };
   }, []);
 
   function handleNavigateTo(page) {
@@ -43,13 +51,13 @@ export default (props) => {
     }, 400);
   }
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
     <Background>
       <Header onPress={() => props.navigation.goBack()} absolute={true} color={'white'} />
-      <View
-        style={[{ ...extraStyles.keyboardAvoidView }, { opacity: waveVisibility }]}
-        pointerEvents="none"
-      >
+      <View style={{ ...extraStyles.keyboardAvoidView }} pointerEvents="none">
         <Wave top={true} transition={animationType} />
         <Wave transition={animationType} />
 
@@ -73,7 +81,12 @@ export default (props) => {
                   paddingVertical: 15,
                 }}
               />
-              <SearchInputText placeholder="Nome de usuário" placerholderTextColor={colors.text} />
+              <SearchInputText
+                value={email}
+                onChangeText={setEmail}
+                placeholder="E-mail"
+                placerholderTextColor={colors.text}
+              />
             </SearchInput>
             <SearchInput>
               <Icon
@@ -86,6 +99,8 @@ export default (props) => {
                 }}
               />
               <SearchInputText
+                value={password}
+                onChangeText={setPassword}
                 placeholder="Senha"
                 placerholderTextColor={colors.text}
                 secureTextEntry={true}
