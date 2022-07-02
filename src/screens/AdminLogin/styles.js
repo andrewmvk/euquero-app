@@ -1,15 +1,17 @@
-import styled from "styled-components/native";
-import { Dimensions } from "react-native";
-import * as defaultS from "../../defaultStyles";
+import styled from 'styled-components/native';
+import { Dimensions } from 'react-native';
+import * as defaultS from '../../defaultStyles';
 
 export const Background = styled.View`
   background: ${defaultS.colors.backgroundMain};
-  flex: 1;
+  height: 100%;
+  width: 100%;
   align-items: center;
 `;
 
 export const Container = styled.SafeAreaView`
-  flex: 1;
+  height: 100%;
+  width: 100%;
   align-items: center;
   justify-content: center;
 `;
@@ -51,15 +53,15 @@ export const SearchInputText = styled.TextInput`
 
 export const extraStyles = {
   containerView: {
-    alignItems: "center",
-    height: Dimensions.get("window").height * 0.6,
-    justifyContent: "space-evenly",
+    alignItems: 'center',
+    height: Dimensions.get('window').height * 0.6,
+    justifyContent: 'space-evenly',
   },
   keyboardAvoidView: {
-    width: "100%",
-    height: Dimensions.get("window").height,
-    position: "absolute",
-    justifyContent: "center",
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    justifyContent: 'center',
     zIndex: 2,
   },
 };
