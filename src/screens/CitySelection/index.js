@@ -1,18 +1,12 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import { Icon } from 'react-native-elements';
+import { FlatList } from 'react-native';
+import axios from 'axios';
 
-import { Icon } from "react-native-elements";
-import {
-  View,
-  TextInput,
-  FlatList,
-  Text,
-  TouchableOpacity,
-} from "react-native";
-
-import { Container, SearchInput, SearchInputText, Card1 } from "./styles";
-import Header from "../../components/Header";
-import DashedCircle from "../../components/DashedCircle";
+import { Container, SearchInput, SearchInputText } from './styles';
+import { Card } from '../../defaultStyles';
+import Header from '../../components/Header';
+import DashedCircle from '../../components/DashedCircle';
 
 export default (props) => {
   const [cities, setCities] = useState([]);
@@ -21,7 +15,7 @@ export default (props) => {
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get(
-        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`,
       );
 
       setCities(response.data);
@@ -33,40 +27,13 @@ export default (props) => {
   //render card from flatlist
   const cityCard = ({ item }) => {
     return (
-      <Card1
+      <Card
+        value={item.id}
         key={item.id}
-        activeOpacity={0.7}
-        style={{ borderLeftColor: "#c4c4c4", borderLeftWidth: 7 }}
-        onPress={() => props.navigation.navigate("#")}
-      >
-        <Text
-          style={{
-            textAlign: "left",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 20,
-            marginLeft: 22,
-            color: "#7F7F7F",
-          }}
-          key={item.id}
-        >
-          {item.nome}
-        </Text>
-        <Text
-          style={{
-            position: "absolute",
-            textAlign: "right",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 15,
-            bottom: 10,
-            right: 22,
-            color: "#7F7F7F",
-          }}
-        >
-          00 UBS
-        </Text>
-      </Card1>
+        onPress={() => handleCardPress(item)}
+        text={item.nome}
+        ubsCount={'00 UBS'}
+      />
     );
   };
 
@@ -74,10 +41,7 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header
-          text={props.route.params.stateName}
-          onPress={() => props.navigation.goBack()}
-        />
+        <Header text={props.route.params.stateName} onPress={() => props.navigation.goBack()} />
         <SearchInput>
           <SearchInputText placeholder="Buscar cidade" />
           <Icon
@@ -91,7 +55,7 @@ export default (props) => {
           />
         </SearchInput>
         <FlatList
-          style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
+          style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
           data={cities}
           renderItem={cityCard}
           keyExtractor={(item) => item.id}

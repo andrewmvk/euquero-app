@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Keyboard } from 'react-native';
+import { auth } from '../../services/firebase.config';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import {
   Container,
@@ -23,6 +25,10 @@ export default (props) => {
   const [animationType, setAnimationType] = useState({ n: false, type: 'nothing' });
 
   useEffect(() => {
+    const unsubscribeSignedIn = auth.onAuthStateChanged((user) => {
+      user ? handleNavigateTo() : undefined;
+    });
+
     const unsubscribeFocus = props.navigation.addListener('focus', () => {
       Keyboard.addListener('keyboardDidShow', () => {
         setAnimationType({ n: true, type: 'away' });
@@ -39,20 +45,27 @@ export default (props) => {
     });
 
     return () => {
+      unsubscribeSignedIn();
       unsubscribeFocus();
       unsubscribeBlur();
     };
   }, []);
 
-  function handleNavigateTo(page) {
+  function handleNavigateTo() {
     setAnimationType({ n: true, type: 'to' });
     setTimeout(() => {
-      props.navigation.navigate(page);
+      props.navigation.navigate('AdminMainMenu');
     }, 400);
   }
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  async function signIn() {
+    await signInWithEmailAndPassword(auth, email, password)
+      .then((res) => console.log(res.user.uid))
+      .catch((err) => console.log(err));
+  }
 
   return (
     <Background>
@@ -108,7 +121,7 @@ export default (props) => {
             </SearchInput>
           </InputArea>
           <View style={{ height: '15%' }}>
-            <SmallButton onPress={() => handleNavigateTo('AdminMainMenu')} text="Acessar" />
+            <SmallButton onPress={signIn} text="Acessar" />
           </View>
         </View>
       </Container>
