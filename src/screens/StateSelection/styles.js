@@ -1,5 +1,5 @@
-import styled from "styled-components/native";
-import * as defaultS from "../../defaultStyles";
+import styled from 'styled-components/native';
+import * as defaultS from '../../defaultStyles';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -7,7 +7,6 @@ export const Container = styled.SafeAreaView`
 `;
 
 export const SearchInput = styled.View`
-  font-family: ${defaultS.fonts.spartanR};
   height: 55px;
   width: 85%;
   background-color: #fff;
@@ -20,15 +19,7 @@ export const SearchInput = styled.View`
 
 export const SearchInputText = styled.TextInput`
   flex: 1;
-  font-size: 18px;
-  color: #7f7f7f;
-`;
-
-export const Card1 = styled.TouchableOpacity`
-  width: 100%;
-  height: 70px;
-  background-color: white;
-  justify-content: center;
-  border-radius: 5px;
-  margin: 7px 0;
+  font-size: ${defaultS.fontSize.cardText};
+  font-family: ${defaultS.fonts.spartanR};
+  color: ${defaultS.colors.text};
 `;

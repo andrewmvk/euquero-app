@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Icon } from "react-native-elements";
-import {
-  View,
-  TextInput,
-  FlatList,
-  Text,
-  TouchableOpacity,
-} from "react-native";
-import { Container, SearchInput, SearchInputText, Card1 } from "./styles";
-import Header from "../../components/Header";
-import DashedCircle from "../../components/DashedCircle";
+import React, { useEffect, useState } from 'react';
+import { Icon } from 'react-native-elements';
+import { FlatList } from 'react-native';
+import axios from 'axios';
 
-import axios from "axios";
+import { Container, SearchInput, SearchInputText } from './styles';
+import Header from '../../components/Header';
+import DashedCircle from '../../components/DashedCircle';
+import { Card } from '../../defaultStyles';
 
 export default (props) => {
   const [brazilianStates, setBrazilianStates] = useState([]);
@@ -20,7 +15,7 @@ export default (props) => {
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get(
-        "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
+        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
       );
 
       setBrazilianStates(response.data);
@@ -29,50 +24,23 @@ export default (props) => {
     fetchData();
   }, []);
 
+  const handleCardPress = (item) => {
+    props.navigation.navigate('CitySelection', {
+      stateID: item.id,
+      stateName: item.nome,
+    });
+  };
+
   //render card from flatlist
   const stateCard = ({ item }) => {
     return (
-      <Card1
+      <Card
         value={item.id}
         key={item.id}
-        activeOpacity={0.7}
-        style={{ borderLeftColor: "#c4c4c4", borderLeftWidth: 7 }}
-        onPress={() =>
-          props.navigation.navigate("CitySelection", {
-            stateID: item.id,
-            stateName: item.nome,
-          })
-        }
-      >
-        <Text
-          style={{
-            textAlign: "left",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 20,
-            marginLeft: 22,
-            color: "#7F7F7F",
-          }}
-          key={item.id}
-        >
-          {item.nome}
-        </Text>
-
-        <Text
-          style={{
-            position: "absolute",
-            textAlign: "right",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 15,
-            bottom: 10,
-            right: 22,
-            color: "#7F7F7F",
-          }}
-        >
-          00 UBS
-        </Text>
-      </Card1>
+        onPress={() => handleCardPress(item)}
+        text={item.nome}
+        ubsCount={'00 UBS'}
+      />
     );
   };
 
@@ -94,7 +62,7 @@ export default (props) => {
           />
         </SearchInput>
         <FlatList
-          style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
+          style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
           data={brazilianStates}
           renderItem={stateCard}
           keyExtractor={(item) => item.id}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
 import styled from 'styled-components/native';
@@ -24,6 +24,7 @@ export const fonts = {
 
 export const fontSize = {
   bigTitle: '23px',
+  cardText: '19px',
   title: '17px',
   header: '13px',
   subtitle: '13px',
@@ -62,6 +63,13 @@ const customButtonShadow = {
     offset: [0, 4],
     radius: 25,
     containerViewStyle: { paddingBottom: 2 },
+  },
+  rounded: {
+    distance: 3,
+    startColor: 'rgba(0,0,0,0.1)',
+    finalColor: 'rgba(0,0,0,0.0)',
+    radius: 25,
+    containerViewStyle: { margin: 20 },
   },
 };
 
@@ -115,3 +123,74 @@ export function LargeButton(props) {
     </Shadow>
   );
 }
+
+const RoundedButton = styled.TouchableOpacity`
+  z-index: 5;
+  height: 50px;
+  width: 50px;
+  border-radius: 25px;
+  background-color: white;
+  justify-content: center;
+  align-items: center;
+`;
+
+export function AddButton(props) {
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+      <Shadow {...customButtonShadow.rounded}>
+        <RoundedButton activeOpacity={buttonOpacity}>
+          <Icon name="plus" size={35} type="material-community" color={colors.orange} />
+        </RoundedButton>
+      </Shadow>
+    </View>
+  );
+}
+
+const CardStyle = styled.TouchableOpacity`
+  width: 100%;
+  height: 70px;
+  background-color: white;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 5px;
+  margin: 7px 0;
+  border-left-width: 7px;
+`;
+
+const CardText = styled.Text`
+  text-align: left;
+  font-family: ${fonts.spartanR};
+  align-items: center;
+  justify-content: center;
+  font-size: ${fontSize.cardText};
+  margin-left: 22px;
+  color: ${colors.text};
+`;
+
+const CardAvaibleUBS = styled.Text`
+  font-family: ${fonts.spartanR};
+  position: absolute;
+  text-align: right;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  bottom: 10px;
+  right: 22px;
+  color: ${colors.text};
+`;
+
+export const Card = (props) => {
+  return (
+    <CardStyle
+      activeOpacity={buttonOpacity}
+      style={props.color ? { borderLeftColor: props.color } : { borderLeftColor: colors.gray }}
+      onPress={props.onPress ? props.onPress : null}
+      disabled={props.onPress === undefined ? true : false}
+    >
+      {props.text ? <CardText>{props.text}</CardText> : null}
+      {props.ubsCount ? <CardAvaibleUBS>{props.ubsCount}</CardAvaibleUBS> : null}
+      {props.children ? { ...props.children } : null}
+    </CardStyle>
+  );
+};
