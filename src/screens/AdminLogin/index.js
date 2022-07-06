@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { View, Keyboard } from 'react-native';
-import { auth } from '../../services/firebase.config';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useState, useEffect } from "react";
+import { View, Keyboard } from "react-native";
+import { auth } from "../../services/firebase.config";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 import {
   Container,
@@ -12,36 +12,39 @@ import {
   extraStyles,
   SearchInput,
   SearchInputText,
-} from './styles';
-import Header from '../../components/Header';
-import { SmallButton, colors } from '../../defaultStyles';
-import Logo from '../../../assets/images/euquero-logo.svg';
-import { Icon } from 'react-native-elements';
+} from "./styles";
+import Header from "../../components/Header";
+import { SmallButton, colors } from "../../defaultStyles";
+import Logo from "../../../assets/images/euquero-logo.svg";
+import { Icon } from "react-native-elements";
 
-import Wave from '../../components/Waves/Wave';
-import DashedWave from '../../components/Waves/DashedWave';
+import Wave from "../../components/Waves/Wave";
+import DashedWave from "../../components/Waves/DashedWave";
 
 export default (props) => {
-  const [animationType, setAnimationType] = useState({ n: false, type: 'nothing' });
+  const [animationType, setAnimationType] = useState({
+    n: false,
+    type: "nothing",
+  });
 
   useEffect(() => {
     const unsubscribeSignedIn = auth.onAuthStateChanged((user) => {
       user ? handleNavigateTo() : undefined;
     });
 
-    const unsubscribeFocus = props.navigation.addListener('focus', () => {
-      Keyboard.addListener('keyboardDidShow', () => {
-        setAnimationType({ n: true, type: 'away' });
+    const unsubscribeFocus = props.navigation.addListener("focus", () => {
+      Keyboard.addListener("keyboardDidShow", () => {
+        setAnimationType({ n: true, type: "away" });
       });
-      Keyboard.addListener('keyboardDidHide', () => {
-        setAnimationType({ n: true, type: 'away' });
+      Keyboard.addListener("keyboardDidHide", () => {
+        setAnimationType({ n: true, type: "away" });
       });
-      setAnimationType({ n: true, type: 'from' });
+      setAnimationType({ n: true, type: "from" });
     });
 
-    const unsubscribeBlur = props.navigation.addListener('blur', () => {
-      Keyboard.removeAllListeners('keyboardDidShow');
-      Keyboard.removeAllListeners('keyboardDidHide');
+    const unsubscribeBlur = props.navigation.addListener("blur", () => {
+      Keyboard.removeAllListeners("keyboardDidShow");
+      Keyboard.removeAllListeners("keyboardDidHide");
     });
 
     return () => {
@@ -52,14 +55,14 @@ export default (props) => {
   }, []);
 
   function handleNavigateTo() {
-    setAnimationType({ n: true, type: 'to' });
+    setAnimationType({ n: true, type: "to" });
     setTimeout(() => {
-      props.navigation.navigate('AdminMainMenu');
+      props.navigation.navigate("AdminMainMenu");
     }, 400);
   }
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   async function signIn() {
     await signInWithEmailAndPassword(auth, email, password)
@@ -69,7 +72,11 @@ export default (props) => {
 
   return (
     <Background>
-      <Header onPress={() => props.navigation.goBack()} absolute={true} color={'white'} />
+      <Header
+        onPress={() => props.navigation.goBack()}
+        absolute={true}
+        color={"white"}
+      />
       <View style={{ ...extraStyles.keyboardAvoidView }} pointerEvents="none">
         <Wave top={true} transition={animationType} />
         <Wave transition={animationType} />
@@ -120,7 +127,7 @@ export default (props) => {
               />
             </SearchInput>
           </InputArea>
-          <View style={{ height: '15%' }}>
+          <View style={{ height: "15%" }}>
             <SmallButton onPress={signIn} text="Acessar" />
           </View>
         </View>
