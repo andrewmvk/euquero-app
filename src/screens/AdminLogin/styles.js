@@ -4,12 +4,14 @@ import * as defaultS from '../../defaultStyles';
 
 export const Background = styled.View`
   background: ${defaultS.colors.backgroundMain};
-  flex: 1;
+  height: 100%;
+  width: 100%;
   align-items: center;
 `;
 
 export const Container = styled.SafeAreaView`
-  flex: 1;
+  height: 100%;
+  width: 100%;
   align-items: center;
   justify-content: center;
 `;
@@ -29,16 +31,24 @@ export const Subtitle = styled.Text`
 export const InputArea = styled.View`
   justify-content: space-around;
   height: 35%;
-  width: 285px;
+  width: 75%;
 `;
 
-export const TextInput = styled.TextInput`
+export const SearchInput = styled.View`
   font-family: ${defaultS.fonts.spartanR};
+  justify-content: center;
+  margin-top: 25px;
+  flex-direction: row;
   height: 28%;
   width: 100%;
   background-color: #fff;
   border-radius: 5px;
-  padding-left: 18px;
+`;
+
+export const SearchInputText = styled.TextInput`
+  flex: 1;
+  font-size: 18px;
+  color: #7f7f7f;
 `;
 
 export const extraStyles = {
@@ -49,7 +59,7 @@ export const extraStyles = {
   },
   keyboardAvoidView: {
     width: '100%',
-    height: Dimensions.get('window').height,
+    height: '100%',
     position: 'absolute',
     justifyContent: 'center',
     zIndex: 2,

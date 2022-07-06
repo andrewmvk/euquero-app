@@ -1,15 +1,14 @@
-import React from "react";
-import {
-  createStackNavigator,
-  CardStyleInterpolators,
-} from "@react-navigation/stack";
+import React from 'react';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
-import Home from "../screens/Home";
-import AdminLogin from "../screens/AdminLogin";
-import AdminMainMenu from "../screens/AdminMainMenu";
-import ComoUsarOApp from "../screens/ComoUsarOApp";
-import SobreOProjeto from "../screens/SobreOProjeto";
-import StateSelection from "../screens/StateSelection";
+import Home from '../screens/Home';
+import AdminLogin from '../screens/AdminLogin';
+import AdminMainMenu from '../screens/AdminMainMenu';
+import ComoUsarOApp from '../screens/ComoUsarOApp';
+import SobreOProjeto from '../screens/SobreOProjeto';
+import StateSelection from '../screens/StateSelection';
+import CitySelection from '../screens/CitySelection';
+import ManageAccounts from '../screens/ManageAccounts';
 
 const Stack = createStackNavigator();
 
@@ -32,8 +31,10 @@ export default () => (
       options={{ cardStyleInterpolator: pop }}
     />
     <Stack.Screen name="AdminMainMenu" component={AdminMainMenu} />
+    <Stack.Screen name="ManageAccounts" component={ManageAccounts} />
     <Stack.Screen name="ComoUsarOApp" component={ComoUsarOApp} />
     <Stack.Screen name="SobreOProjeto" component={SobreOProjeto} />
     <Stack.Screen name="StateSelection" component={StateSelection} />
+    <Stack.Screen name="CitySelection" component={CitySelection} />
   </Stack.Navigator>
 );

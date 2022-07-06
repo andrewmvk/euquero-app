@@ -36,19 +36,34 @@ export default props => {
 
       setOriginalData(response.data)
       setData(response.data)
+        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
+      );
+
+      setBrazilianStates(response.data);
     }
 
     fetchData()
   }, [])
 
+
   //reversing order for data
   const brazilianStates = data.reverse()
 
-  //render item from flatlist
+  const handleCardPress = (item) => {
+    props.navigation.navigate('CitySelection', {
+      stateID: item.id,
+      stateName: item.nome,
+    });
+  };
+
+
+  //render card from flatlist
   const stateCard = ({ item }) => {
     return (
-      <Card1
+      <Card
+        value={item.id}
         key={item.id}
+
         activeOpacity={0.7}
         style={{ borderLeftColor: '#c4c4c4', borderLeftWidth: 7 }}
       >
@@ -100,13 +115,18 @@ export default props => {
       )
     )
   }
+        onPress={() => handleCardPress(item)}
+        text={item.nome}
+        ubsCount={'00 UBS'}
+      />
+    );
+  };
 
   return (
     <>
       <DashedCircle />
       <Container>
         <Header onPress={() => props.navigation.goBack()} />
-
         <SearchArea>
           <SearchInput>
             <SearchInputText
@@ -133,6 +153,18 @@ export default props => {
             />
           </TouchableOpacity>
         </SearchArea>
+        <SearchInput>
+          <SearchInputText placeholder="Buscar estado" />
+          <Icon
+            name="search-outline"
+            type="ionicon"
+            color="#c4c4c4"
+            style={{
+              paddingHorizontal: 15,
+              paddingVertical: 15,
+            }}
+          />
+        </SearchInput>
 
         <FlatList
           style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
