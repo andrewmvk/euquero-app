@@ -34,14 +34,14 @@ export default (props) => {
               onPress={() => props.navigation.navigate('ManageAccounts')}
             >
               <Icon name="account-cog" size={70} type="material-community" color="#c4c4c4" />
-              <ManageText style={{ fontFamily: 'Spartan_400Regular' }}>Gerenciar Contas</ManageText>
+              <ManageText>Gerenciar Contas</ManageText>
             </ManageTouchableBox>
           </Shadow>
 
           <Shadow {...ManageBoxShadow}>
             <ManageTouchableBox activeOpacity={buttonOpacity}>
               <Icon name="bank" size={70} type="material-community" color="#c4c4c4" />
-              <ManageText style={{ fontFamily: 'Spartan_400Regular' }}>Gerenciar UBS</ManageText>
+              <ManageText>Gerenciar UBS</ManageText>
             </ManageTouchableBox>
           </Shadow>
         </View>
