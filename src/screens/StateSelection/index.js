@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Icon } from "react-native-elements";
-import { FlatList, TouchableOpacity } from "react-native";
-import axios from "axios";
-import { colors } from "../../defaultStyles";
-import { Container, SearchInput, SearchInputText, SearchArea } from "./styles";
-import Header from "../../components/Header";
-import DashedCircle from "../../components/DashedCircle";
-import { Card } from "../../defaultStyles";
+import React, { useEffect, useState } from 'react';
+import { Icon } from 'react-native-elements';
+import { FlatList, TouchableOpacity } from 'react-native';
+import axios from 'axios';
+import { colors } from '../../defaultStyles';
+import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
+import Header from '../../components/Header';
+import DashedCircle from '../../components/DashedCircle';
+import { Card } from '../../defaultStyles';
 
 export default (props) => {
   const [brazilianStates, setBrazilianStates] = useState([]);
@@ -18,7 +18,7 @@ export default (props) => {
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get(
-        "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
+        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
       );
 
       setBrazilianStates(response.data);
@@ -30,7 +30,7 @@ export default (props) => {
   }, []);
 
   const handleCardPress = (item) => {
-    props.navigation.navigate("CitySelection", {
+    props.navigation.navigate('CitySelection', {
       stateID: item.id,
       stateName: item.nome,
     });
@@ -44,7 +44,7 @@ export default (props) => {
         key={item.id}
         onPress={() => handleCardPress(item)}
         text={item.nome}
-        ubsCount={"00 UBS"}
+        ubsCount={'00 UBS'}
       />
     );
   };
@@ -54,16 +54,16 @@ export default (props) => {
     setBrazilianStates(
       arr.filter((d) =>
         d.nome
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
           .toLowerCase()
           .includes(
             t
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              .toLowerCase()
-          )
-      )
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .toLowerCase(),
+          ),
+      ),
     );
   };
 
@@ -74,10 +74,7 @@ export default (props) => {
         <Header onPress={() => props.navigation.goBack()} />
         <SearchArea>
           <SearchInput>
-            <SearchInputText
-              placeholder="Buscar estado"
-              onChangeText={(t) => search(t)}
-            />
+            <SearchInputText placeholder="Buscar estado" onChangeText={(t) => search(t)} />
             <Icon
               name="search-outline"
               type="ionicon"
@@ -99,7 +96,7 @@ export default (props) => {
           </TouchableOpacity>
         </SearchArea>
         <FlatList
-          style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
+          style={{ marginTop: 25, marginBottom: 25 }}
           data={brazilianStates}
           renderItem={stateCard}
           keyExtractor={(item) => item.id}

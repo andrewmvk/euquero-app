@@ -9,6 +9,7 @@ import SobreOProjeto from '../screens/SobreOProjeto';
 import StateSelection from '../screens/StateSelection';
 import CitySelection from '../screens/CitySelection';
 import ManageAccounts from '../screens/ManageAccounts';
+import RegisterAccounts from '../screens/RegisterAccounts';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,7 @@ export default () => (
     />
     <Stack.Screen name="AdminMainMenu" component={AdminMainMenu} />
     <Stack.Screen name="ManageAccounts" component={ManageAccounts} />
+    <Stack.Screen name="RegisterAccounts" component={RegisterAccounts} />
     <Stack.Screen name="ComoUsarOApp" component={ComoUsarOApp} />
     <Stack.Screen name="SobreOProjeto" component={SobreOProjeto} />
     <Stack.Screen name="StateSelection" component={StateSelection} />
