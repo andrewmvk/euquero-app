@@ -1,12 +1,12 @@
-import React from 'react'
-import { View, Image, Linking, Dimensions } from 'react-native'
-import AppIntroSlider from 'react-native-app-intro-slider'
-import { Icon } from 'react-native-elements'
-import { Title, PhaseText, extraStyles, TextScroll } from './styles'
-import Header from '../../components/Header'
-import { colors } from '../../defaultStyles'
+import React from 'react';
+import { View, Image, Linking, Dimensions } from 'react-native';
+import AppIntroSlider from 'react-native-app-intro-slider';
+import { Icon } from 'react-native-elements';
+import { Title, PhaseText, extraStyles, TextScroll } from './styles';
+import Header from '../../components/Header';
+import { colors } from '../../defaultStyles';
 
-import { SmallButton } from '../../defaultStyles'
+import { SmallButton } from '../../defaultStyles';
 
 const slides = [
   {
@@ -27,11 +27,11 @@ const slides = [
     title: 'Nossos Objetivos',
     text: '1 - Desenvolver uma rede de pesquisa, envolvendo universidades, trabalhadores, gestores e comunidade. \n \n 2 - Monitorar a qualidade dos serviços ofertados nos 1000 dias; \n \n 3 - Ampliar a integração entre a comunidade (especialmente as gestantes e mães), profissionais de saúde e gestores em saúde; \n \n 4 - Contribuir para o empoderamento das mulheres quanto aos seus direitos e de seus filhos nos primeiros 1000 dias; \n \n 5 - Fortalecer o sistema de saúde para oferecer maior qualidade e acesso aos cuidados de saúde materna, neonatal e infantil nos primeiros 1000 dias.'
   }
-]
+];
 
 export default props => {
   function renderSlides({ item }) {
-    let windowHeight = Dimensions.get('window').height
+    let windowHeight = Dimensions.get('window').height;
     return (
       <View style={{ ...extraStyles.containerOut }}>
         <Image source={item.image} style={{ ...extraStyles.tutorialImage }} />
@@ -50,7 +50,7 @@ export default props => {
           </View>
         </View>
       </View>
-    )
+    );
   }
 
   _renderNextButton = () => {
@@ -63,8 +63,8 @@ export default props => {
           size={28}
         />
       </View>
-    )
-  }
+    );
+  };
 
   _renderPrevButton = () => {
     return (
@@ -76,8 +76,8 @@ export default props => {
           size={28}
         />
       </View>
-    )
-  }
+    );
+  };
 
   _renderDoneButton = () => {
     return (
@@ -89,8 +89,8 @@ export default props => {
           size={28}
         />
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -110,5 +110,5 @@ export default props => {
         renderPrevButton={this._renderPrevButton}
       />
     </>
-  )
-}
+  );
+};
