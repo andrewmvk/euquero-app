@@ -7,6 +7,7 @@ import * as Font from 'expo-font';
 import {
   Spartan_300Light,
   Spartan_400Regular,
+  Spartan_500Medium,
   Spartan_700Bold,
   Spartan_900Black,
 } from '@expo-google-fonts/spartan';
@@ -22,6 +23,7 @@ export default () => {
         await Font.loadAsync({
           Spartan_300Light,
           Spartan_400Regular,
+          Spartan_500Medium,
           Spartan_700Bold,
           Spartan_900Black,
         });

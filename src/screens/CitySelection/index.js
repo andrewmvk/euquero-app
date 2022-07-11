@@ -27,6 +27,14 @@ export default props => {
     fetchData();
   }, []);
 
+  const handleCardPress = item => {
+    props.navigation.navigate('UBSSelection', {
+      cityID: item.id,
+      stateName: props.route.params.stateName,
+      cityName: item.nome
+    });
+  };
+
   //render card from flatlist
   const cityCard = ({ item }) => {
     return (

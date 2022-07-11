@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TextInput, TouchableOpacity, View, StyleSheet, Text, Dimensions } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
 import styled from 'styled-components/native';
@@ -18,36 +18,65 @@ export const colors = {
 export const fonts = {
   spartanL: 'Spartan_300Light',
   spartanR: 'Spartan_400Regular',
+  spartanM: 'Spartan_500Medium',
   spartanBold: 'Spartan_700Bold',
   spartanBlack: 'Spartan_900Black',
 };
 
+export const fontSizeNoUnits = {
+  bigTitle: 22,
+  cardText: 19,
+  textInput: 16,
+  title: 17,
+  header: 13,
+  subtitle: 13,
+};
+
 export const fontSize = {
-  bigTitle: '23px',
-  cardText: '19px',
-  title: '17px',
-  header: '13px',
-  subtitle: '13px',
+  bigTitle: `${fontSizeNoUnits.bigTitle}` + 'px',
+  cardText: `${fontSizeNoUnits.cardText}` + 'px',
+  textInput: `${fontSizeNoUnits.textInput}` + 'px',
+  title: `${fontSizeNoUnits.title}` + 'px',
+  header: `${fontSizeNoUnits.header}` + 'px',
+  subtitle: `${fontSizeNoUnits.subtitle}` + 'px',
 };
 
 export const buttonOpacity = 0.6;
+const screenWidth = Dimensions.get('window').width;
 
-//Default components
+//================================================= DEFAULT COMPONENTS =================================================
 
-export function TouchableArrow(props) {
+const BigTitleView = styled.View`
+  width: 100%;
+  margin-top: 7%;
+  height: 13%;
+  justify-content: center;
+  align-items: center;
+`;
+
+const BigTitleText = styled.Text`
+  font-family: ${fonts.spartanM};
+  font-size: ${fontSize.bigTitle};
+  color: ${colors.text};
+`;
+
+const Line = styled.View`
+  width: 20%;
+  height: 2px;
+  margin-top: 5px;
+  background-color: ${colors.orange};
+`;
+
+export const BigTitle = (props) => {
   return (
-    <TouchableOpacity
-      {...props}
-      style={{ height: '100%', width: 30, justifyContent: 'center', zIndex: 5 }}
-    >
-      <Icon
-        name="chevron-back-outline"
-        type="ionicon"
-        color={props.color ? props.color : colors.orange}
-      />
-    </TouchableOpacity>
+    <BigTitleView>
+      <View style={{ justifyContent: 'space-around', width: '100%', alignItems: 'center' }}>
+        <BigTitleText>{props.text}</BigTitleText>
+        <Line></Line>
+      </View>
+    </BigTitleView>
   );
-}
+};
 
 const customButtonShadow = {
   small: {
@@ -65,15 +94,15 @@ const customButtonShadow = {
     containerViewStyle: { paddingBottom: 2 },
   },
   rounded: {
-    distance: 3,
-    startColor: 'rgba(0,0,0,0.1)',
+    distance: 5,
+    startColor: 'rgba(0,0,0,0.05)',
     finalColor: 'rgba(0,0,0,0.0)',
     radius: 25,
     containerViewStyle: { margin: 20 },
   },
 };
 
-const buttonStyles = {
+const buttonStyles = StyleSheet.create({
   small: {
     width: 200,
     height: 40,
@@ -90,18 +119,30 @@ const buttonStyles = {
     alignItems: 'center',
     justifyContent: 'center',
   },
-};
+  register: {
+    width: '90%',
+    height: 60,
+    backgroundColor: colors.orange,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 const SmallButtonText = styled.Text`
   color: ${colors.titleSubtitle};
   font-size: ${fontSize.subtitle};
-  font-family: ${fonts.spartanR};
+  font-family: ${fonts.spartanM};
 `;
 
 export function SmallButton(props) {
   return (
     <Shadow {...customButtonShadow.small}>
-      <TouchableOpacity activeOpacity={buttonOpacity} style={{ ...buttonStyles.small }} {...props}>
+      <TouchableOpacity
+        activeOpacity={buttonOpacity}
+        style={buttonStyles.small}
+        onPress={props.onPress}
+      >
         <SmallButtonText>{props.text ? props.text : 'TEXT'}</SmallButtonText>
       </TouchableOpacity>
     </Shadow>
@@ -110,17 +151,39 @@ export function SmallButton(props) {
 
 const LargeButtonText = styled.Text`
   color: ${colors.titleSubtitle};
-  font-family: ${fonts.spartanR};
+  font-family: ${fonts.spartanM};
   font-size: ${fontSize.title};
 `;
 
 export function LargeButton(props) {
   return (
     <Shadow {...customButtonShadow.large}>
-      <TouchableOpacity activeOpacity={buttonOpacity} style={{ ...buttonStyles.large }} {...props}>
+      <TouchableOpacity
+        activeOpacity={buttonOpacity}
+        style={buttonStyles.large}
+        onPress={props.onPress}
+      >
         <LargeButtonText>{props.text ? props.text : 'TEXT'}</LargeButtonText>
       </TouchableOpacity>
     </Shadow>
+  );
+}
+
+const RegisterButtonText = styled.Text`
+  color: ${colors.titleSubtitle};
+  font-family: ${fonts.spartanR};
+  font-size: ${fontSize.title};
+`;
+
+export function RegisterButton(props) {
+  return (
+    <TouchableOpacity
+      activeOpacity={buttonOpacity}
+      style={buttonStyles.register}
+      onPress={props.onPress}
+    >
+      <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
+    </TouchableOpacity>
   );
 }
 
@@ -138,7 +201,7 @@ export function AddButton(props) {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
       <Shadow {...customButtonShadow.rounded}>
-        <RoundedButton activeOpacity={buttonOpacity}>
+        <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
           <Icon name="plus" size={35} type="material-community" color={colors.orange} />
         </RoundedButton>
       </Shadow>
@@ -146,51 +209,113 @@ export function AddButton(props) {
   );
 }
 
-const CardStyle = styled.TouchableOpacity`
-  width: 100%;
-  height: 70px;
-  background-color: white;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 5px;
-  margin: 7px 0;
-  border-left-width: 7px;
-`;
+const cardStyles = StyleSheet.create({
+  container: {
+    width: screenWidth * 0.85,
+    height: 70,
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 5,
+    borderLeftWidth: 7,
+  },
+  cardText: {
+    textAlign: 'left',
+    fontFamily: fonts.spartanR,
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: fontSizeNoUnits.cardText,
+    marginLeft: 22,
+    color: colors.text,
+  },
+  avaibleUBSText: {
+    fontFamily: fonts.spartanR,
+    position: 'absolute',
+    textAlign: 'right',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: fontSizeNoUnits.subtitle,
+    bottom: 10,
+    right: 22,
+    color: colors.text,
+  },
+});
 
-const CardText = styled.Text`
-  text-align: left;
-  font-family: ${fonts.spartanR};
-  align-items: center;
-  justify-content: center;
-  font-size: ${fontSize.cardText};
-  margin-left: 22px;
-  color: ${colors.text};
-`;
-
-const CardAvaibleUBS = styled.Text`
-  font-family: ${fonts.spartanR};
-  position: absolute;
-  text-align: right;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  bottom: 10px;
-  right: 22px;
-  color: ${colors.text};
-`;
+const cardShadow = {
+  distance: 6,
+  startColor: 'rgba(0,0,0,0.025)',
+  finalColor: 'rgba(0,0,0,0.0)',
+  radius: 5,
+  containerViewStyle: { marginVertical: 7, height: 70, width: screenWidth * 0.85 },
+};
 
 export const Card = (props) => {
+  const color = props.color ? props.color : colors.gray;
+
   return (
-    <CardStyle
-      activeOpacity={buttonOpacity}
-      style={props.color ? { borderLeftColor: props.color } : { borderLeftColor: colors.gray }}
-      onPress={props.onPress ? props.onPress : null}
-      disabled={props.onPress === undefined ? true : false}
-    >
-      {props.text ? <CardText>{props.text}</CardText> : null}
-      {props.ubsCount ? <CardAvaibleUBS>{props.ubsCount}</CardAvaibleUBS> : null}
-      {props.children ? { ...props.children } : null}
-    </CardStyle>
+    <Shadow {...cardShadow}>
+      <TouchableOpacity
+        activeOpacity={buttonOpacity}
+        style={[cardStyles.container, { borderLeftColor: color }]}
+        onPress={props.onPress ? props.onPress : null}
+        disabled={props.onPress === undefined ? true : false}
+      >
+        {props.text ? <Text style={cardStyles.cardText}>{props.text}</Text> : null}
+        {props.ubsCount ? <Text style={cardStyles.avaibleUBSText}>{props.ubsCount}</Text> : null}
+        {props.children ? { ...props.children } : null}
+      </TouchableOpacity>
+    </Shadow>
+  );
+};
+
+const inputBoxStyles = StyleSheet.create({
+  searchInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 50,
+    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 5,
+  },
+  searchInputText: {
+    flex: 1,
+    fontSize: fontSizeNoUnits.textInput,
+    fontFamily: fonts.spartanR,
+    color: colors.text,
+  },
+});
+
+const inputBoxShadow = {
+  distance: 6,
+  startColor: 'rgba(0,0,0,0.025)',
+  finalColor: 'rgba(0,0,0,0.0)',
+  radius: 5,
+  containerViewStyle: { marginTop: 25, height: 50, width: '100%' },
+};
+
+export const InputBox = (props) => {
+  return (
+    <Shadow {...inputBoxShadow}>
+      <View style={inputBoxStyles.searchInput}>
+        <Icon
+          name={props.type === 'password' ? 'lock-closed-outline' : 'person-outline'}
+          type="ionicon"
+          color={colors.gray}
+          style={{
+            paddingHorizontal: 15,
+            paddingVertical: 15,
+          }}
+        />
+        <TextInput
+          style={inputBoxStyles.searchInputText}
+          value={props.value}
+          onChangeText={props.onChangeText}
+          placeholder={props.placeholder ? props.placeholder : 'PLACEHOLDER'}
+          placerholderTextColor={colors.text}
+          secureTextEntry={props.type === 'password' ? true : false}
+        />
+      </View>
+    </Shadow>
   );
 };

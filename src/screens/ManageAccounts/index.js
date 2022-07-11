@@ -42,13 +42,13 @@ export default (props) => {
       <Container>
         <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
         <FlatList
-          style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
+          style={{ marginTop: 45, marginBottom: 25 }}
           data={accounts}
           renderItem={stateCard}
           keyExtractor={(item) => item.id}
         />
       </Container>
-      <AddButton />
+      <AddButton onPress={() => props.navigation.navigate('RegisterAccounts')} />
     </>
   );
 };

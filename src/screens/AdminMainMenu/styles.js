@@ -8,6 +8,7 @@ export const Container = styled.SafeAreaView`
 
 export const ManageText = styled.Text`
   padding-top: 10px;
+  font-family: ${defaultS.fonts.spartanR};
   font-size: ${defaultS.fontSize.title};
   color: ${defaultS.colors.text};
 `;

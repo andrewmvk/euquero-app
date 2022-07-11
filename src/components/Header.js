@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontFamily: fonts.spartanR,
+    fontFamily: fonts.spartanBold,
     fontSize: 13,
     color: colors.gray,
     marginLeft: 10,
