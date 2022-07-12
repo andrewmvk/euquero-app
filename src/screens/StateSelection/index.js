@@ -8,7 +8,7 @@ import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 import { Card } from '../../defaultStyles';
 
-export default (props) => {
+export default props => {
   const [brazilianStates, setBrazilianStates] = useState([]);
 
   // backup array
@@ -18,7 +18,7 @@ export default (props) => {
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get(
-        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
+        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/'
       );
 
       setBrazilianStates(response.data);
@@ -29,10 +29,10 @@ export default (props) => {
     fetchData();
   }, []);
 
-  const handleCardPress = (item) => {
+  const handleCardPress = item => {
     props.navigation.navigate('CitySelection', {
       stateID: item.id,
-      stateName: item.nome,
+      stateName: item.nome
     });
   };
 
@@ -49,10 +49,10 @@ export default (props) => {
     );
   };
 
-  search = (t) => {
+  search = t => {
     let arr = [...originalData];
     setBrazilianStates(
-      arr.filter((d) =>
+      arr.filter(d =>
         d.nome
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
@@ -61,9 +61,9 @@ export default (props) => {
             t
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase(),
-          ),
-      ),
+              .toLowerCase()
+          )
+      )
     );
   };
 
@@ -74,14 +74,17 @@ export default (props) => {
         <Header onPress={() => props.navigation.goBack()} />
         <SearchArea>
           <SearchInput>
-            <SearchInputText placeholder="Buscar estado" onChangeText={(t) => search(t)} />
+            <SearchInputText
+              placeholder="Buscar estado"
+              onChangeText={t => search(t)}
+            />
             <Icon
               name="search-outline"
               type="ionicon"
               color="#c4c4c4"
               style={{
                 paddingHorizontal: 15,
-                paddingVertical: 15,
+                paddingVertical: 15
               }}
             />
           </SearchInput>
@@ -96,10 +99,10 @@ export default (props) => {
           </TouchableOpacity>
         </SearchArea>
         <FlatList
-          style={{ marginTop: 25, marginBottom: 25 }}
+          style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
           data={brazilianStates}
           renderItem={stateCard}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
         />
       </Container>
     </>
