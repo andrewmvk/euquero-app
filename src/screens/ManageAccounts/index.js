@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { FlatList } from 'react-native';
-import { Icon } from 'react-native-elements';
+import React, { useState } from "react";
+import { FlatList } from "react-native";
+import { Icon } from "react-native-elements";
 
-import { Container, TrashIcon } from './styles';
-import Header from '../../components/Header';
-import DashedCircle from '../../components/DashedCircle';
-import { AddButton, buttonOpacity, Card, colors } from '../../defaultStyles';
+import { Container, TrashIcon } from "./styles";
+import Header from "../../components/Header";
+import DashedCircle from "../../components/DashedCircle";
+import { AddButton, buttonOpacity, Card, colors } from "../../defaultStyles";
 
 export default (props) => {
   const [accounts, setAccounts] = useState([
     {
       id: 1,
-      name: 'John',
-      email: 'john@example.com',
+      name: "John",
+      email: "john@example.com",
     },
     {
       id: 2,
-      name: 'John Smith',
-      email: 'john@example2.com',
+      name: "John Smith",
+      email: "john@example2.com",
     },
   ]);
 
@@ -28,9 +28,22 @@ export default (props) => {
 
   const stateCard = ({ item }) => {
     return (
-      <Card value={item.id} key={item.id} text={item.name} color={colors.orange}>
-        <TrashIcon activeOpacity={buttonOpacity} onPress={() => deleteAccount(item.id)}>
-          <Icon name="trash-can-outline" size={35} type="material-community" color="#c4c4c4" />
+      <Card
+        value={item.id}
+        key={item.id}
+        text={item.name}
+        color={colors.orange}
+      >
+        <TrashIcon
+          activeOpacity={buttonOpacity}
+          onPress={() => deleteAccount(item.id)}
+        >
+          <Icon
+            name="trash-can-outline"
+            size={35}
+            type="material-community"
+            color="#c4c4c4"
+          />
         </TrashIcon>
       </Card>
     );
@@ -40,7 +53,10 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
+        <Header
+          text={"Administrativo - Contas"}
+          onPress={() => props.navigation.goBack()}
+        />
         <FlatList
           style={{ marginTop: 45, marginBottom: 25 }}
           data={accounts}
@@ -48,7 +64,9 @@ export default (props) => {
           keyExtractor={(item) => item.id}
         />
       </Container>
-      <AddButton onPress={() => props.navigation.navigate('RegisterAccounts')} />
+      <AddButton
+        onPress={() => props.navigation.navigate("RegisterAccounts")}
+      />
     </>
   );
 };
