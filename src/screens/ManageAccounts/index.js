@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { FlatList, Switch } from 'react-native';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 
-import { Container, TrashIcon } from './styles';
+import { Container, SwitchView } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
-import { AddButton, buttonOpacity, Card, colors } from '../../defaultStyles';
+import { AddButton, Card, colors, buttonOpacity } from '../../defaultStyles';
 import Modal from '../../components/Modal';
 
 export default (props) => {
@@ -75,14 +74,14 @@ export default (props) => {
         text={item.email}
         color={item.disabled ? colors.gray : colors.orange}
       >
-        <TrashIcon activeOpacity={buttonOpacity} onPress={() => dataModal(item)}>
-          <Icon
-            name={item.disabled ? 'account-reactivate' : 'trash-can-outline'}
-            size={35}
-            type="material-community"
-            color={item.disabled ? colors.orange : colors.gray}
+        <SwitchView onPress={() => dataModal(item)} activeOpacity={buttonOpacity}>
+          <Switch
+            trackColor={{ false: colors.gray, true: colors.orange }}
+            thumbColor={item.disabled ? colors.gray : colors.orange}
+            value={!item.disabled}
+            disabled={true}
           />
-        </TrashIcon>
+        </SwitchView>
       </Card>
     );
   };
