@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { authSecondary, db } from '../../services/firebase.config';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
@@ -9,6 +12,32 @@ export default (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleSignUp = async () => {
+    if (password != confirmPassword) {
+      return console.warn('Senha e confirmar senha estão diferentes');
+    } else {
+      try {
+        const res = await createUserWithEmailAndPassword(authSecondary, email, password);
+
+        await setDoc(doc(db, 'users', res.user.uid), {
+          email: email,
+          createdAt: serverTimestamp(),
+          isAdmin: false,
+          disabled: false,
+        }).then(() => {
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+
+          const newUser = { email: email, type: 'add' };
+          props.navigation.navigate('AdminMainMenu', { isAdmin: true, newUser });
+        });
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+  };
 
   return (
     <>
@@ -33,7 +62,7 @@ export default (props) => {
         </InputArea>
       </Container>
       <ButtonView>
-        <RegisterButton text="CADASTRAR" />
+        <RegisterButton text="CADASTRAR" onPress={handleSignUp} />
       </ButtonView>
     </>
   );

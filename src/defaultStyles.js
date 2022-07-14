@@ -26,8 +26,9 @@ export const fonts = {
 export const fontSizeNoUnits = {
   bigTitle: 22,
   cardText: 19,
-  textInput: 16,
   title: 17,
+  textInput: 16,
+  text: 15,
   header: 13,
   subtitle: 13,
 };
@@ -35,13 +36,15 @@ export const fontSizeNoUnits = {
 export const fontSize = {
   bigTitle: `${fontSizeNoUnits.bigTitle}` + 'px',
   cardText: `${fontSizeNoUnits.cardText}` + 'px',
-  textInput: `${fontSizeNoUnits.textInput}` + 'px',
   title: `${fontSizeNoUnits.title}` + 'px',
+  textInput: `${fontSizeNoUnits.textInput}` + 'px',
+  text: `${fontSizeNoUnits.text}` + 'px',
   header: `${fontSizeNoUnits.header}` + 'px',
   subtitle: `${fontSizeNoUnits.subtitle}` + 'px',
 };
 
 export const buttonOpacity = 0.6;
+
 const screenWidth = Dimensions.get('window').width;
 
 //================================================= DEFAULT COMPONENTS =================================================
@@ -199,7 +202,15 @@ const RoundedButton = styled.TouchableOpacity`
 
 export function AddButton(props) {
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+      }}
+    >
       <Shadow {...customButtonShadow.rounded}>
         <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
           <Icon name="plus" size={35} type="material-community" color={colors.orange} />
