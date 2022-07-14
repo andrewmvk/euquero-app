@@ -29,7 +29,7 @@ export const CardText = styled.Text`
   color: ${colors.text};
 `;
 
-export const TrashIcon = styled.TouchableOpacity`
+export const SwitchView = styled.TouchableOpacity`
   justify-content: center;
   height: 90%;
   padding-right: 5%;
