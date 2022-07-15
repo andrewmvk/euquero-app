@@ -31,13 +31,19 @@ export default (props) => {
         console.log(err);
       }
     };
-    fetchData();
-  }, []);
+    if (!props.route.params?.newUser) {
+      fetchData();
+    } else {
+      switchModal(props.route.params.newUser, 'add');
+      setAccounts([...accounts, props.route.params.newUser]);
+    }
+  }, [props.route.params?.newUser]);
 
   const disableAccount = async (user) => {
     try {
       await updateDoc(doc(db, 'users', user.id), {
         disabled: !user.disabled,
+        maximumAcessAttempts: !user.disabled ? 3 : null,
       }).then(() => {
         const filteredData = accounts.filter((item) => item.id !== user.id);
         user.disabled = !user.disabled;
@@ -52,8 +58,8 @@ export default (props) => {
     }
   };
 
-  function dataModal(user) {
-    setModalData({ ...user, type: 'delete' });
+  function switchModal(user, type) {
+    setModalData({ ...user, type: type ? type : null });
     toggleModal();
   }
 
@@ -74,7 +80,7 @@ export default (props) => {
         text={item.email}
         color={item.disabled ? colors.gray : colors.orange}
       >
-        <SwitchView onPress={() => dataModal(item)} activeOpacity={buttonOpacity}>
+        <SwitchView onPress={() => switchModal(item)} activeOpacity={buttonOpacity}>
           <Switch
             trackColor={{ false: colors.gray, true: colors.orange }}
             thumbColor={item.disabled ? colors.gray : colors.orange}

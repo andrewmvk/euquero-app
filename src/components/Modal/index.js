@@ -19,7 +19,7 @@ export default (props) => {
     modalHeight = 0.35 * deviceHeight;
     iconName = 'check';
     text = 'Conta cadastrada com sucesso!';
-  } else {
+  } else if (params.type != 'advice') {
     modalHeight = 0.5 * deviceHeight;
     if (params.disabled) {
       iconName = 'account-reactivate';
@@ -30,81 +30,108 @@ export default (props) => {
     }
   }
 
+  const adminAdvice =
+    'A conta NÃO será completamente excluída e sim desativada! Um aviso será exibido dizendo que a conta está desativada e inacessível e, caso a pessoa pesista em acessá-la, a conta será permanentemente excluída! Você, como administrador, pode reativá-la a qualquer momento.';
+
   function toggleModalVisibility() {
     setObsModalVisibility(!obsModalVisibility);
   }
 
-  return (
-    <Modal
-      isVisible={props.isVisible}
-      onBackdropPress={() => props.onPress()}
-      style={{ margin: 0 }}
-    >
-      <View style={[styles.container, { height: modalHeight }]}>
-        <View style={styles.lineBar} />
-        <ContainerIn>
-          <View style={{ flex: 2, justifyContent: 'center' }}>
-            <Icon name={iconName} size={90} type="material-community" color={colors.gray} />
-          </View>
-          <View style={{ flex: 2, alignItems: 'center', justifyContent: 'space-evenly' }}>
-            <Title>{text}</Title>
-            <Name>{params.email ? params.email : 'EMAIL'}</Name>
-          </View>
+  const accountDisabledAdvice = () => {
+    const accountAdvice =
+      params?.type === 'disabledAccountAdvice' || params?.type === 'deletedAccountAdvice'
+        ? params.type
+        : false;
 
-          {params.type != 'add' ? (
-            <View style={styles.buttonView}>
-              <TouchableOpacity
-                style={[styles.button, { backgroundColor: colors.orange }]}
-                activeOpacity={buttonOpacity}
-                onPress={() => props.onPressYes(props.params)}
-              >
-                <ButtonText>SIM</ButtonText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, { backgroundColor: colors.gray }]}
-                activeOpacity={buttonOpacity}
-                onPress={() => props.onPress()}
-              >
-                <ButtonText>NÃO</ButtonText>
-              </TouchableOpacity>
-            </View>
-          ) : null}
+    const closeModal = accountAdvice ? () => props.onPress() : toggleModalVisibility;
 
-          {params.type != 'add' && !params.disabled ? (
+    return (
+      <Modal
+        isVisible={accountAdvice ? props.isVisible : obsModalVisibility}
+        onBackdropPress={() => closeModal()}
+        onBackButtonPress={() => closeModal()}
+      >
+        <View style={[styles.observationModal, { height: modalHeight * 0.6 }]}>
+          <View style={{ flex: 3, width: '95%', justifyContent: 'center' }}>
+            <ObservationText>
+              {params?.type === 'disabledAccountAdvice'
+                ? 'AVISO! Esta conta foi desativada por um administrador e está inacessível. Até o momento da reativação por um administrador, você não poderá acessar esta conta e, caso persista por mais ' +
+                  params?.maximumAcessAttempts +
+                  ' tentativas, a conta será permanentemente excluída.'
+                : params?.type === 'deletedAccountAdvice'
+                ? 'Conta deletada permanentemente por excessivas tentativas de acesso após avisos de ter sido desativada por um administrador!'
+                : adminAdvice}
+            </ObservationText>
+          </View>
+          <View style={{ flex: 1, marginTop: 10, justifyContent: 'center' }}>
             <TouchableOpacity
+              style={[styles.button, { backgroundColor: colors.gray }]}
+              onPress={() => closeModal()}
               activeOpacity={buttonOpacity}
-              style={{ marginTop: '10%', justifyContent: 'center', alignItems: 'center' }}
-              onPress={toggleModalVisibility}
             >
-              <TouchableText>OBS.: A conta não será excluida...</TouchableText>
+              <ButtonText>OK!</ButtonText>
             </TouchableOpacity>
-          ) : null}
-        </ContainerIn>
-
-        <Modal isVisible={obsModalVisibility} onBackdropPress={toggleModalVisibility}>
-          <View style={[styles.observationModal, { height: modalHeight * 0.5 }]}>
-            <View style={{ flex: 3, width: '95%' }}>
-              <ObservationText>
-                A conta não será completamente excluída e sim desativada! Um aviso será exibido
-                dizendo que a conta está desativada e inacessível e, caso a pessoa pesista em
-                acessá-la, a conta será permanentemente excluída! Você, como administrador, pode
-                reativá-la a qualquer momento.
-              </ObservationText>
-            </View>
-            <View style={{ flex: 1 }}>
-              <TouchableOpacity
-                style={[styles.button, { backgroundColor: colors.gray }]}
-                onPress={toggleModalVisibility}
-                activeOpacity={buttonOpacity}
-              >
-                <ButtonText>OK!</ButtonText>
-              </TouchableOpacity>
-            </View>
           </View>
-        </Modal>
-      </View>
-    </Modal>
-  );
+        </View>
+      </Modal>
+    );
+  };
+
+  if (params?.type != 'disabledAccountAdvice' && params?.type != 'deletedAccountAdvice') {
+    return (
+      <Modal
+        isVisible={props.isVisible}
+        onBackButtonPress={() => props.onPress()}
+        onBackdropPress={() => props.onPress()}
+        style={{ margin: 0 }}
+      >
+        <View style={[styles.container, { height: modalHeight }]}>
+          <View style={styles.lineBar} />
+          <ContainerIn>
+            <View style={{ flex: 2, justifyContent: 'center' }}>
+              <Icon name={iconName} size={90} type="material-community" color={colors.gray} />
+            </View>
+            <View style={{ flex: 2, alignItems: 'center', justifyContent: 'space-evenly' }}>
+              <Title>{text}</Title>
+              <Name>{params.email ? params.email : 'EMAIL'}</Name>
+            </View>
+
+            {params.type != 'add' ? (
+              <View style={styles.buttonView}>
+                <TouchableOpacity
+                  style={[styles.button, { backgroundColor: colors.orange }]}
+                  activeOpacity={buttonOpacity}
+                  onPress={() => props.onPressYes(props.params)}
+                >
+                  <ButtonText>SIM</ButtonText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.button, { backgroundColor: colors.gray }]}
+                  activeOpacity={buttonOpacity}
+                  onPress={() => props.onPress()}
+                >
+                  <ButtonText>NÃO</ButtonText>
+                </TouchableOpacity>
+              </View>
+            ) : null}
+
+            {params.type != 'add' && !params.disabled ? (
+              <TouchableOpacity
+                activeOpacity={buttonOpacity}
+                style={{ marginTop: '10%', justifyContent: 'center', alignItems: 'center' }}
+                onPress={toggleModalVisibility}
+              >
+                <TouchableText>OBS.: A conta não será excluida...</TouchableText>
+              </TouchableOpacity>
+            ) : null}
+          </ContainerIn>
+          {accountDisabledAdvice()}
+        </View>
+      </Modal>
+    );
+  } else {
+    return accountDisabledAdvice();
+  }
 };
 
 const styles = StyleSheet.create({

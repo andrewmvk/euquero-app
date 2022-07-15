@@ -30,8 +30,8 @@ export default (props) => {
           setPassword('');
           setConfirmPassword('');
 
-          const newUser = { email: email, type: 'add' };
-          props.navigation.navigate('AdminMainMenu', { isAdmin: true, newUser });
+          const newUser = { id: res.user.uid, email: email };
+          props.navigation.navigate('ManageAccounts', { newUser });
         });
       } catch (err) {
         console.warn(err);
@@ -61,7 +61,7 @@ export default (props) => {
           />
         </InputArea>
       </Container>
-      <ButtonView>
+      <ButtonView pointerEvents={'box-none'}>
         <RegisterButton text="CADASTRAR" onPress={handleSignUp} />
       </ButtonView>
     </>
