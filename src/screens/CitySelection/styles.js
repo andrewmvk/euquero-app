@@ -8,7 +8,7 @@ export const Container = styled.SafeAreaView`
 
 export const SearchInput = styled.View`
   height: 55px;
-  width: 85%;
+  width: 72%;
   background-color: #fff;
   border-radius: 5px;
   padding-left: 18px;
@@ -22,4 +22,9 @@ export const SearchInputText = styled.TextInput`
   font-size: ${defaultS.fontSize.cardText};
   font-family: ${defaultS.fonts.spartanR};
   color: ${defaultS.colors.text};
+`;
+
+export const SearchArea = styled.View`
+  flex-direction: row;
+  align-items: center;
 `;
