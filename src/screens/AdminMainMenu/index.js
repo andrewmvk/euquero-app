@@ -1,26 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Icon } from 'react-native-elements';
 import { View } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import { auth } from '../../services/firebase.config';
 
 import { Container, ManageTouchableBox, ManageBoxShadow, ManageText } from './styles';
-import Modal from '../../components/Modal';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 import { buttonOpacity, colors } from '../../defaultStyles';
 
 export default (props) => {
-  const [modalData, setModalData] = useState({ email: '', type: '' });
-  const [modalVisibility, setModalVisibility] = useState(false);
-
-  useEffect(() => {
-    if (props.route.params.newUser) {
-      setModalData(props.route.params.newUser);
-      toggleModal();
-    }
-  }, [props.route.params.newUser]);
-
   function handleSignOut() {
     auth
       .signOut()
@@ -30,10 +19,6 @@ export default (props) => {
       .catch((err) => {
         console.log(err);
       });
-  }
-
-  function toggleModal() {
-    setModalVisibility(!modalVisibility);
   }
 
   return (
@@ -75,7 +60,6 @@ export default (props) => {
           </Shadow>
         </View>
       </Container>
-      <Modal isVisible={modalVisibility} params={modalData} onPress={toggleModal} />
     </>
   );
 };

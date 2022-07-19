@@ -1,4 +1,7 @@
 import styled from 'styled-components/native';
+import { Dimensions } from 'react-native';
+
+const deviceHeight = Dimensions.get('screen').height * 0.92 + 'px';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -12,8 +15,10 @@ export const InputArea = styled.View`
 `;
 
 export const ButtonView = styled.View`
+  height: ${deviceHeight};
   width: 100%;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+  position: absolute;
   padding: 10%;
 `;
