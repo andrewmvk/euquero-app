@@ -90,7 +90,10 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
+        <Header
+          text={"Administrativo - Contas"}
+          onPress={() => props.navigation.goBack()}
+        />
         <FlatList
           style={{ marginTop: 45, marginBottom: 25 }}
           data={accounts}

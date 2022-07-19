@@ -1,26 +1,33 @@
-import React from 'react';
-import { TextInput, TouchableOpacity, View, StyleSheet, Text, Dimensions } from 'react-native';
-import { Icon } from 'react-native-elements';
-import { Shadow } from 'react-native-shadow-2';
-import styled from 'styled-components/native';
+import React from "react";
+import {
+  TextInput,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+} from "react-native";
+import { Icon } from "react-native-elements";
+import { Shadow } from "react-native-shadow-2";
+import styled from "styled-components/native";
 
 //Default styles variables
 
 export const colors = {
-  orange: '#FF6B0F',
-  text: '#7F7F7F',
-  titleSubtitle: '#fff',
-  backgroundMain: '#2C3196',
-  backgroundSecond: '#F8F8F8',
-  gray: '#C4C4C4',
+  orange: "#FF6B0F",
+  text: "#7F7F7F",
+  titleSubtitle: "#fff",
+  backgroundMain: "#2C3196",
+  backgroundSecond: "#F8F8F8",
+  gray: "#C4C4C4",
 };
 
 export const fonts = {
-  spartanL: 'Spartan_300Light',
-  spartanR: 'Spartan_400Regular',
-  spartanM: 'Spartan_500Medium',
-  spartanBold: 'Spartan_700Bold',
-  spartanBlack: 'Spartan_900Black',
+  spartanL: "Spartan_300Light",
+  spartanR: "Spartan_400Regular",
+  spartanM: "Spartan_500Medium",
+  spartanBold: "Spartan_700Bold",
+  spartanBlack: "Spartan_900Black",
 };
 
 export const fontSizeNoUnits = {
@@ -73,7 +80,13 @@ const Line = styled.View`
 export const BigTitle = (props) => {
   return (
     <BigTitleView>
-      <View style={{ justifyContent: 'space-around', width: '100%', alignItems: 'center' }}>
+      <View
+        style={{
+          justifyContent: "space-around",
+          width: "100%",
+          alignItems: "center",
+        }}
+      >
         <BigTitleText>{props.text}</BigTitleText>
         <Line></Line>
       </View>
@@ -81,25 +94,54 @@ export const BigTitle = (props) => {
   );
 };
 
+const MediumTitleView = styled.View`
+  width: 100%;
+  height: 13%;
+  justify-content: center;
+  align-items: center;
+`;
+
+const MediumTitleText = styled.Text`
+  font-family: ${fonts.spartanM};
+  font-size: 18px;
+  color: ${colors.text};
+`;
+
+export const MediumTitle = (props) => {
+  return (
+    <MediumTitleView>
+      <View
+        style={{
+          justifyContent: "space-around",
+          width: "100%",
+          alignItems: "flex-start",
+        }}
+      >
+        <MediumTitleText>{props.text}</MediumTitleText>
+      </View>
+    </MediumTitleView>
+  );
+};
+
 const customButtonShadow = {
   small: {
     distance: 0,
-    startColor: 'rgba(0,0,0,0.1)',
+    startColor: "rgba(0,0,0,0.1)",
     offset: [0, 4],
     radius: 20,
     containerViewStyle: { paddingBottom: 2 },
   },
   large: {
     distance: 0,
-    startColor: 'rgba(0,0,0,0.1)',
+    startColor: "rgba(0,0,0,0.1)",
     offset: [0, 4],
     radius: 25,
     containerViewStyle: { paddingBottom: 2 },
   },
   rounded: {
-    distance: 5,
-    startColor: 'rgba(0,0,0,0.05)',
-    finalColor: 'rgba(0,0,0,0.0)',
+    distance: 0,
+    startColor: "rgba(0,0,0,0.1)",
+    finalColor: "rgba(0,0,0,0.0)",
     radius: 25,
     containerViewStyle: { margin: 20 },
   },
@@ -111,24 +153,24 @@ const buttonStyles = StyleSheet.create({
     height: 40,
     backgroundColor: colors.orange,
     borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   large: {
     width: 250,
     height: 50,
     backgroundColor: colors.orange,
     borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   register: {
-    width: '90%',
+    width: "90%",
     height: 60,
     backgroundColor: colors.orange,
     borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
@@ -146,7 +188,7 @@ export function SmallButton(props) {
         style={buttonStyles.small}
         onPress={props.onPress}
       >
-        <SmallButtonText>{props.text ? props.text : 'TEXT'}</SmallButtonText>
+        <SmallButtonText>{props.text ? props.text : "TEXT"}</SmallButtonText>
       </TouchableOpacity>
     </Shadow>
   );
@@ -166,7 +208,7 @@ export function LargeButton(props) {
         style={buttonStyles.large}
         onPress={props.onPress}
       >
-        <LargeButtonText>{props.text ? props.text : 'TEXT'}</LargeButtonText>
+        <LargeButtonText>{props.text ? props.text : "TEXT"}</LargeButtonText>
       </TouchableOpacity>
     </Shadow>
   );
@@ -185,16 +227,18 @@ export function RegisterButton(props) {
       style={buttonStyles.register}
       onPress={props.onPress}
     >
-      <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
+      <RegisterButtonText>
+        {props.text ? props.text : "TEXT"}
+      </RegisterButtonText>
     </TouchableOpacity>
   );
 }
 
 const RoundedButton = styled.TouchableOpacity`
   z-index: 5;
-  height: 50px;
-  width: 50px;
-  border-radius: 25px;
+  height: 70px;
+  width: 70px;
+  border-radius: 50px;
   background-color: white;
   justify-content: center;
   align-items: center;
@@ -213,7 +257,12 @@ export function AddButton(props) {
     >
       <Shadow {...customButtonShadow.rounded}>
         <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
-          <Icon name="plus" size={35} type="material-community" color={colors.orange} />
+          <Icon
+            name="plus"
+            size={35}
+            type="material-community"
+            color={colors.orange}
+          />
         </RoundedButton>
       </Shadow>
     </View>
@@ -224,28 +273,29 @@ const cardStyles = StyleSheet.create({
   container: {
     width: screenWidth * 0.85,
     height: 70,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     borderRadius: 5,
     borderLeftWidth: 7,
   },
   cardText: {
-    textAlign: 'left',
+    textAlign: "left",
     fontFamily: fonts.spartanR,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     fontSize: fontSizeNoUnits.cardText,
     marginLeft: 22,
     color: colors.text,
+    width: screenWidth * 0.6,
   },
   avaibleUBSText: {
     fontFamily: fonts.spartanR,
-    position: 'absolute',
-    textAlign: 'right',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: "absolute",
+    textAlign: "right",
+    alignItems: "center",
+    justifyContent: "center",
     fontSize: fontSizeNoUnits.subtitle,
     bottom: 10,
     right: 22,
@@ -255,10 +305,14 @@ const cardStyles = StyleSheet.create({
 
 const cardShadow = {
   distance: 6,
-  startColor: 'rgba(0,0,0,0.025)',
-  finalColor: 'rgba(0,0,0,0.0)',
+  startColor: "rgba(0,0,0,0.025)",
+  finalColor: "rgba(0,0,0,0.0)",
   radius: 5,
-  containerViewStyle: { marginVertical: 7, height: 70, width: screenWidth * 0.85 },
+  containerViewStyle: {
+    marginVertical: 7,
+    height: 70,
+    width: screenWidth * 0.85,
+  },
 };
 
 export const Card = (props) => {
@@ -272,8 +326,14 @@ export const Card = (props) => {
         onPress={props.onPress ? props.onPress : null}
         disabled={props.onPress === undefined ? true : false}
       >
-        {props.text ? <Text style={cardStyles.cardText}>{props.text}</Text> : null}
-        {props.ubsCount ? <Text style={cardStyles.avaibleUBSText}>{props.ubsCount}</Text> : null}
+        {props.text ? (
+          <Text style={cardStyles.cardText} numberOfLines={1}>
+            {props.text}
+          </Text>
+        ) : null}
+        {props.ubsCount ? (
+          <Text style={cardStyles.avaibleUBSText}>{props.ubsCount}</Text>
+        ) : null}
         {props.children ? { ...props.children } : null}
       </TouchableOpacity>
     </Shadow>
@@ -282,11 +342,11 @@ export const Card = (props) => {
 
 const inputBoxStyles = StyleSheet.create({
   searchInput: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     height: 50,
-    width: '100%',
-    backgroundColor: '#fff',
+    width: "100%",
+    backgroundColor: "#fff",
     borderRadius: 5,
   },
   searchInputText: {
@@ -299,10 +359,10 @@ const inputBoxStyles = StyleSheet.create({
 
 const inputBoxShadow = {
   distance: 6,
-  startColor: 'rgba(0,0,0,0.025)',
-  finalColor: 'rgba(0,0,0,0.0)',
+  startColor: "rgba(0,0,0,0.025)",
+  finalColor: "rgba(0,0,0,0.0)",
   radius: 5,
-  containerViewStyle: { marginTop: 25, height: 50, width: '100%' },
+  containerViewStyle: { marginTop: 25, height: 50, width: "100%" },
 };
 
 export const InputBox = (props) => {
@@ -310,7 +370,9 @@ export const InputBox = (props) => {
     <Shadow {...inputBoxShadow}>
       <View style={inputBoxStyles.searchInput}>
         <Icon
-          name={props.type === 'password' ? 'lock-closed-outline' : 'person-outline'}
+          name={
+            props.type === "password" ? "lock-closed-outline" : "person-outline"
+          }
           type="ionicon"
           color={colors.gray}
           style={{
@@ -322,9 +384,9 @@ export const InputBox = (props) => {
           style={inputBoxStyles.searchInputText}
           value={props.value}
           onChangeText={props.onChangeText}
-          placeholder={props.placeholder ? props.placeholder : 'PLACEHOLDER'}
+          placeholder={props.placeholder ? props.placeholder : "PLACEHOLDER"}
           placerholderTextColor={colors.text}
-          secureTextEntry={props.type === 'password' ? true : false}
+          secureTextEntry={props.type === "password" ? true : false}
         />
       </View>
     </Shadow>

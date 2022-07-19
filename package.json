@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/spartan": "^0.2.2",
+    "@react-native-picker/picker": "^2.4.2",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/stack": "^6.2.1",
@@ -26,6 +27,7 @@
     "react-native": "0.68.2",
     "react-native-app-intro-slider": "^4.0.4",
     "react-native-dotenv": "^3.3.1",
+    "react-native-dropdown-select-list": "^1.0.18",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "~2.2.1",
     "react-native-modal": "^13.0.1",

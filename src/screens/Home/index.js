@@ -1,27 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { View } from "react-native";
 
-import { Container, LogoView, Subtitle, Buttons, AdminBtn, extraStyles } from './styles';
+import {
+  Container,
+  LogoView,
+  Subtitle,
+  Buttons,
+  AdminBtn,
+  extraStyles,
+} from "./styles";
 
-import Wave from '../../components/Waves/Wave';
-import DashedWave from '../../components/Waves/DashedWave';
+import Wave from "../../components/Waves/Wave";
+import DashedWave from "../../components/Waves/DashedWave";
 
-import { Icon } from '@rneui/themed';
-import Logo from '../../../assets/images/euquero-logo.svg';
-import { LargeButton, SmallButton, buttonOpacity } from '../../defaultStyles';
+import { Icon } from "@rneui/themed";
+import Logo from "../../../assets/images/euquero-logo.svg";
+import { LargeButton, SmallButton, buttonOpacity } from "../../defaultStyles";
 
 export default (props) => {
-  const [transition, setTransition] = useState({ n: false, type: '' });
+  const [transition, setTransition] = useState({ n: false, type: "" });
 
   useEffect(() => {
-    const unsubscribe = props.navigation.addListener('focus', () => {
-      setTransition({ n: true, type: 'from' });
+    const unsubscribe = props.navigation.addListener("focus", () => {
+      setTransition({ n: true, type: "from" });
     });
     return () => unsubscribe();
   }, []);
 
   function handleNavigateTo(page) {
-    setTransition({ n: true, type: 'to' });
+    setTransition({ n: true, type: "to" });
     setTimeout(() => {
       props.navigation.navigate(page);
     }, 400);
@@ -46,7 +53,7 @@ export default (props) => {
             <LargeButton
               text="Buscar UBS"
               onPress={() => {
-                handleNavigateTo('StateSelection');
+                handleNavigateTo("StateSelection");
               }}
             />
           </View>
@@ -54,7 +61,7 @@ export default (props) => {
             <SmallButton
               text="Como usar o App"
               onPress={() => {
-                handleNavigateTo('ComoUsarOApp');
+                handleNavigateTo("ComoUsarOApp");
               }}
             />
           </View>
@@ -62,7 +69,7 @@ export default (props) => {
             <SmallButton
               text="Sobre o Projeto"
               onPress={() => {
-                handleNavigateTo('SobreOProjeto');
+                handleNavigateTo("SobreOProjeto");
               }}
             />
           </View>
@@ -71,7 +78,7 @@ export default (props) => {
 
       <AdminBtn
         activeOpacity={buttonOpacity}
-        onPress={() => props.navigation.navigate('AdminLogin')}
+        onPress={() => props.navigation.navigate("AdminLogin")}
       >
         <Icon
           name="shield-account"

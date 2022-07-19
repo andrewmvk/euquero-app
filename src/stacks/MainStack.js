@@ -12,6 +12,8 @@ import UBSSelection from '../screens/UBSSelection';
 import ManageAccounts from '../screens/ManageAccounts';
 import RegisterAccounts from '../screens/RegisterAccounts';
 import Modal from '../components/Modal';
+import ManageUBS from "../screens/ManageUBS";
+import RegisterUBS from "../screens/RegisterUBS";
 
 const Stack = createStackNavigator();
 
@@ -28,10 +30,12 @@ export default () => (
     <Stack.Screen name="AdminMainMenu" component={AdminMainMenu} />
     <Stack.Screen name="ManageAccounts" component={ManageAccounts} />
     <Stack.Screen name="RegisterAccounts" component={RegisterAccounts} />
+    <Stack.Screen name="RegisterUBS" component={RegisterUBS} />
     <Stack.Screen name="ComoUsarOApp" component={ComoUsarOApp} />
     <Stack.Screen name="SobreOProjeto" component={SobreOProjeto} />
     <Stack.Screen name="StateSelection" component={StateSelection} />
     <Stack.Screen name="CitySelection" component={CitySelection} />
     <Stack.Screen name="UBSSelection" component={UBSSelection} />
+    <Stack.Screen name="ManageUBS" component={ManageUBS} />
   </Stack.Navigator>
 );

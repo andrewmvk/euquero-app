@@ -40,7 +40,7 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo'} onPress={handleSignOut} />
+        <Header text={"Administrativo"} onPress={handleSignOut} />
 
         <View style={{ alignItems: 'center', marginTop: 50 }}>
           {props.route.params.isAdmin ? (
@@ -59,6 +59,18 @@ export default (props) => {
             <ManageTouchableBox activeOpacity={buttonOpacity}>
               <Icon name="bank" size={70} type="material-community" color={colors.gray} />
               <ManageText>Gerenciar UBS</ManageText>
+            </ManageTouchableBox>
+          </Shadow>
+
+          <Shadow {...ManageBoxShadow}>
+            <ManageTouchableBox activeOpacity={buttonOpacity}>
+              <Icon
+                name="file-upload"
+                size={70}
+                type="material-community"
+                color="#c4c4c4"
+              />
+              <ManageText>Cadastrar UBS</ManageText>
             </ManageTouchableBox>
           </Shadow>
         </View>
