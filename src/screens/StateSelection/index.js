@@ -49,7 +49,7 @@ export default (props) => {
     );
   };
 
-  search = (t) => {
+  const search = t => {
     let arr = [...originalData];
     setBrazilianStates(
       arr.filter((d) =>
@@ -65,6 +65,14 @@ export default (props) => {
           )
       )
     );
+  };
+
+  const handleOrderClick = () => {
+    let newList = [...brazilianStates];
+
+    newList.sort((a, b) => (a.nome > b.nome ? 1 : b.nome > a.nome ? -1 : 0));
+
+    setBrazilianStates(newList);
   };
 
   return (
@@ -88,7 +96,7 @@ export default (props) => {
               }}
             />
           </SearchInput>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleOrderClick}>
             <Icon
               name="order-alphabetical-ascending"
               type="material-community"

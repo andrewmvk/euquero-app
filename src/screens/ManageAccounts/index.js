@@ -1,50 +1,87 @@
-import React, { useState } from "react";
-import { FlatList } from "react-native";
-import { Icon } from "react-native-elements";
+import React, { useEffect, useState } from 'react';
+import { FlatList, Switch } from 'react-native';
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { auth, db } from '../../services/firebase.config';
 
-import { Container, TrashIcon } from "./styles";
-import Header from "../../components/Header";
-import DashedCircle from "../../components/DashedCircle";
-import { AddButton, buttonOpacity, Card, colors } from "../../defaultStyles";
+import { Container, SwitchView } from './styles';
+import Header from '../../components/Header';
+import DashedCircle from '../../components/DashedCircle';
+import { AddButton, Card, colors, buttonOpacity } from '../../defaultStyles';
+import Modal from '../../components/Modal';
 
 export default (props) => {
-  const [accounts, setAccounts] = useState([
-    {
-      id: 1,
-      name: "John",
-      email: "john@example.com",
-    },
-    {
-      id: 2,
-      name: "John Smith",
-      email: "john@example2.com",
-    },
-  ]);
+  const [accounts, setAccounts] = useState([]);
+  const [modalData, setModalData] = useState({ email: '', type: '' });
+  const [modalVisibility, setModalVisibility] = useState(false);
 
-  const deleteAccount = (id) => {
-    const filteredData = accounts.filter((item) => item.id !== id);
-    setAccounts(filteredData);
+  useEffect(() => {
+    const fetchData = async () => {
+      let list = [];
+      try {
+        const querySnapshot = await getDocs(collection(db, 'users'));
+
+        querySnapshot.forEach((doc) => {
+          if (doc.data().email != auth.currentUser.email) {
+            list.push({ id: doc.id, ...doc.data() });
+          }
+        });
+
+        setAccounts(list);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const disableAccount = async (user) => {
+    try {
+      await updateDoc(doc(db, 'users', user.id), {
+        disabled: !user.disabled,
+      }).then(() => {
+        const filteredData = accounts.filter((item) => item.id !== user.id);
+        user.disabled = !user.disabled;
+        if (user.disabled) {
+          setAccounts([...filteredData, user]);
+        } else {
+          setAccounts([user, ...filteredData]);
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  function dataModal(user) {
+    setModalData({ ...user, type: 'delete' });
+    toggleModal();
+  }
+
+  function onPressYes(user) {
+    toggleModal();
+    disableAccount(user);
+  }
+
+  function toggleModal() {
+    setModalVisibility(!modalVisibility);
+  }
 
   const stateCard = ({ item }) => {
     return (
       <Card
         value={item.id}
         key={item.id}
-        text={item.name}
-        color={colors.orange}
+        text={item.email}
+        color={item.disabled ? colors.gray : colors.orange}
       >
-        <TrashIcon
-          activeOpacity={buttonOpacity}
-          onPress={() => deleteAccount(item.id)}
-        >
-          <Icon
-            name="trash-can-outline"
-            size={35}
-            type="material-community"
-            color="#c4c4c4"
+        <SwitchView onPress={() => dataModal(item)} activeOpacity={buttonOpacity}>
+          <Switch
+            trackColor={{ false: colors.gray, true: colors.orange }}
+            thumbColor={item.disabled ? colors.gray : colors.orange}
+            value={!item.disabled}
+            disabled={true}
           />
-        </TrashIcon>
+        </SwitchView>
       </Card>
     );
   };
@@ -64,8 +101,12 @@ export default (props) => {
           keyExtractor={(item) => item.id}
         />
       </Container>
-      <AddButton
-        onPress={() => props.navigation.navigate("RegisterAccounts")}
+      <AddButton onPress={() => props.navigation.navigate('RegisterAccounts')} />
+      <Modal
+        isVisible={modalVisibility}
+        params={modalData}
+        onPress={toggleModal}
+        onPressYes={onPressYes}
       />
     </>
   );
