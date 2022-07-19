@@ -2139,6 +2139,11 @@
     sudo-prompt "^9.0.0"
     wcwidth "^1.0.1"
 
+"@react-native-picker/picker@^2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-2.4.2.tgz#2925eb8e76ff6b584c80529adc251df963be9141"
+  integrity sha512-0nY8638h1J3wKz6P3IJMpOoxJDdOj7Dk/K2hP/xpqP3KnIY0lmoqYlhyNihuyVPocDGajf6SA7LFFsFepQ56ag==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets/-/assets-1.0.0.tgz#c6f9bf63d274bafc8e970628de24986b30a55c8e"
@@ -6480,6 +6485,11 @@ react-native-dotenv@^3.3.1:
   integrity sha512-gAKXout1XCwCqJ3QPGoQAF2eRzOHgOnwg3x19z+ssow8bDIksJeKBqvoHDyGziVilAIP1J0bEC9Jf+VF8nFang==
   dependencies:
     dotenv "^10.0.0"
+
+react-native-dropdown-select-list@^1.0.18:
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/react-native-dropdown-select-list/-/react-native-dropdown-select-list-1.0.18.tgz#2e178d7659bda25a953f08ab3d2784b2b6d1bd00"
+  integrity sha512-GJBjyxjRw/MGMZAGlONziRkUPKPB5gO/4vBgf9fnsUxNI/ATo6fwfGw187GNSwe8LHjie87wAu6/35iwz6fOdA==
 
 react-native-elements@^3.4.2:
   version "3.4.2"

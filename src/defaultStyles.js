@@ -91,6 +91,35 @@ export const BigTitle = (props) => {
   );
 };
 
+const MediumTitleView = styled.View`
+  width: 100%;
+  height: 13%;
+  justify-content: center;
+  align-items: center;
+`;
+
+const MediumTitleText = styled.Text`
+  font-family: ${fonts.spartanM};
+  font-size: 18px;
+  color: ${colors.text};
+`;
+
+export const MediumTitle = (props) => {
+  return (
+    <MediumTitleView>
+      <View
+        style={{
+          justifyContent: "space-around",
+          width: "100%",
+          alignItems: "flex-start",
+        }}
+      >
+        <MediumTitleText>{props.text}</MediumTitleText>
+      </View>
+    </MediumTitleView>
+  );
+};
+
 const customButtonShadow = {
   small: {
     distance: 0,
@@ -221,7 +250,6 @@ export function AddButton(props) {
         position: "absolute",
         right: 0,
         bottom: 0,
-        borderColor: "rgba(255, 255, 255)",
       }}
     >
       <Shadow {...customButtonShadow.rounded}>

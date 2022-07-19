@@ -25,7 +25,7 @@ const pop = () => ({
 
 export default () => (
   <Stack.Navigator
-    initialRouteName="RegisterUBS"
+    initialRouteName="Home"
     screenOptions={{
       headerShown: false,
       cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
