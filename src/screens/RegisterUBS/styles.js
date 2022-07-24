@@ -17,6 +17,9 @@ export const MediumTitle = styled.Text`
 `;
 
 export const ButtonView = styled.View`
-  width: 100%;
+  height: 25px;
+  width: 90%;
   align-items: center;
+  margin-top: 20px;
+  margin-bottom: 40px;
 `;
