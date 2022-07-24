@@ -27,22 +27,35 @@ export default (props) => {
       <Container>
         <Header text={"Administrativo"} onPress={handleSignOut} />
 
-        <View style={{ alignItems: 'center', marginTop: 50 }}>
+        <View style={{ alignItems: "center", marginTop: 50 }}>
           {props.route.params.isAdmin ? (
             <Shadow {...ManageBoxShadow}>
               <ManageTouchableBox
                 activeOpacity={buttonOpacity}
-                onPress={() => props.navigation.navigate('ManageAccounts')}
+                onPress={() => props.navigation.navigate("ManageAccounts")}
               >
-                <Icon name="account-cog" size={70} type="material-community" color={colors.gray} />
+                <Icon
+                  name="account-cog"
+                  size={70}
+                  type="material-community"
+                  color={colors.gray}
+                />
                 <ManageText>Gerenciar Contas</ManageText>
               </ManageTouchableBox>
             </Shadow>
           ) : null}
 
           <Shadow {...ManageBoxShadow}>
-            <ManageTouchableBox activeOpacity={buttonOpacity}>
-              <Icon name="bank" size={70} type="material-community" color={colors.gray} />
+            <ManageTouchableBox
+              activeOpacity={buttonOpacity}
+              onPress={() => props.navigation.navigate("ManageUBS")}
+            >
+              <Icon
+                name="bank"
+                size={70}
+                type="material-community"
+                color={colors.gray}
+              />
               <ManageText>Gerenciar UBS</ManageText>
             </ManageTouchableBox>
           </Shadow>
