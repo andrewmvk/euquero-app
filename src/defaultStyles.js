@@ -41,18 +41,18 @@ export const fontSizeNoUnits = {
 };
 
 export const fontSize = {
-  bigTitle: `${fontSizeNoUnits.bigTitle}` + 'px',
-  cardText: `${fontSizeNoUnits.cardText}` + 'px',
-  title: `${fontSizeNoUnits.title}` + 'px',
-  textInput: `${fontSizeNoUnits.textInput}` + 'px',
-  text: `${fontSizeNoUnits.text}` + 'px',
-  header: `${fontSizeNoUnits.header}` + 'px',
-  subtitle: `${fontSizeNoUnits.subtitle}` + 'px',
+  bigTitle: `${fontSizeNoUnits.bigTitle}` + "px",
+  cardText: `${fontSizeNoUnits.cardText}` + "px",
+  title: `${fontSizeNoUnits.title}` + "px",
+  textInput: `${fontSizeNoUnits.textInput}` + "px",
+  text: `${fontSizeNoUnits.text}` + "px",
+  header: `${fontSizeNoUnits.header}` + "px",
+  subtitle: `${fontSizeNoUnits.subtitle}` + "px",
 };
 
 export const buttonOpacity = 0.6;
 
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get("window").width;
 
 //================================================= DEFAULT COMPONENTS =================================================
 
@@ -248,9 +248,9 @@ export function AddButton(props) {
   return (
     <View
       style={{
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        position: 'absolute',
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        position: "absolute",
         bottom: 0,
         right: 0,
       }}

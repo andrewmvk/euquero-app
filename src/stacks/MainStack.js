@@ -1,17 +1,20 @@
-import React from 'react';
-import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import React from "react";
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+} from "@react-navigation/stack";
 
-import Home from '../screens/Home';
-import AdminLogin from '../screens/AdminLogin';
-import AdminMainMenu from '../screens/AdminMainMenu';
-import ComoUsarOApp from '../screens/ComoUsarOApp';
-import SobreOProjeto from '../screens/SobreOProjeto';
-import StateSelection from '../screens/StateSelection';
-import CitySelection from '../screens/CitySelection';
-import UBSSelection from '../screens/UBSSelection';
-import ManageAccounts from '../screens/ManageAccounts';
-import RegisterAccounts from '../screens/RegisterAccounts';
-import Modal from '../components/Modal';
+import Home from "../screens/Home";
+import AdminLogin from "../screens/AdminLogin";
+import AdminMainMenu from "../screens/AdminMainMenu";
+import ComoUsarOApp from "../screens/ComoUsarOApp";
+import SobreOProjeto from "../screens/SobreOProjeto";
+import StateSelection from "../screens/StateSelection";
+import CitySelection from "../screens/CitySelection";
+import UBSSelection from "../screens/UBSSelection";
+import ManageAccounts from "../screens/ManageAccounts";
+import RegisterAccounts from "../screens/RegisterAccounts";
+import Modal from "../components/Modal";
 import ManageUBS from "../screens/ManageUBS";
 import RegisterUBS from "../screens/RegisterUBS";
 
@@ -19,14 +22,18 @@ const Stack = createStackNavigator();
 
 export default () => (
   <Stack.Navigator
-    initialRouteName="Home"
+    initialRouteName="RegisterUBS"
     screenOptions={{
       headerShown: false,
       cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
     }}
   >
     <Stack.Screen name="Home" component={Home} />
-    <Stack.Screen name="AdminLogin" component={AdminLogin} options={{ animationEnabled: false }} />
+    <Stack.Screen
+      name="AdminLogin"
+      component={AdminLogin}
+      options={{ animationEnabled: false }}
+    />
     <Stack.Screen name="AdminMainMenu" component={AdminMainMenu} />
     <Stack.Screen name="ManageAccounts" component={ManageAccounts} />
     <Stack.Screen name="RegisterAccounts" component={RegisterAccounts} />

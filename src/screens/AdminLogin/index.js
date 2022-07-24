@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Keyboard } from 'react-native';
 import { auth, db } from '../../services/firebase.config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 import { Container, LogoView, InputArea, Subtitle, Background, extraStyles } from './styles';
 import Header from '../../components/Header';
@@ -11,8 +11,15 @@ import Logo from '../../../assets/images/euquero-logo.svg';
 
 import Wave from '../../components/Waves/Wave';
 import DashedWave from '../../components/Waves/DashedWave';
+import Modal from '../../components/Modal';
 
 export default (props) => {
+  const [modalData, setModalData] = useState({ email: '', type: '' });
+  const [modalVisibility, setModalVisibility] = useState(false);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const [animationType, setAnimationType] = useState({
     n: false,
     type: 'nothing',
@@ -40,18 +47,42 @@ export default (props) => {
     });
 
     return unsubscribeFocus;
-  }, []);
+  }, [props.route.params]);
 
   const getUser = async (u) => {
     let userData = {};
     try {
       const docRef = doc(db, 'users', u.uid);
-      await getDoc(docRef).then((docSnap) => {
+      await getDoc(docRef).then(async (docSnap) => {
         userData = docSnap.data();
-        if (userData == undefined) {
+        if (userData == undefined && !userData.disabled) {
           handleNavigateTo({ isAdmin: false });
-        } else {
+        } else if (!userData.disabled) {
           handleNavigateTo(userData);
+        } else {
+          setEmail('');
+          setPassword('');
+
+          if (userData.maximumAcessAttempts - 1 >= 0) {
+            setTimeout(() => {
+              setModalData({ ...userData, type: 'disabledAccountAdvice' });
+              toggleModal();
+            }, 500);
+
+            await updateDoc(doc(db, 'users', u.uid), {
+              maximumAcessAttempts: userData.maximumAcessAttempts - 1,
+            });
+          } else {
+            setTimeout(() => {
+              setModalData({ ...userData, type: 'deletedAccountAdvice' });
+              toggleModal();
+            }, 500);
+
+            await deleteDoc(doc(db, 'users', u.uid));
+            auth.currentUser.delete();
+          }
+
+          auth.signOut();
         }
       });
     } catch (err) {
@@ -66,8 +97,9 @@ export default (props) => {
     }, 400);
   }
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  function toggleModal() {
+    setModalVisibility(!modalVisibility);
+  }
 
   const signIn = () => {
     signInWithEmailAndPassword(auth, email, password)
@@ -105,6 +137,7 @@ export default (props) => {
           </View>
         </View>
       </Container>
+      <Modal isVisible={modalVisibility} params={modalData} onPress={toggleModal} />
     </Background>
   );
 };
