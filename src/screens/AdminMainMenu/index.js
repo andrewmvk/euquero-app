@@ -25,21 +25,16 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={"Administrativo"} onPress={handleSignOut} />
+        <Header text={'Administrativo'} onPress={handleSignOut} />
 
-        <View style={{ alignItems: "center", marginTop: 50 }}>
+        <View style={{ alignItems: 'center', marginTop: 50 }}>
           {props.route.params.isAdmin ? (
             <Shadow {...ManageBoxShadow}>
               <ManageTouchableBox
                 activeOpacity={buttonOpacity}
-                onPress={() => props.navigation.navigate("ManageAccounts")}
+                onPress={() => props.navigation.navigate('ManageAccounts')}
               >
-                <Icon
-                  name="account-cog"
-                  size={70}
-                  type="material-community"
-                  color={colors.gray}
-                />
+                <Icon name="account-cog" size={70} type="material-community" color={colors.gray} />
                 <ManageText>Gerenciar Contas</ManageText>
               </ManageTouchableBox>
             </Shadow>
@@ -48,26 +43,19 @@ export default (props) => {
           <Shadow {...ManageBoxShadow}>
             <ManageTouchableBox
               activeOpacity={buttonOpacity}
-              onPress={() => props.navigation.navigate("ManageUBS")}
+              onPress={() => props.navigation.navigate('ManageUBS')}
             >
-              <Icon
-                name="bank"
-                size={70}
-                type="material-community"
-                color={colors.gray}
-              />
+              <Icon name="bank" size={70} type="material-community" color={colors.gray} />
               <ManageText>Gerenciar UBS</ManageText>
             </ManageTouchableBox>
           </Shadow>
 
           <Shadow {...ManageBoxShadow}>
-            <ManageTouchableBox activeOpacity={buttonOpacity}>
-              <Icon
-                name="file-upload"
-                size={70}
-                type="material-community"
-                color="#c4c4c4"
-              />
+            <ManageTouchableBox
+              activeOpacity={buttonOpacity}
+              onPress={() => props.navigation.navigate('UploadUBSTable')}
+            >
+              <Icon name="file-upload" size={70} type="material-community" color="#c4c4c4" />
               <ManageText>Cadastrar UBS</ManageText>
             </ManageTouchableBox>
           </Shadow>

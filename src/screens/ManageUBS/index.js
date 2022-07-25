@@ -1,81 +1,62 @@
-import React, { useState } from "react";
-import { FlatList, TouchableOpacity } from "react-native";
-import { Icon } from "react-native-elements";
+import React, { useState } from 'react';
+import { FlatList, TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-elements';
 
-import {
-  Container,
-  TrashIcon,
-  SearchInput,
-  SearchInputText,
-  SearchArea,
-} from "./styles";
-import Header from "../../components/Header";
-import DashedCircle from "../../components/DashedCircle";
-import { AddButton, buttonOpacity, Card, colors } from "../../defaultStyles";
+import { Container, TrashIcon, SearchInput, SearchInputText, SearchArea } from './styles';
+import Header from '../../components/Header';
+import DashedCircle from '../../components/DashedCircle';
+import { AddButton, buttonOpacity, Card, colors } from '../../defaultStyles';
 
 export default (props) => {
-  const [accounts, setAccounts] = useState([
+  const [ubs, setUbs] = useState([
     {
       id: 1,
-      name: "UBS Av. Goiás",
+      name: 'UBS Av. Goiás',
     },
     {
       id: 2,
-      name: "UBS Vila Sofia",
+      name: 'UBS Vila Sofia',
     },
     {
       id: 3,
-      name: "UBS Vila Olavo",
+      name: 'UBS Vila Olavo',
     },
     {
       id: 4,
-      name: "UBS Conjunto Rio Clarooooooooo",
+      name: 'UBS Conjunto Rio Clarooooooooo',
     },
     {
       id: 5,
-      name: "UBS Vila Sofia",
+      name: 'UBS Vila Sofia',
     },
     {
       id: 6,
-      name: "UBS Vila Sofia",
+      name: 'UBS Vila Sofia',
     },
     {
       id: 7,
-      name: "UBS Vila Sofia",
+      name: 'UBS Vila Sofia',
     },
     {
       id: 8,
-      name: "UBS Vila Sofia",
+      name: 'UBS Vila Sofia',
     },
     {
       id: 9,
-      name: "UBS Vila Sofia",
+      name: 'UBS Vila Sofia',
     },
   ]);
 
-  const deleteAccount = (id) => {
-    const filteredData = accounts.filter((item) => item.id !== id);
-    setAccounts(filteredData);
+  const deleteUbs = (id) => {
+    const filteredData = ubs.filter((item) => item.id !== id);
+    setUbs(filteredData);
   };
 
-  const stateCard = ({ item }) => {
+  const cards = ({ item }) => {
     return (
-      <Card
-        value={item.id}
-        key={item.id}
-        text={item.name}
-        color={colors.orange}
-      >
-        <TrashIcon
-          activeOpacity={buttonOpacity}
-          onPress={() => deleteAccount(item.id)}
-        >
-          <Icon
-            name="trash-can-outline"
-            size={35}
-            type="material-community"
-            color="#c4c4c4"
-          />
+      <Card value={item.id} key={item.id} text={item.name} color={colors.orange}>
+        <TrashIcon activeOpacity={buttonOpacity} onPress={() => deleteUbs(item.id)}>
+          <Icon name="trash-can-outline" size={35} type="material-community" color="#c4c4c4" />
         </TrashIcon>
       </Card>
     );
@@ -85,16 +66,10 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header
-          text={"Administrativo - UBS"}
-          onPress={() => props.navigation.goBack()}
-        />
+        <Header text={'Administrativo - UBS'} onPress={() => props.navigation.goBack()} />
         <SearchArea>
           <SearchInput>
-            <SearchInputText
-              placeholder="Buscar UBS"
-              onChangeText={(t) => search(t)}
-            />
+            <SearchInputText placeholder="Buscar UBS" onChangeText={(t) => search(t)} />
             <Icon
               name="search-outline"
               type="ionicon"
@@ -117,12 +92,12 @@ export default (props) => {
         </SearchArea>
         <FlatList
           style={{ marginTop: 32, marginBottom: 25 }}
-          data={accounts}
-          renderItem={stateCard}
+          data={ubs}
+          renderItem={cards}
           keyExtractor={(item) => item.id}
         />
       </Container>
-      <AddButton onPress={() => props.navigation.navigate("RegisterUBS")} />
+      <AddButton onPress={() => props.navigation.navigate('RegisterUBS')} />
     </>
   );
 };
