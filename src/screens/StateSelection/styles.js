@@ -1,5 +1,5 @@
-import styled from "styled-components/native";
-import * as defaultS from "../../defaultStyles";
+import styled from 'styled-components/native';
+import * as defaultS from '../../defaultStyles';
 
 export const Container = styled.SafeAreaView`
   flex: 1;

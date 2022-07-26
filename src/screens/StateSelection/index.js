@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Icon } from "react-native-elements";
-import { FlatList, TouchableOpacity } from "react-native";
-import axios from "axios";
-import { colors } from "../../defaultStyles";
-import { Container, SearchInput, SearchInputText, SearchArea } from "./styles";
-import Header from "../../components/Header";
-import DashedCircle from "../../components/DashedCircle";
-import { Card } from "../../defaultStyles";
+import React, { useEffect, useState } from 'react';
+import { Icon } from 'react-native-elements';
+import { FlatList, TouchableOpacity, Text } from 'react-native';
+import axios from 'axios';
+import { colors } from '../../defaultStyles';
+import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
+import Header from '../../components/Header';
+import DashedCircle from '../../components/DashedCircle';
+import { Card } from '../../defaultStyles';
 
-export default (props) => {
+export default props => {
   const [brazilianStates, setBrazilianStates] = useState([]);
 
   // backup array
@@ -18,7 +18,7 @@ export default (props) => {
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get(
-        "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
+        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/'
       );
 
       setBrazilianStates(response.data);
@@ -29,10 +29,10 @@ export default (props) => {
     fetchData();
   }, []);
 
-  const handleCardPress = (item) => {
-    props.navigation.navigate("CitySelection", {
+  const handleCardPress = item => {
+    props.navigation.navigate('CitySelection', {
       stateID: item.id,
-      stateName: item.nome,
+      stateName: item.nome
     });
   };
 
@@ -44,7 +44,7 @@ export default (props) => {
         key={item.id}
         onPress={() => handleCardPress(item)}
         text={item.nome}
-        ubsCount={"00 UBS"}
+        ubsCount={'00 UBS'}
       />
     );
   };
@@ -52,15 +52,15 @@ export default (props) => {
   const search = t => {
     let arr = [...originalData];
     setBrazilianStates(
-      arr.filter((d) =>
+      arr.filter(d =>
         d.nome
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
           .toLowerCase()
           .includes(
             t
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
               .toLowerCase()
           )
       )
@@ -84,7 +84,7 @@ export default (props) => {
           <SearchInput>
             <SearchInputText
               placeholder="Buscar estado"
-              onChangeText={(t) => search(t)}
+              onChangeText={t => search(t)}
             />
             <Icon
               name="search-outline"
@@ -92,7 +92,7 @@ export default (props) => {
               color="#c4c4c4"
               style={{
                 paddingHorizontal: 15,
-                paddingVertical: 15,
+                paddingVertical: 15
               }}
             />
           </SearchInput>
@@ -106,12 +106,16 @@ export default (props) => {
             />
           </TouchableOpacity>
         </SearchArea>
-        <FlatList
-          style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
-          data={brazilianStates}
-          renderItem={stateCard}
-          keyExtractor={(item) => item.id}
-        />
+        {brazilianStates.length === 0 ? (
+          <Text>Não foi encontrado nenhum estado com esse nome!</Text>
+        ) : (
+          <FlatList
+            style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
+            data={brazilianStates}
+            renderItem={stateCard}
+            keyExtractor={item => item.id}
+          />
+        )}
       </Container>
     </>
   );
