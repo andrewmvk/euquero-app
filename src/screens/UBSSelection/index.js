@@ -1,31 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { FlatList, TouchableOpacity } from 'react-native';
+import { FlatList, TouchableOpacity, Text } from 'react-native';
 import { colors } from '../../defaultStyles';
 import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
 import { Card } from '../../defaultStyles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 
+import ubs from './ubsList';
+
 export default props => {
-  const ubs = [
-    {
-      id: 1,
-      nome: 'UBS 1'
-    },
-    {
-      id: 2,
-      nome: 'UBS 2'
-    },
-    {
-      id: 3,
-      nome: 'UBS 3'
-    }
-  ];
+  const [searchUbs, setUbs] = useState('');
+  const [list, setList] = useState(ubs);
 
   const ubsCard = ({ item }) => {
     return <Card value={item.id} key={item.id} text={item.nome} />;
   };
+
+  useEffect(() => {
+    if (searchUbs === '') {
+      setList(ubs);
+    } else {
+      setList(
+        ubs.filter(d =>
+          d.nome
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .includes(
+              searchUbs
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+            )
+        )
+      );
+    }
+  }, [searchUbs]);
 
   return (
     <>
@@ -37,7 +48,10 @@ export default props => {
         />
         <SearchArea>
           <SearchInput>
-            <SearchInputText placeholder="Buscar UBS" />
+            <SearchInputText
+              placeholder="Buscar UBS"
+              onChangeText={t => setUbs(t)}
+            />
             <Icon
               name="search-outline"
               type="ionicon"
@@ -58,12 +72,18 @@ export default props => {
             />
           </TouchableOpacity>
         </SearchArea>
-        <FlatList
-          style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
-          data={ubs}
-          renderItem={ubsCard}
-          keyExtractor={item => item.id}
-        />
+        {list.length === 0 ? (
+          <Text>
+            Não foi encontrada nenhuma Unidade Básica de Saúde com esse nome!
+          </Text>
+        ) : (
+          <FlatList
+            style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
+            data={list}
+            renderItem={ubsCard}
+            keyExtractor={item => item.id}
+          />
+        )}
       </Container>
     </>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { FlatList, TouchableOpacity } from 'react-native';
+import { FlatList, TouchableOpacity, Text } from 'react-native';
 import axios from 'axios';
 import { colors } from '../../defaultStyles';
 import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
@@ -108,12 +108,16 @@ export default props => {
             />
           </TouchableOpacity>
         </SearchArea>
-        <FlatList
-          style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
-          data={cities}
-          renderItem={cityCard}
-          keyExtractor={item => item.id}
-        />
+        {cities.length === 0 ? (
+          <Text>Não foi encontrada nenhuma cidade com esse nome!</Text>
+        ) : (
+          <FlatList
+            style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
+            data={cities}
+            renderItem={cityCard}
+            keyExtractor={item => item.id}
+          />
+        )}
       </Container>
     </>
   );
