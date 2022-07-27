@@ -1,23 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { Icon } from 'react-native-elements';
-import { FlatList, TouchableOpacity } from 'react-native';
-import axios from 'axios';
-import { colors } from '../../defaultStyles';
-import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
-import { Card } from '../../defaultStyles';
-import Header from '../../components/Header';
-import DashedCircle from '../../components/DashedCircle';
+import React, { useEffect, useState } from "react";
+import { Icon } from "react-native-elements";
+import { FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
+import axios from "axios";
+import { colors } from "../../defaultStyles";
+import { Container, SearchInput, SearchInputText, SearchArea } from "./styles";
+import { Card } from "../../defaultStyles";
+import Header from "../../components/Header";
+import DashedCircle from "../../components/DashedCircle";
+import { isLoading } from "expo-font";
 
-export default props => {
+export default (props) => {
   const [cities, setCities] = useState([]);
   const [originalData, setOriginalData] = useState([]);
+  const [isLoading, setIsloading] = useState(true);
 
   //api request
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(
-        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`
-      );
+      const response = await axios
+        .get(
+          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`
+        )
+        .finally(() => setIsloading(false));
 
       setCities(response.data);
 
@@ -27,11 +31,11 @@ export default props => {
     fetchData();
   }, []);
 
-  const handleCardPress = item => {
-    props.navigation.navigate('UBSSelection', {
+  const handleCardPress = (item) => {
+    props.navigation.navigate("UBSSelection", {
       cityID: item.id,
       stateName: props.route.params.stateName,
-      cityName: item.nome
+      cityName: item.nome,
     });
   };
 
@@ -43,23 +47,23 @@ export default props => {
         key={item.id}
         onPress={() => handleCardPress(item)}
         text={item.nome}
-        ubsCount={'00 UBS'}
+        ubsCount={"00 UBS"}
       />
     );
   };
 
-  const search = t => {
+  const search = (t) => {
     let arr = [...originalData];
     setCities(
-      arr.filter(d =>
+      arr.filter((d) =>
         d.nome
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase()
           .includes(
             t
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
               .toLowerCase()
           )
       )
@@ -86,7 +90,7 @@ export default props => {
           <SearchInput>
             <SearchInputText
               placeholder="Buscar cidade"
-              onChangeText={t => search(t)}
+              onChangeText={(t) => search(t)}
             />
             <Icon
               name="search-outline"
@@ -94,7 +98,7 @@ export default props => {
               color="#c4c4c4"
               style={{
                 paddingHorizontal: 15,
-                paddingVertical: 15
+                paddingVertical: 15,
               }}
             />
           </SearchInput>
@@ -108,12 +112,20 @@ export default props => {
             />
           </TouchableOpacity>
         </SearchArea>
-        <FlatList
-          style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
-          data={cities}
-          renderItem={cityCard}
-          keyExtractor={item => item.id}
-        />
+        {isLoading ? (
+          <ActivityIndicator
+            size="large"
+            color="#FF6B0F"
+            style={{ marginTop: 50 }}
+          />
+        ) : (
+          <FlatList
+            style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
+            data={cities}
+            renderItem={cityCard}
+            keyExtractor={(item) => item.id}
+          />
+        )}
       </Container>
     </>
   );

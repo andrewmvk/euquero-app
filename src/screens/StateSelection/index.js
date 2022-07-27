@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Icon } from "react-native-elements";
-import { FlatList, TouchableOpacity } from "react-native";
+import { FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
 import axios from "axios";
 import { colors } from "../../defaultStyles";
 import { Container, SearchInput, SearchInputText, SearchArea } from "./styles";
@@ -10,16 +10,14 @@ import { Card } from "../../defaultStyles";
 
 export default (props) => {
   const [brazilianStates, setBrazilianStates] = useState([]);
-
-  // backup array
+  const [isLoading, setIsloading] = useState(true);
   const [originalData, setOriginalData] = useState([]);
 
-  //api request
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(
-        "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
-      );
+      const response = await axios
+        .get("https://servicodados.ibge.gov.br/api/v1/localidades/estados/")
+        .finally(() => setIsloading(false));
 
       setBrazilianStates(response.data);
 
@@ -49,7 +47,7 @@ export default (props) => {
     );
   };
 
-  const search = t => {
+  const search = (t) => {
     let arr = [...originalData];
     setBrazilianStates(
       arr.filter((d) =>
@@ -106,12 +104,20 @@ export default (props) => {
             />
           </TouchableOpacity>
         </SearchArea>
-        <FlatList
-          style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
-          data={brazilianStates}
-          renderItem={stateCard}
-          keyExtractor={(item) => item.id}
-        />
+        {isLoading ? (
+          <ActivityIndicator
+            size="large"
+            color="#FF6B0F"
+            style={{ marginTop: 50 }}
+          />
+        ) : (
+          <FlatList
+            style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
+            data={brazilianStates}
+            renderItem={stateCard}
+            keyExtractor={(item) => item.id}
+          />
+        )}
       </Container>
     </>
   );
