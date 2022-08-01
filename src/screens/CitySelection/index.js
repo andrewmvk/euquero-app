@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { FlatList, TouchableOpacity, Text } from 'react-native';
+import { FlatList, TouchableOpacity, Text, Image, View } from 'react-native';
 import axios from 'axios';
 import { colors } from '../../defaultStyles';
-import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
+import {
+  Container,
+  SearchInput,
+  SearchInputText,
+  SearchArea,
+  NoResults,
+  Title,
+  SimpleText
+} from './styles';
 import { Card } from '../../defaultStyles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
@@ -109,7 +117,17 @@ export default props => {
           </TouchableOpacity>
         </SearchArea>
         {cities.length === 0 ? (
-          <Text>Não foi encontrada nenhuma cidade com esse nome!</Text>
+          <NoResults>
+            <View>
+              <Image
+                source={require('../../../assets/images/noResultsImg.png')}
+              />
+            </View>
+            <Title>NADA POR AQUI!</Title>
+            <SimpleText>
+              Não encontramos nenhum item correspondente à sua pesquisa.
+            </SimpleText>
+          </NoResults>
         ) : (
           <FlatList
             style={{ width: '85%', marginTop: 25, marginBottom: 25 }}

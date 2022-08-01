@@ -28,3 +28,25 @@ export const SearchArea = styled.View`
   flex-direction: row;
   align-items: center;
 `;
+
+export const NoResults = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 100px;
+`;
+
+export const Title = styled.Text`
+  font-size: 24px;
+  color: #9bb5cc;
+  font-weight: bold;
+  margin-top: 16px;
+`;
+
+export const SimpleText = styled.Text`
+  font-size: 20px;
+  font-weight: 300;
+  color: #808080;
+  text-align: center;
+  margin: 16px 30px 16px 30px;
+`;
