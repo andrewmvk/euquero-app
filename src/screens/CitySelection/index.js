@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Icon } from "react-native-elements";
-<<<<<<< HEAD
+import React, { useEffect, useState } from 'react';
+import { Icon } from 'react-native-elements';
 import {
   FlatList,
   TouchableOpacity,
@@ -8,9 +7,9 @@ import {
   Image,
   View,
   ActivityIndicator,
-} from "react-native";
-import axios from "axios";
-import { colors } from "../../defaultStyles";
+} from 'react-native';
+import axios from 'axios';
+import { colors } from '../../defaultStyles';
 import {
   Container,
   SearchInput,
@@ -19,29 +18,16 @@ import {
   NoResults,
   Title,
   SimpleText,
-} from "./styles";
-import { Card } from "../../defaultStyles";
-import Header from "../../components/Header";
-import DashedCircle from "../../components/DashedCircle";
-=======
-import { FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
-import axios from "axios";
-import { colors } from "../../defaultStyles";
-import { Container, SearchInput, SearchInputText, SearchArea } from "./styles";
-import { Card } from "../../defaultStyles";
-import Header from "../../components/Header";
-import DashedCircle from "../../components/DashedCircle";
-import { isLoading } from "expo-font";
->>>>>>> d7a198f2b37ee679304b2b78134f635ba6d2dc58
+} from './styles';
+import { Card } from '../../defaultStyles';
+import Header from '../../components/Header';
+import DashedCircle from '../../components/DashedCircle';
 
 export default (props) => {
   const [cities, setCities] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [isLoading, setIsloading] = useState(true);
-<<<<<<< HEAD
-=======
 
->>>>>>> d7a198f2b37ee679304b2b78134f635ba6d2dc58
   //api request
   useEffect(() => {
     async function fetchData() {
@@ -60,7 +46,7 @@ export default (props) => {
   }, []);
 
   const handleCardPress = (item) => {
-    props.navigation.navigate("UBSSelection", {
+    props.navigation.navigate('UBSSelection', {
       cityID: item.id,
       stateName: props.route.params.stateName,
       cityName: item.nome,
@@ -75,7 +61,7 @@ export default (props) => {
         key={item.id}
         onPress={() => handleCardPress(item)}
         text={item.nome}
-        ubsCount={"00 UBS"}
+        ubsCount={'00 UBS'}
       />
     );
   };
@@ -85,13 +71,13 @@ export default (props) => {
     setCities(
       arr.filter((d) =>
         d.nome
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
           .toLowerCase()
           .includes(
             t
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
               .toLowerCase()
           )
       )
@@ -110,7 +96,7 @@ export default (props) => {
     return (
       <NoResults>
         <View>
-          <Image source={require("../../../assets/images/noResultsImg.png")} />
+          <Image source={require('../../../assets/images/noResultsImg.png')} />
         </View>
         <Title>NADA POR AQUI!</Title>
         <SimpleText>
@@ -131,13 +117,13 @@ export default (props) => {
         <SearchArea>
           <SearchInput>
             <SearchInputText
-              placeholder="Buscar cidade"
+              placeholder='Buscar cidade'
               onChangeText={(t) => search(t)}
             />
             <Icon
-              name="search-outline"
-              type="ionicon"
-              color="#c4c4c4"
+              name='search-outline'
+              type='ionicon'
+              color='#c4c4c4'
               style={{
                 paddingHorizontal: 15,
                 paddingVertical: 15,
@@ -146,8 +132,8 @@ export default (props) => {
           </SearchInput>
           <TouchableOpacity onPress={handleOrderClick}>
             <Icon
-              name="order-alphabetical-ascending"
-              type="material-community"
+              name='order-alphabetical-ascending'
+              type='material-community'
               color={colors.gray}
               size={32}
               style={{ marginTop: 25, marginLeft: 25 }}
@@ -156,20 +142,17 @@ export default (props) => {
         </SearchArea>
         {isLoading ? (
           <ActivityIndicator
-            size="large"
-            color="#FF6B0F"
+            size='large'
+            color='#FF6B0F'
             style={{ marginTop: 50 }}
           />
         ) : (
           <FlatList
-            style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
+            style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
             data={cities}
             renderItem={cityCard}
             keyExtractor={(item) => item.id}
-<<<<<<< HEAD
             ListEmptyComponent={EmptyListMessage}
-=======
->>>>>>> d7a198f2b37ee679304b2b78134f635ba6d2dc58
           />
         )}
       </Container>
