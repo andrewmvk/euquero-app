@@ -1,5 +1,5 @@
-import styled from 'styled-components/native';
-import * as defaultS from '../../defaultStyles';
+import styled from "styled-components/native";
+import * as defaultS from "../../defaultStyles";
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -33,7 +33,7 @@ export const NoResults = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  margin-bottom: 100px;
+  margin-top: 100px;
 `;
 
 export const Title = styled.Text`

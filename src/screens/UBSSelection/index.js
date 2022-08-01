@@ -1,7 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Icon } from 'react-native-elements';
-import { FlatList, TouchableOpacity, Text, Image, View } from 'react-native';
-import { colors } from '../../defaultStyles';
+import React, { useEffect, useState } from "react";
+import { Icon } from "react-native-elements";
+import {
+  FlatList,
+  TouchableOpacity,
+  Text,
+  Image,
+  View,
+  ActivityIndicator,
+} from "react-native";
+import { colors } from "../../defaultStyles";
 import {
   Container,
   SearchInput,
@@ -9,16 +16,17 @@ import {
   SearchArea,
   NoResults,
   Title,
-  SimpleText
-} from './styles';
-import { Card } from '../../defaultStyles';
-import Header from '../../components/Header';
-import DashedCircle from '../../components/DashedCircle';
+  SimpleText,
+} from "./styles";
+import { Card } from "../../defaultStyles";
+import Header from "../../components/Header";
+import DashedCircle from "../../components/DashedCircle";
 
-import ubs from './ubsList';
+import ubs from "./ubsList";
 
-export default props => {
-  const [searchUbs, setUbs] = useState('');
+export default (props) => {
+  const [isLoading, setIsloading] = useState(true);
+  const [searchUbs, setUbs] = useState("");
   const [list, setList] = useState(ubs);
 
   const ubsCard = ({ item }) => {
@@ -26,25 +34,39 @@ export default props => {
   };
 
   useEffect(() => {
-    if (searchUbs === '') {
+    if (searchUbs === "") {
       setList(ubs);
     } else {
       setList(
-        ubs.filter(d =>
+        ubs.filter((d) =>
           d.nome
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
             .toLowerCase()
             .includes(
               searchUbs
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
                 .toLowerCase()
             )
         )
       );
     }
   }, [searchUbs]);
+
+  const EmptyListMessage = () => {
+    return (
+      <NoResults>
+        <View>
+          <Image source={require("../../../assets/images/noResultsImg.png")} />
+        </View>
+        <Title>NADA POR AQUI!</Title>
+        <SimpleText>
+          Não encontramos nenhum item correspondente à sua pesquisa.
+        </SimpleText>
+      </NoResults>
+    );
+  };
 
   return (
     <>
@@ -58,7 +80,7 @@ export default props => {
           <SearchInput>
             <SearchInputText
               placeholder="Buscar UBS"
-              onChangeText={t => setUbs(t)}
+              onChangeText={(t) => setUbs(t)}
             />
             <Icon
               name="search-outline"
@@ -66,7 +88,7 @@ export default props => {
               color="#c4c4c4"
               style={{
                 paddingHorizontal: 15,
-                paddingVertical: 15
+                paddingVertical: 15,
               }}
             />
           </SearchInput>
@@ -80,24 +102,19 @@ export default props => {
             />
           </TouchableOpacity>
         </SearchArea>
-        {list.length === 0 ? (
-          <NoResults>
-            <View>
-              <Image
-                source={require('../../../assets/images/noResultsImg.png')}
-              />
-            </View>
-            <Title>NADA POR AQUI!</Title>
-            <SimpleText>
-              Não encontramos nenhum item correspondente à sua pesquisa.
-            </SimpleText>
-          </NoResults>
+        {isLoading ? (
+          <ActivityIndicator
+            size="large"
+            color="#FF6B0F"
+            style={{ marginTop: 50 }}
+          />
         ) : (
           <FlatList
-            style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
+            style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
             data={list}
             renderItem={ubsCard}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
+            ListEmptyComponent={EmptyListMessage}
           />
         )}
       </Container>
