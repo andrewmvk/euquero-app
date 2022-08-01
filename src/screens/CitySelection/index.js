@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Icon } from "react-native-elements";
+<<<<<<< HEAD
 import {
   FlatList,
   TouchableOpacity,
@@ -22,11 +23,25 @@ import {
 import { Card } from "../../defaultStyles";
 import Header from "../../components/Header";
 import DashedCircle from "../../components/DashedCircle";
+=======
+import { FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
+import axios from "axios";
+import { colors } from "../../defaultStyles";
+import { Container, SearchInput, SearchInputText, SearchArea } from "./styles";
+import { Card } from "../../defaultStyles";
+import Header from "../../components/Header";
+import DashedCircle from "../../components/DashedCircle";
+import { isLoading } from "expo-font";
+>>>>>>> d7a198f2b37ee679304b2b78134f635ba6d2dc58
 
 export default (props) => {
   const [cities, setCities] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [isLoading, setIsloading] = useState(true);
+<<<<<<< HEAD
+=======
+
+>>>>>>> d7a198f2b37ee679304b2b78134f635ba6d2dc58
   //api request
   useEffect(() => {
     async function fetchData() {
@@ -151,7 +166,10 @@ export default (props) => {
             data={cities}
             renderItem={cityCard}
             keyExtractor={(item) => item.id}
+<<<<<<< HEAD
             ListEmptyComponent={EmptyListMessage}
+=======
+>>>>>>> d7a198f2b37ee679304b2b78134f635ba6d2dc58
           />
         )}
       </Container>

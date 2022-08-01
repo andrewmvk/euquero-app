@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
 import {
@@ -21,17 +22,31 @@ import {
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 import { Card } from '../../defaultStyles';
+=======
+import React, { useEffect, useState } from "react";
+import { Icon } from "react-native-elements";
+import { FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
+import axios from "axios";
+import { colors } from "../../defaultStyles";
+import { Container, SearchInput, SearchInputText, SearchArea } from "./styles";
+import Header from "../../components/Header";
+import DashedCircle from "../../components/DashedCircle";
+import { Card } from "../../defaultStyles";
+>>>>>>> d7a198f2b37ee679304b2b78134f635ba6d2dc58
 
 export default (props) => {
   const [brazilianStates, setBrazilianStates] = useState([]);
   const [isLoading, setIsloading] = useState(true);
   const [originalData, setOriginalData] = useState([]);
 
-  //api request
   useEffect(() => {
     async function fetchData() {
       const response = await axios
+<<<<<<< HEAD
         .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados/')
+=======
+        .get("https://servicodados.ibge.gov.br/api/v1/localidades/estados/")
+>>>>>>> d7a198f2b37ee679304b2b78134f635ba6d2dc58
         .finally(() => setIsloading(false));
 
       setBrazilianStates(response.data);
@@ -135,17 +150,29 @@ export default (props) => {
         </SearchArea>
         {isLoading ? (
           <ActivityIndicator
+<<<<<<< HEAD
             size='large'
             color='#FF6B0F'
+=======
+            size="large"
+            color="#FF6B0F"
+>>>>>>> d7a198f2b37ee679304b2b78134f635ba6d2dc58
             style={{ marginTop: 50 }}
           />
         ) : (
           <FlatList
+<<<<<<< HEAD
             style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
             data={brazilianStates}
             renderItem={stateCard}
             keyExtractor={(item) => item.id}
             ListEmptyComponent={EmptyListMessage}
+=======
+            style={{ width: "85%", marginTop: 25, marginBottom: 25 }}
+            data={brazilianStates}
+            renderItem={stateCard}
+            keyExtractor={(item) => item.id}
+>>>>>>> d7a198f2b37ee679304b2b78134f635ba6d2dc58
           />
         )}
       </Container>
