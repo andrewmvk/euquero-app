@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { FlatList, TouchableOpacity, Image, View } from 'react-native';
+import {
+  FlatList,
+  TouchableOpacity,
+  Image,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import axios from 'axios';
 import { colors } from '../../defaultStyles';
 import {
@@ -10,24 +16,22 @@ import {
   SearchArea,
   NoResults,
   Title,
-  SimpleText
+  SimpleText,
 } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 import { Card } from '../../defaultStyles';
 
-export default props => {
+export default (props) => {
   const [brazilianStates, setBrazilianStates] = useState([]);
-
-  // backup array
+  const [isLoading, setIsloading] = useState(true);
   const [originalData, setOriginalData] = useState([]);
 
-  //api request
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(
-        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/'
-      );
+      const response = await axios
+        .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados/')
+        .finally(() => setIsloading(false));
 
       setBrazilianStates(response.data);
 
@@ -37,10 +41,10 @@ export default props => {
     fetchData();
   }, []);
 
-  const handleCardPress = item => {
+  const handleCardPress = (item) => {
     props.navigation.navigate('CitySelection', {
       stateID: item.id,
-      stateName: item.nome
+      stateName: item.nome,
     });
   };
 
@@ -57,10 +61,10 @@ export default props => {
     );
   };
 
-  const search = t => {
+  const search = (t) => {
     let arr = [...originalData];
     setBrazilianStates(
-      arr.filter(d =>
+      arr.filter((d) =>
         d.nome
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
@@ -83,6 +87,20 @@ export default props => {
     setBrazilianStates(newList);
   };
 
+  const EmptyListMessage = () => {
+    return (
+      <NoResults>
+        <View>
+          <Image source={require('../../../assets/images/noResultsImg.png')} />
+        </View>
+        <Title>NADA POR AQUI!</Title>
+        <SimpleText>
+          Não encontramos nenhum item correspondente à sua pesquisa.
+        </SimpleText>
+      </NoResults>
+    );
+  };
+
   return (
     <>
       <DashedCircle />
@@ -91,47 +109,42 @@ export default props => {
         <SearchArea>
           <SearchInput>
             <SearchInputText
-              placeholder="Buscar estado"
-              onChangeText={t => search(t)}
+              placeholder='Buscar estado'
+              onChangeText={(t) => search(t)}
             />
             <Icon
-              name="search-outline"
-              type="ionicon"
-              color="#c4c4c4"
+              name='search-outline'
+              type='ionicon'
+              color='#c4c4c4'
               style={{
                 paddingHorizontal: 15,
-                paddingVertical: 15
+                paddingVertical: 15,
               }}
             />
           </SearchInput>
           <TouchableOpacity onPress={handleOrderClick}>
             <Icon
-              name="order-alphabetical-ascending"
-              type="material-community"
+              name='order-alphabetical-ascending'
+              type='material-community'
               color={colors.gray}
               size={32}
               style={{ marginTop: 25, marginLeft: 25 }}
             />
           </TouchableOpacity>
         </SearchArea>
-        {brazilianStates.length === 0 ? (
-          <NoResults>
-            <View>
-              <Image
-                source={require('../../../assets/images/noResultsImg.png')}
-              />
-            </View>
-            <Title>NADA POR AQUI!</Title>
-            <SimpleText>
-              Não encontramos nenhum item correspondente à sua pesquisa.
-            </SimpleText>
-          </NoResults>
+        {isLoading ? (
+          <ActivityIndicator
+            size='large'
+            color='#FF6B0F'
+            style={{ marginTop: 50 }}
+          />
         ) : (
           <FlatList
             style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
             data={brazilianStates}
             renderItem={stateCard}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
+            ListEmptyComponent={EmptyListMessage}
           />
         )}
       </Container>
