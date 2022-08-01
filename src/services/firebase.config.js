@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 import { REACT_APP_FIREBASE_KEY } from '@env';
 
 const firebaseConfig = {
@@ -15,6 +16,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const secondaryApp = initializeApp(firebaseConfig, 'Secondary');
+
 export const auth = getAuth(app);
 export const authSecondary = getAuth(secondaryApp);
+
+export const storage = getStorage(app);
+
 export const db = getFirestore(app);
