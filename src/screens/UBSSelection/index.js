@@ -75,7 +75,10 @@ export default props => {
     return (
       <NoResults>
         <View>
-          <Image source={require('../../../assets/images/noResultsImg.png')} />
+          <Image
+            source={require('../../../assets/images/noResultsImg.png')}
+            style={{ resizeMode: 'contain', height: 200 }}
+          />
         </View>
         <Title>NADA POR AQUI!</Title>
         <SimpleText>
