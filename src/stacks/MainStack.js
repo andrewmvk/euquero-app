@@ -1,22 +1,23 @@
-import React from "react";
+import React from 'react';
 import {
   createStackNavigator,
-  CardStyleInterpolators,
-} from "@react-navigation/stack";
+  CardStyleInterpolators
+} from '@react-navigation/stack';
 
-import Home from "../screens/Home";
-import AdminLogin from "../screens/AdminLogin";
-import AdminMainMenu from "../screens/AdminMainMenu";
-import ComoUsarOApp from "../screens/ComoUsarOApp";
-import SobreOProjeto from "../screens/SobreOProjeto";
-import StateSelection from "../screens/StateSelection";
-import CitySelection from "../screens/CitySelection";
-import UBSSelection from "../screens/UBSSelection";
-import ManageAccounts from "../screens/ManageAccounts";
-import RegisterAccounts from "../screens/RegisterAccounts";
-import ManageUBS from "../screens/ManageUBS";
-import RegisterUBS from "../screens/RegisterUBS";
-import UploadUBSTable from "../screens/UploadUBSTable";
+import Home from '../screens/Home';
+import AdminLogin from '../screens/AdminLogin';
+import AdminMainMenu from '../screens/AdminMainMenu';
+import ComoUsarOApp from '../screens/ComoUsarOApp';
+import SobreOProjeto from '../screens/SobreOProjeto';
+import StateSelection from '../screens/StateSelection';
+import CitySelection from '../screens/CitySelection';
+import UBSSelection from '../screens/UBSSelection';
+import ManageAccounts from '../screens/ManageAccounts';
+import RegisterAccounts from '../screens/RegisterAccounts';
+import ManageUBS from '../screens/ManageUBS';
+import RegisterUBS from '../screens/RegisterUBS';
+import UploadUBSTable from '../screens/UploadUBSTable';
+import ServiceSelection from '../screens/ServiceSelection';
 
 const Stack = createStackNavigator();
 
@@ -25,7 +26,7 @@ export default () => (
     initialRouteName="Home"
     screenOptions={{
       headerShown: false,
-      cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
+      cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid
     }}
   >
     <Stack.Screen name="Home" component={Home} />
@@ -45,5 +46,6 @@ export default () => (
     <Stack.Screen name="UBSSelection" component={UBSSelection} />
     <Stack.Screen name="ManageUBS" component={ManageUBS} />
     <Stack.Screen name="UploadUBSTable" component={UploadUBSTable} />
+    <Stack.Screen name="ServiceSelection" component={ServiceSelection} />
   </Stack.Navigator>
 );
