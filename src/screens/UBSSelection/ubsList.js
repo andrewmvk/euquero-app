@@ -1,50 +1,38 @@
 export default [
   {
     id: 1,
-    nome: 'UBS 1'
+    nome: 'UBS Av. Goiás'
   },
   {
     id: 2,
-    nome: 'UBS 2'
+    nome: 'UBS Vila Sofia'
   },
   {
     id: 3,
-    nome: 'UBS 3'
+    nome: 'UBS Vila Olavo'
   },
   {
     id: 4,
-    nome: 'UBS 4'
+    nome: 'UBS Vila Fátima'
   },
   {
     id: 5,
-    nome: 'UBS A'
+    nome: 'UBS Conjunto Rio Claro'
   },
   {
     id: 6,
-    nome: 'UBS B'
+    nome: 'UBS Colmeia Park'
   },
   {
     id: 7,
-    nome: 'UBS AB'
+    nome: 'UBS Vila Brasília'
   },
   {
     id: 8,
-    nome: 'UBS ABC'
+    nome: 'UBS Santo Antônio'
   },
   {
     id: 9,
-    nome: 'UBS C'
-  },
-  {
-    id: 10,
-    nome: 'UBS AD'
-  },
-  {
-    id: 11,
-    nome: 'UBS CD'
-  },
-  {
-    id: 12,
-    nome: 'UBS ABCD'
+    nome: 'UBS Estrela Dalva'
   }
 ];

@@ -6,7 +6,7 @@ import {
   Text,
   Image,
   View,
-  ActivityIndicator,
+  ActivityIndicator
 } from 'react-native';
 import { colors } from '../../defaultStyles';
 import {
@@ -17,6 +17,7 @@ import {
   NoResults,
   Title,
   SimpleText,
+  image
 } from './styles';
 import { Card } from '../../defaultStyles';
 import Header from '../../components/Header';
@@ -24,13 +25,29 @@ import DashedCircle from '../../components/DashedCircle';
 
 import ubs from './ubsList';
 
-export default (props) => {
+export default props => {
   const [isLoading, setIsloading] = useState(true);
   const [searchUbs, setUbs] = useState('');
   const [list, setList] = useState(ubs);
 
+  const handleCardPress = item => {
+    props.navigation.navigate('ServiceSelection', {
+      ubsID: item.id,
+      stateName: props.route.params.stateName,
+      cityName: props.route.params.cityName,
+      ubsName: item.nome
+    });
+  };
+
   const ubsCard = ({ item }) => {
-    return <Card value={item.id} key={item.id} text={item.nome} />;
+    return (
+      <Card
+        value={item.id}
+        key={item.id}
+        onPress={() => handleCardPress(item)}
+        text={item.nome}
+      />
+    );
   };
 
   useEffect(() => {
@@ -38,7 +55,7 @@ export default (props) => {
       setList(ubs);
     } else {
       setList(
-        ubs.filter((d) =>
+        ubs.filter(d =>
           d.nome
             .normalize('NFD')
             .replace(/[\u0300-\u036f]/g, '')
@@ -79,23 +96,23 @@ export default (props) => {
         <SearchArea>
           <SearchInput>
             <SearchInputText
-              placeholder='Buscar UBS'
-              onChangeText={(t) => setUbs(t)}
+              placeholder="Buscar UBS"
+              onChangeText={t => setUbs(t)}
             />
             <Icon
-              name='search-outline'
-              type='ionicon'
-              color='#c4c4c4'
+              name="search-outline"
+              type="ionicon"
+              color="#c4c4c4"
               style={{
                 paddingHorizontal: 15,
-                paddingVertical: 15,
+                paddingVertical: 15
               }}
             />
           </SearchInput>
           <TouchableOpacity>
             <Icon
-              name='order-alphabetical-ascending'
-              type='material-community'
+              name="order-alphabetical-ascending"
+              type="material-community"
               color={colors.gray}
               size={32}
               style={{ marginTop: 25, marginLeft: 25 }}
@@ -106,7 +123,7 @@ export default (props) => {
           style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
           data={list}
           renderItem={ubsCard}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           ListEmptyComponent={EmptyListMessage}
         />
       </Container>
