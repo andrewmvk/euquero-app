@@ -8,7 +8,6 @@ export const Container = styled.SafeAreaView`
 `;
 
 export const Map = styled.View`
-  height: 250px;
   margin-top: 30px;
   margin-bottom: 30px;
   width: 100%;
