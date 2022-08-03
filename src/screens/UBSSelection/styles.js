@@ -33,7 +33,7 @@ export const NoResults = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  margin-bottom: 100px;
+  margin-top: 100px;
 `;
 
 export const Title = styled.Text`

@@ -11,7 +11,13 @@ import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
 import { colors, fonts, RegisterButton } from '../../defaultStyles';
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
-import { SimpleText, Title, Container, ButtonView, TouchableText } from './styles';
+import {
+  SimpleText,
+  Title,
+  Container,
+  ButtonView,
+  TouchableText,
+} from './styles';
 
 export default (props) => {
   const downloadDefaultExcel = async () => {
@@ -116,7 +122,7 @@ export default (props) => {
       Alert.alert('Upload completo!');
     } catch (err) {
       Alert.alert(
-        'Algo deu errado ao tentar inserir os dados do arquivo no banco de dados, por favor verifique a formatação do arquivo.',
+        'Algo deu errado ao tentar inserir os dados do arquivo no banco de dados, por favor verifique a formatação do arquivo.'
       );
       console.log(err);
     }
@@ -125,12 +131,15 @@ export default (props) => {
   return (
     <>
       <DashedCircle />
-      <Header text={'Administrativo - Upload'} onPress={() => props.navigation.goBack()} />
+      <Header
+        text={'Administrativo - Upload'}
+        onPress={() => props.navigation.goBack()}
+      />
       <Container>
         <View style={{ marginTop: '25%' }}>
           <Icon
-            name="file-excel-outline"
-            type="material-community"
+            name='file-excel-outline'
+            type='material-community'
             size={120}
             color={colors.orange}
           />
@@ -140,23 +149,37 @@ export default (props) => {
 
         <SimpleText>
           <Text>
-            Para adicionar várias UBS's ao mesmo tempo, faça UPLOAD do arquivo .xlsx contendo os
-            dados das UBS's e{' '}
+            Para adicionar várias UBS's ao mesmo tempo, faça UPLOAD do arquivo
+            .xlsx contendo os dados das UBS's e{' '}
           </Text>
-          <Text style={{ fontFamily: fonts.spartanBold }}>seguindo a formatação padrão.</Text>
+          <Text style={{ fontFamily: fonts.spartanBold }}>
+            seguindo a formatação padrão.
+          </Text>
         </SimpleText>
 
         <ButtonView>
-          <RegisterButton text="Fazer Upload" onPress={handleDocument} />
+          <RegisterButton text='Fazer Upload' onPress={handleDocument} />
         </ButtonView>
 
-        <View style={{ position: 'absolute', bottom: 0, width: '100%', alignItems: 'center' }}>
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            alignItems: 'center',
+          }}
+        >
           <SimpleText>
             <Text>Modelo com a </Text>
-            <Text style={{ fontFamily: fonts.spartanBold }}>formatação padrão</Text>
+            <Text style={{ fontFamily: fonts.spartanBold }}>
+              formatação padrão
+            </Text>
           </SimpleText>
 
-          <TouchableOpacity style={{ marginBottom: 40 }} onPress={downloadDefaultExcel}>
+          <TouchableOpacity
+            style={{ marginBottom: 40 }}
+            onPress={downloadDefaultExcel}
+          >
             <TouchableText>Baixe aqui</TouchableText>
           </TouchableOpacity>
         </View>
