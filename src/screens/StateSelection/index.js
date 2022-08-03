@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Image,
   View,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import axios from 'axios';
 import { colors } from '../../defaultStyles';
@@ -16,13 +16,13 @@ import {
   SearchArea,
   NoResults,
   Title,
-  SimpleText
+  SimpleText,
 } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 import { Card } from '../../defaultStyles';
 
-export default props => {
+export default (props) => {
   const [brazilianStates, setBrazilianStates] = useState([]);
   const [isLoading, setIsloading] = useState(true);
   const [originalData, setOriginalData] = useState([]);
@@ -41,10 +41,10 @@ export default props => {
     fetchData();
   }, []);
 
-  const handleCardPress = item => {
+  const handleCardPress = (item) => {
     props.navigation.navigate('CitySelection', {
       stateID: item.id,
-      stateName: item.nome
+      stateName: item.nome,
     });
   };
 
@@ -61,10 +61,10 @@ export default props => {
     );
   };
 
-  const search = t => {
+  const search = (t) => {
     let arr = [...originalData];
     setBrazilianStates(
-      arr.filter(d =>
+      arr.filter((d) =>
         d.nome
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
@@ -112,23 +112,23 @@ export default props => {
         <SearchArea>
           <SearchInput>
             <SearchInputText
-              placeholder="Buscar estado"
-              onChangeText={t => search(t)}
+              placeholder='Buscar estado'
+              onChangeText={(t) => search(t)}
             />
             <Icon
-              name="search-outline"
-              type="ionicon"
-              color="#c4c4c4"
+              name='search-outline'
+              type='ionicon'
+              color='#c4c4c4'
               style={{
                 paddingHorizontal: 15,
-                paddingVertical: 15
+                paddingVertical: 15,
               }}
             />
           </SearchInput>
           <TouchableOpacity onPress={handleOrderClick}>
             <Icon
-              name="order-alphabetical-ascending"
-              type="material-community"
+              name='order-alphabetical-ascending'
+              type='material-community'
               color={colors.gray}
               size={32}
               style={{ marginTop: 25, marginLeft: 25 }}
@@ -137,16 +137,21 @@ export default props => {
         </SearchArea>
         {isLoading ? (
           <ActivityIndicator
-            size="large"
-            color="#FF6B0F"
+            size='large'
+            color='#FF6B0F'
             style={{ marginTop: 50 }}
           />
         ) : (
           <FlatList
-            style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
+            style={{
+              width: '100%',
+              marginTop: 25,
+              paddingTop: 5,
+            }}
+            contentContainerStyle={{ alignItems: 'center' }}
             data={brazilianStates}
             renderItem={stateCard}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
             ListEmptyComponent={EmptyListMessage}
           />
         )}

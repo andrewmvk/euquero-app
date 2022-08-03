@@ -5,7 +5,7 @@ import {
   View,
   StyleSheet,
   Text,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
@@ -19,7 +19,7 @@ export const colors = {
   titleSubtitle: '#fff',
   backgroundMain: '#2C3196',
   backgroundSecond: '#F8F8F8',
-  gray: '#C4C4C4'
+  gray: '#C4C4C4',
 };
 
 export const fonts = {
@@ -27,7 +27,7 @@ export const fonts = {
   spartanR: 'Spartan_400Regular',
   spartanM: 'Spartan_500Medium',
   spartanBold: 'Spartan_700Bold',
-  spartanBlack: 'Spartan_900Black'
+  spartanBlack: 'Spartan_900Black',
 };
 
 export const fontSizeNoUnits = {
@@ -37,7 +37,7 @@ export const fontSizeNoUnits = {
   textInput: 16,
   text: 15,
   header: 13,
-  subtitle: 13
+  subtitle: 13,
 };
 
 export const fontSize = {
@@ -47,7 +47,7 @@ export const fontSize = {
   textInput: `${fontSizeNoUnits.textInput}` + 'px',
   text: `${fontSizeNoUnits.text}` + 'px',
   header: `${fontSizeNoUnits.header}` + 'px',
-  subtitle: `${fontSizeNoUnits.subtitle}` + 'px'
+  subtitle: `${fontSizeNoUnits.subtitle}` + 'px',
 };
 
 export const buttonOpacity = 0.6;
@@ -77,14 +77,14 @@ const Line = styled.View`
   background-color: ${colors.orange};
 `;
 
-export const BigTitle = props => {
+export const BigTitle = (props) => {
   return (
     <BigTitleView>
       <View
         style={{
           justifyContent: 'space-around',
           width: '100%',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
         <BigTitleText>{props.text}</BigTitleText>
@@ -107,14 +107,14 @@ const MediumTitleText = styled.Text`
   color: ${colors.text};
 `;
 
-export const MediumTitle = props => {
+export const MediumTitle = (props) => {
   return (
     <MediumTitleView>
       <View
         style={{
           justifyContent: 'space-around',
           width: '100%',
-          alignItems: 'flex-start'
+          alignItems: 'flex-start',
         }}
       >
         <MediumTitleText>{props.text}</MediumTitleText>
@@ -129,22 +129,22 @@ const customButtonShadow = {
     startColor: 'rgba(0,0,0,0.1)',
     offset: [0, 4],
     radius: 20,
-    containerViewStyle: { paddingBottom: 2 }
+    containerViewStyle: { paddingBottom: 2 },
   },
   large: {
     distance: 0,
     startColor: 'rgba(0,0,0,0.1)',
     offset: [0, 4],
     radius: 25,
-    containerViewStyle: { paddingBottom: 2 }
+    containerViewStyle: { paddingBottom: 2 },
   },
   rounded: {
     distance: 0,
     startColor: 'rgba(0,0,0,0.1)',
     finalColor: 'rgba(0,0,0,0.0)',
     radius: 25,
-    containerViewStyle: { margin: 20 }
-  }
+    containerViewStyle: { margin: 20 },
+  },
 };
 
 const buttonStyles = StyleSheet.create({
@@ -154,7 +154,7 @@ const buttonStyles = StyleSheet.create({
     backgroundColor: colors.orange,
     borderRadius: 20,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   large: {
     width: 250,
@@ -162,7 +162,7 @@ const buttonStyles = StyleSheet.create({
     backgroundColor: colors.orange,
     borderRadius: 25,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   register: {
     width: '90%',
@@ -170,8 +170,8 @@ const buttonStyles = StyleSheet.create({
     backgroundColor: colors.orange,
     borderRadius: 5,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
 
 const SmallButtonText = styled.Text`
@@ -252,15 +252,15 @@ export function AddButton(props) {
         justifyContent: 'flex-end',
         position: 'absolute',
         bottom: 0,
-        right: 0
+        right: 0,
       }}
     >
       <Shadow {...customButtonShadow.rounded}>
         <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
           <Icon
-            name="plus"
+            name='plus'
             size={35}
-            type="material-community"
+            type='material-community'
             color={colors.orange}
           />
         </RoundedButton>
@@ -278,7 +278,7 @@ const cardStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 5,
-    borderLeftWidth: 7
+    borderLeftWidth: 7,
   },
   cardText: {
     textAlign: 'left',
@@ -288,7 +288,7 @@ const cardStyles = StyleSheet.create({
     fontSize: fontSizeNoUnits.cardText,
     marginLeft: 22,
     color: colors.text,
-    width: screenWidth * 0.6
+    width: screenWidth * 0.6,
   },
   avaibleUBSText: {
     fontFamily: fonts.spartanR,
@@ -299,23 +299,23 @@ const cardStyles = StyleSheet.create({
     fontSize: fontSizeNoUnits.subtitle,
     bottom: 10,
     right: 22,
-    color: colors.text
-  }
+    color: colors.text,
+  },
 });
 
 const cardShadow = {
-  distance: 6,
+  distance: 2,
   startColor: 'rgba(0,0,0,0.025)',
   finalColor: 'rgba(0,0,0,0.0)',
-  radius: 5,
+  radius: 9,
   containerViewStyle: {
     marginVertical: 7,
-    height: 70,
-    width: screenWidth * 0.85
-  }
+    height: 71,
+    width: screenWidth * 0.85,
+  },
 };
 
-export const Card = props => {
+export const Card = (props) => {
   const color = props.color ? props.color : colors.gray;
 
   return (
@@ -347,14 +347,15 @@ const inputBoxStyles = StyleSheet.create({
     height: 50,
     width: '100%',
     backgroundColor: '#fff',
-    borderRadius: 5
+    borderRadius: 5,
   },
   searchInputText: {
     flex: 1,
     fontSize: fontSizeNoUnits.textInput,
     fontFamily: fonts.spartanR,
-    color: colors.text
-  }
+    color: colors.text,
+    paddingRight: 15,
+  },
 });
 
 const inputBoxShadow = {
@@ -362,10 +363,10 @@ const inputBoxShadow = {
   startColor: 'rgba(0,0,0,0.025)',
   finalColor: 'rgba(0,0,0,0.0)',
   radius: 5,
-  containerViewStyle: { marginTop: 25, height: 50, width: '100%' }
+  containerViewStyle: { marginTop: 25, height: 50, width: '100%' },
 };
 
-export const InputBox = props => {
+export const InputBox = (props) => {
   return (
     <Shadow {...inputBoxShadow}>
       <View style={inputBoxStyles.searchInput}>
@@ -373,11 +374,10 @@ export const InputBox = props => {
           name={
             props.type === 'password' ? 'lock-closed-outline' : 'person-outline'
           }
-          type="ionicon"
+          type='ionicon'
           color={colors.gray}
           style={{
             paddingHorizontal: 15,
-            paddingVertical: 15
           }}
         />
         <TextInput

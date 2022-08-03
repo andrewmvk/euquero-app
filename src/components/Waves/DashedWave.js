@@ -54,7 +54,7 @@ export default (props) => {
           Q${qPointA2} ${qPointB2} 
         `}
         strokeDasharray={`10 10 8`}
-        stroke="#fff"
+        stroke='#fff'
         strokeWidth={2}
       />
     </Svg>
