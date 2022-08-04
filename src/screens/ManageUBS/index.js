@@ -6,8 +6,13 @@ import { Container, TrashIcon, SearchInput, SearchInputText, SearchArea } from '
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 import { AddButton, buttonOpacity, Card, colors } from '../../defaultStyles';
+import Modal from '../../components/Modal';
 
 export default (props) => {
+  const [modalVisibility, setModalVisibility] = useState(false);
+  const [modalData, setModalData] = useState({ title: '', text: '', iconName: '', iconType: '' });
+  const [selectedUbs, setSelectedUbs] = useState(null);
+
   const [ubs, setUbs] = useState([
     {
       id: 1,
@@ -47,15 +52,34 @@ export default (props) => {
     },
   ]);
 
-  const deleteUbs = (id) => {
-    const filteredData = ubs.filter((item) => item.id !== id);
+  const deleteUbs = () => {
+    const filteredData = ubs.filter((ubs) => ubs.id !== selectedUbs.id);
     setUbs(filteredData);
+    setSelectedUbs(null);
   };
+
+  function deleteUbsModal(item) {
+    setSelectedUbs(item);
+    const title = 'Deseja mesmo EXCLUIR esta UBS ?';
+    const text = item.name;
+    const iconData = { name: 'trash-can-outline', type: 'material-community' };
+    setModalData({ title, text, iconName: iconData.name, iconType: iconData.type });
+    toggleModal();
+  }
+
+  function onPressYes() {
+    toggleModal();
+    deleteUbs();
+  }
+
+  function toggleModal() {
+    setModalVisibility(!modalVisibility);
+  }
 
   const cards = ({ item }) => {
     return (
       <Card value={item.id} key={item.id} text={item.name} color={colors.orange}>
-        <TrashIcon activeOpacity={buttonOpacity} onPress={() => deleteUbs(item.id)}>
+        <TrashIcon activeOpacity={buttonOpacity} onPress={() => deleteUbsModal(item)}>
           <Icon name="trash-can-outline" size={35} type="material-community" color="#c4c4c4" />
         </TrashIcon>
       </Card>
@@ -98,6 +122,13 @@ export default (props) => {
         />
       </Container>
       <AddButton onPress={() => props.navigation.navigate('RegisterUBS')} />
+      <Modal
+        isVisible={modalVisibility}
+        onPressYes={selectedUbs ? onPressYes : null}
+        onBackPress={toggleModal}
+        icon={{ name: modalData.iconName, type: modalData.iconType }}
+        data={{ title: modalData.title, text: modalData.text }}
+      />
     </>
   );
 };
