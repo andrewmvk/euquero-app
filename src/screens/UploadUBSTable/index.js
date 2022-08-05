@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, TouchableOpacity, View, Linking, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View, Linking, Alert, ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { db, storage } from '../../services/firebase.config';
 import { getDownloadURL, ref } from 'firebase/storage';
@@ -14,6 +14,8 @@ import Header from '../../components/Header';
 import { SimpleText, Title, Container, ButtonView, TouchableText } from './styles';
 
 export default (props) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const downloadDefaultExcel = async () => {
     const fileName = 'cadastro_estabelecimentos_final5.xlsx';
     const pathReference = ref(storage, fileName);
@@ -24,6 +26,7 @@ export default (props) => {
   };
 
   const handleDocument = async () => {
+    setIsLoading(true);
     try {
       const fileDoc = await DocumentPicker.getDocumentAsync({
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -150,9 +153,16 @@ export default (props) => {
           <Text style={{ fontFamily: fonts.spartanBold }}>seguindo a formatação padrão.</Text>
         </SimpleText>
 
-        <ButtonView>
-          <RegisterButton text="Fazer Upload" onPress={handleDocument} />
-        </ButtonView>
+        {isLoading ? (
+          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+        ) : (
+          <ButtonView>
+            <RegisterButton
+              text="Fazer Upload"
+              onPress={() => handleDocument().then(() => setIsLoading(false))}
+            />
+          </ButtonView>
+        )}
 
         <View
           style={{

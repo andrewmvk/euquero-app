@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { FlatList, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../services/firebase.config';
 
 import { Container, TrashIcon, SearchInput, SearchInputText, SearchArea } from './styles';
 import Header from '../../components/Header';
@@ -13,44 +15,30 @@ export default (props) => {
   const [modalData, setModalData] = useState({ title: '', text: '', iconName: '', iconType: '' });
   const [selectedUbs, setSelectedUbs] = useState(null);
 
-  const [ubs, setUbs] = useState([
-    {
-      id: 1,
-      name: 'UBS Av. Goiás',
-    },
-    {
-      id: 2,
-      name: 'UBS Vila Sofia',
-    },
-    {
-      id: 3,
-      name: 'UBS Vila Olavo',
-    },
-    {
-      id: 4,
-      name: 'UBS Conjunto Rio Clarooooooooo',
-    },
-    {
-      id: 5,
-      name: 'UBS Vila Sofia',
-    },
-    {
-      id: 6,
-      name: 'UBS Vila Sofia',
-    },
-    {
-      id: 7,
-      name: 'UBS Vila Sofia',
-    },
-    {
-      id: 8,
-      name: 'UBS Vila Sofia',
-    },
-    {
-      id: 9,
-      name: 'UBS Vila Sofia',
-    },
-  ]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [ubs, setUbs] = useState([]);
+  const [ubsBackup, setUbsBackup] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      let list = [];
+      try {
+        const ubsQuerySnapshot = await getDocs(collection(db, 'ubs'));
+
+        ubsQuerySnapshot.forEach((ubs) => {
+          list.push({ id: ubs.id, ...ubs.data() });
+        });
+        setUbs(list);
+        setUbsBackup(list);
+      } catch (err) {
+        console.log('Something went wrong while trying to fetch data');
+        console.log(err);
+      }
+    };
+
+    fetchData().then(() => setIsLoading(false));
+  }, []);
 
   const deleteUbs = () => {
     const filteredData = ubs.filter((ubs) => ubs.id !== selectedUbs.id);
@@ -75,6 +63,24 @@ export default (props) => {
   function toggleModal() {
     setModalVisibility(!modalVisibility);
   }
+
+  const search = (t) => {
+    let arr = [...ubsBackup];
+    setUbs(
+      arr.filter((d) =>
+        d.name
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .includes(
+            t
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .toLowerCase(),
+          ),
+      ),
+    );
+  };
 
   const cards = ({ item }) => {
     return (
@@ -114,12 +120,17 @@ export default (props) => {
             />
           </TouchableOpacity>
         </SearchArea>
-        <FlatList
-          style={{ marginTop: 32, marginBottom: 25 }}
-          data={ubs}
-          renderItem={cards}
-          keyExtractor={(item) => item.id}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+        ) : (
+          <FlatList
+            style={{ marginTop: 32, marginBottom: 25, width: '100%' }}
+            contentContainerStyle={{ alignItems: 'center' }}
+            data={ubs}
+            renderItem={cards}
+            keyExtractor={(item) => item.id}
+          />
+        )}
       </Container>
       <AddButton onPress={() => props.navigation.navigate('RegisterUBS')} />
       <Modal

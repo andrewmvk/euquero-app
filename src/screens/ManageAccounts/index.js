@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Switch } from 'react-native';
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { ActivityIndicator, FlatList, Switch } from 'react-native';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 
 import { Container, SwitchView } from './styles';
@@ -15,33 +15,49 @@ export default (props) => {
   const [modalVisibility, setModalVisibility] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       let list = [];
       try {
-        const querySnapshot = await getDocs(collection(db, 'users'));
+        const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        if (currentUserSnap.data().isAdmin) {
+          const querySnapshot = await getDocs(collection(db, 'users'));
 
-        querySnapshot.forEach((doc) => {
-          if (doc.data().email != auth.currentUser.email) {
-            list.push({ id: doc.id, ...doc.data() });
-          }
-        });
+          querySnapshot.forEach((doc) => {
+            if (doc.data().email != auth.currentUser.email) {
+              list.push({ id: doc.id, ...doc.data() });
+            }
+          });
 
-        setAccounts(list);
+          list.sort((a, b) => {
+            return a.disabled === b.disabled ? 0 : a.disabled ? 1 : -1;
+          });
+          setAccounts(list);
+        } else {
+          console.log('This account does not have a admin permission to access other accounts');
+        }
       } catch (err) {
+        console.log('Something went wront while trying to access database accounts');
         console.log(err);
       }
     };
+
     if (!props.route.params?.newUser) {
-      fetchData();
+      fetchData().then(() => setIsLoading(false));
     } else {
+      setIsLoading(true);
       const title = 'Conta cadastrada com sucesso';
       const text = props.route.params.newUser.email;
       const icon = { name: 'check', type: 'material-community' };
       setModalData({ title, text, iconName: icon.name, iconType: icon.type });
+      setSelectedUser(null);
       toggleModal();
 
       setAccounts([...accounts, props.route.params.newUser]);
+      setIsLoading(false);
     }
   }, [props.route.params?.newUser]);
 
@@ -117,12 +133,17 @@ export default (props) => {
       <DashedCircle />
       <Container>
         <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
-        <FlatList
-          style={{ marginTop: 45, marginBottom: 25 }}
-          data={accounts}
-          renderItem={stateCard}
-          keyExtractor={(item) => item.id}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+        ) : (
+          <FlatList
+            style={{ marginTop: 45, marginBottom: 25, width: '100%' }}
+            contentContainerStyle={{ alignItems: 'center' }}
+            data={accounts}
+            renderItem={stateCard}
+            keyExtractor={(item) => item.id}
+          />
+        )}
       </Container>
       <AddButton onPress={() => props.navigation.navigate('RegisterAccounts')} />
       <Modal
