@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   Dimensions,
+  Image,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
@@ -227,9 +228,7 @@ export function RegisterButton(props) {
       style={buttonStyles.register}
       onPress={props.onPress}
     >
-      <RegisterButtonText>
-        {props.text ? props.text : 'TEXT'}
-      </RegisterButtonText>
+      <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
     </TouchableOpacity>
   );
 }
@@ -257,12 +256,7 @@ export function AddButton(props) {
     >
       <Shadow {...customButtonShadow.rounded}>
         <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
-          <Icon
-            name='plus'
-            size={35}
-            type='material-community'
-            color={colors.orange}
-          />
+          <Icon name="plus" size={35} type="material-community" color={colors.orange} />
         </RoundedButton>
       </Shadow>
     </View>
@@ -332,7 +326,7 @@ export const Card = (props) => {
           </Text>
         ) : null}
         {props.ubsCount ? (
-          <Text style={cardStyles.avaibleUBSText}>{props.ubsCount}</Text>
+          <Text style={cardStyles.avaibleUBSText}>{props.ubsCount + ' UBS'}</Text>
         ) : null}
         {props.children ? { ...props.children } : null}
       </TouchableOpacity>
@@ -371,10 +365,8 @@ export const InputBox = (props) => {
     <Shadow {...inputBoxShadow}>
       <View style={inputBoxStyles.searchInput}>
         <Icon
-          name={
-            props.type === 'password' ? 'lock-closed-outline' : 'person-outline'
-          }
-          type='ionicon'
+          name={props.type === 'password' ? 'lock-closed-outline' : 'person-outline'}
+          type="ionicon"
           color={colors.gray}
           style={{
             paddingHorizontal: 15,
@@ -390,5 +382,42 @@ export const InputBox = (props) => {
         />
       </View>
     </Shadow>
+  );
+};
+
+const NoResults = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  margin-top: 100px;
+`;
+
+const Title = styled.Text`
+  font-size: 24px;
+  color: #9bb5cc;
+  font-family: ${fonts.spartanBold};
+  margin-top: 16px;
+`;
+
+const SimpleText = styled.Text`
+  font-size: 20px;
+  font-family: ${fonts.spartanR};
+  color: #808080;
+  text-align: center;
+  margin: 16px 30px 16px 30px;
+`;
+
+export const EmptyListMessage = () => {
+  return (
+    <NoResults>
+      <View>
+        <Image
+          source={require('../assets/images/noResultsImg.png')}
+          style={{ resizeMode: 'contain', height: 200 }}
+        />
+      </View>
+      <Title>NADA POR AQUI!</Title>
+      <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
+    </NoResults>
   );
 };

@@ -1,39 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { FlatList, TouchableOpacity, Image, View, ActivityIndicator } from 'react-native';
+import { FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import axios from 'axios';
-import { colors } from '../../defaultStyles';
-import {
-  Container,
-  SearchInput,
-  SearchInputText,
-  SearchArea,
-  NoResults,
-  Title,
-  SimpleText,
-} from './styles';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../services/firebase.config';
+
+import { colors, EmptyListMessage } from '../../defaultStyles';
+import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 import { Card } from '../../defaultStyles';
 
 export default (props) => {
   const [brazilianStates, setBrazilianStates] = useState([]);
-  const [isLoading, setIsloading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [originalData, setOriginalData] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
-      setIsloading(true);
-      const response = await axios
-        .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados/')
-        .finally(() => setIsloading(false));
+    const fetchData = async () => {
+      setIsLoading(true);
+      let statesArray = [];
 
-      setBrazilianStates(response.data);
+      const response = await axios.get(
+        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
+      );
 
-      setOriginalData(response.data);
-    }
+      const ubsAmountSnap = await getDocs(collection(db, 'ubsCount'));
 
-    fetchData();
+      for (i = 0; i < response.data.length; i++) {
+        let ubsAmount = 0;
+        for (j = 0; j < ubsAmountSnap.docs.length; j++) {
+          if (+ubsAmountSnap.docs[j].id === response.data[i].id) {
+            ubsAmount = ubsAmountSnap.docs[j].data().amount;
+          }
+        }
+        const stateObject = {
+          nome: response.data[i].nome,
+          id: response.data[i].id,
+          ubsAmount: ubsAmount ? ubsAmount : 0,
+        };
+        statesArray.push(stateObject);
+      }
+
+      statesArray.sort((a, b) =>
+        a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
+      );
+
+      setBrazilianStates(statesArray);
+      setOriginalData(statesArray);
+    };
+
+    fetchData().then(() => setIsLoading(false));
   }, []);
 
   const handleCardPress = (item) => {
@@ -49,9 +66,10 @@ export default (props) => {
       <Card
         value={item.id}
         key={item.id}
+        color={item.ubsAmount != 0 ? colors.orange : colors.gray}
         onPress={() => handleCardPress(item)}
         text={item.nome}
-        ubsCount={'00 UBS'}
+        ubsCount={`${item.ubsAmount}`}
       />
     );
   };
@@ -80,21 +98,6 @@ export default (props) => {
     newList.sort((a, b) => (a.nome > b.nome ? 1 : b.nome > a.nome ? -1 : 0));
 
     setBrazilianStates(newList);
-  };
-
-  const EmptyListMessage = () => {
-    return (
-      <NoResults>
-        <View>
-          <Image
-            source={require('../../../assets/images/noResultsImg.png')}
-            style={{ resizeMode: 'contain', height: 200 }}
-          />
-        </View>
-        <Title>NADA POR AQUI!</Title>
-        <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
-      </NoResults>
-    );
   };
 
   return (

@@ -7,7 +7,7 @@ import { db } from '../../services/firebase.config';
 import { Container, TrashIcon, SearchInput, SearchInputText, SearchArea } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
-import { AddButton, buttonOpacity, Card, colors } from '../../defaultStyles';
+import { AddButton, buttonOpacity, Card, colors, EmptyListMessage } from '../../defaultStyles';
 import Modal from '../../components/Modal';
 
 export default (props) => {
@@ -65,6 +65,7 @@ export default (props) => {
   }
 
   const search = (t) => {
+    setIsLoading(true);
     let arr = [...ubsBackup];
     setUbs(
       arr.filter((d) =>
@@ -99,7 +100,10 @@ export default (props) => {
         <Header text={'Administrativo - UBS'} onPress={() => props.navigation.goBack()} />
         <SearchArea>
           <SearchInput>
-            <SearchInputText placeholder="Buscar UBS" onChangeText={(t) => search(t)} />
+            <SearchInputText
+              placeholder="Buscar UBS"
+              onChangeText={(t) => search(t).then(() => setIsLoading(false))}
+            />
             <Icon
               name="search-outline"
               type="ionicon"
@@ -129,6 +133,7 @@ export default (props) => {
             data={ubs}
             renderItem={cards}
             keyExtractor={(item) => item.id}
+            ListEmptyComponent={EmptyListMessage}
           />
         )}
       </Container>
