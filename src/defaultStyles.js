@@ -7,6 +7,7 @@ import {
   Text,
   Dimensions,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
@@ -238,7 +239,11 @@ export function RegisterButton(props) {
       style={buttonStyles.register}
       onPress={props.onPress}
     >
-      <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
+      {props.isLoading ? (
+        <ActivityIndicator size="large" color="#fff" />
+      ) : (
+        <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
+      )}
     </TouchableOpacity>
   );
 }

@@ -2,38 +2,18 @@ import React from 'react';
 import { Icon } from 'react-native-elements';
 import { View } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
-import { auth } from '../../services/firebase.config';
 
-import { Container, ManageTouchableBox, ManageBoxShadow, ManageText, LogoutButton } from './styles';
+import { Container, ManageTouchableBox, ManageBoxShadow, ManageText } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 import { buttonOpacity, colors } from '../../defaultStyles';
 
 export default (props) => {
-  function goHome() {
-    props.navigation.navigate('Home');
-  }
-
-  function handleSignOut() {
-    auth
-      .signOut()
-      .then(() => {
-        props.navigation.goBack();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
   return (
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo'} onPress={goHome}>
-          <LogoutButton activeOpacity={buttonOpacity} onPress={handleSignOut}>
-            <Icon name="logout" size={30} type="material-community" color="#959595" />
-          </LogoutButton>
-        </Header>
+        <Header text={'Administrativo'} onPress={() => props.navigation.goBack()} />
 
         <View style={{ alignItems: 'center', marginTop: 50 }}>
           {props.route.params.isAdmin ? (

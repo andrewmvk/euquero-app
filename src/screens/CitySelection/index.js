@@ -54,9 +54,9 @@ export default (props) => {
       <Card
         value={item.id}
         key={item.id}
+        color={colors.orange}
         onPress={() => handleCardPress(item)}
         text={item.nome}
-        ubsCount={'00'}
       />
     );
   };

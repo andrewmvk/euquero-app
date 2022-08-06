@@ -6,9 +6,12 @@ export const Title = styled.Text`
   color: ${colors.text};
   font-family: ${fonts.spartanR};
   margin-bottom: 10px;
+  width: 70%;
+  text-align: center;
 `;
 
 export const Description = styled.Text`
+  text-align: center;
   font-size: ${fontSize.text};
   color: ${colors.text};
   font-family: ${fonts.spartanBold};
@@ -17,10 +20,11 @@ export const Description = styled.Text`
 export const TextView = styled.View`
   width: 100%;
   align-items: center;
-  flex: 1;
+  flex: 1.25;
 `;
 
 export const ButtonText = styled.Text`
+  text-align: center;
   font-family: ${fonts.spartanR};
   font-size: ${fontSize.title};
   color: ${colors.titleSubtitle};

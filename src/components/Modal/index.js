@@ -17,11 +17,11 @@ const AnimatedLine = Animated.createAnimatedComponent(View);
 export default (props) => {
   const deviceHeight = Dimensions.get('window').height;
   const deviceWidth = Dimensions.get('window').width;
-  const defaultHeight = deviceHeight * 0.35;
+  const defaultHeight = deviceHeight * 0.4;
   let modalContainerHeight = defaultHeight;
 
   if (props.onPressYes) {
-    modalContainerHeight = deviceHeight * 0.45;
+    modalContainerHeight = deviceHeight * 0.5;
   }
 
   const animatedWidth = useSharedValue(deviceWidth);
@@ -65,7 +65,7 @@ export default (props) => {
         <AnimatedLine animatedProps={straightLineProps} />
         {props.icon ? (
           <View style={styles.iconView}>
-            <Icon name={props.icon?.name} size={90} type={props.icon?.type} color={colors.gray} />
+            <Icon name={props.icon?.name} size={100} type={props.icon?.type} color={colors.gray} />
           </View>
         ) : null}
 

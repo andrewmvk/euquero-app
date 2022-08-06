@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
 import { FlatList, TouchableOpacity, Image, View, ActivityIndicator } from 'react-native';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
 
 import { colors } from '../../defaultStyles';
@@ -28,13 +28,15 @@ export default (props) => {
       setIsLoading(true);
       let list = [];
       try {
-        const ubsQuerySnapshot = await getDocs(collection(db, 'ubs'));
+        const cityIDSlice = props.route.params.cityID.toString().slice(0, -1);
+        const cityID = +cityIDSlice;
+        const ubsQuery = query(collection(db, 'ubs'), where('city', '==', cityID));
+        const ubsSnapshot = await getDocs(ubsQuery);
 
-        ubsQuerySnapshot.forEach((ubs) => {
-          if (ubs.data().uf === props.route.params.stateID) {
-            list.push({ id: ubs.id, ...ubs.data() });
-          }
-        });
+        for (i = 0; i < ubsSnapshot.docs.length; i++) {
+          list.push({ id: ubsSnapshot.docs[i].id, ...ubsSnapshot.docs[i].data() });
+        }
+
         setUbs(list);
         setUbsBackup(list);
       } catch (err) {

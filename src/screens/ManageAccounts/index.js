@@ -56,7 +56,7 @@ export default (props) => {
       setSelectedUser(null);
       toggleModal();
 
-      setAccounts([...accounts, props.route.params.newUser]);
+      setAccounts([props.route.params.newUser, ...accounts]);
       setIsLoading(false);
     }
   }, [props.route.params?.newUser]);

@@ -17,7 +17,7 @@ export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const downloadDefaultExcel = async () => {
-    const fileName = 'cadastro_estabelecimentos_final5.xlsx';
+    const fileName = 'cadastro_estabelecimentos_final9.xlsx';
     const pathReference = ref(storage, fileName);
 
     await getDownloadURL(pathReference).then(async (url) => {
@@ -74,6 +74,7 @@ export default (props) => {
         const promises = dataFile.map(async (data) => {
           await setDoc(doc(db, 'ubs', data.id.toString()), {
             uf: data.uf,
+            city: data.city,
             name: data.name,
             location,
           });
@@ -132,7 +133,11 @@ export default (props) => {
   return (
     <>
       <DashedCircle />
-      <Header text={'Administrativo - Upload'} onPress={() => props.navigation.goBack()} />
+      <Header
+        text={'Administrativo - Upload'}
+        onPress={() => props.navigation.goBack()}
+        pointerEvents={isLoading ? 'none' : 'auto'}
+      />
       <Container>
         <View style={{ marginTop: '25%' }}>
           <Icon
@@ -159,6 +164,7 @@ export default (props) => {
           <ButtonView>
             <RegisterButton
               text="Fazer Upload"
+              pointerEvents={isLoading ? 'none' : 'auto'}
               onPress={() => handleDocument().then(() => setIsLoading(false))}
             />
           </ButtonView>
