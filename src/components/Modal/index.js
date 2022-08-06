@@ -1,21 +1,58 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Modal from 'react-native-modal';
+import Animated, {
+  Easing,
+  useAnimatedProps,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { buttonOpacity, colors } from '../../defaultStyles';
 import { ButtonText, Description, TextView, Title } from './styles';
 
+const AnimatedLine = Animated.createAnimatedComponent(View);
+
 export default (props) => {
   const deviceHeight = Dimensions.get('window').height;
+  const deviceWidth = Dimensions.get('window').width;
   const defaultHeight = deviceHeight * 0.35;
   let modalContainerHeight = defaultHeight;
 
-  if (props.children) {
-    modalContainerHeight = deviceHeight * 0.5;
-  } else if (props.onPressYes) {
+  if (props.onPressYes) {
     modalContainerHeight = deviceHeight * 0.45;
   }
+
+  const animatedWidth = useSharedValue(deviceWidth);
+
+  const straightLineProps = useAnimatedProps(() => {
+    return {
+      width: animatedWidth.value,
+      style: {
+        backgroundColor: colors.orange,
+        height: 5,
+        left: 0,
+        position: 'absolute',
+        top: 0,
+      },
+    };
+  });
+
+  useEffect(() => {
+    if (props.isVisible) {
+      animatedWidth.value = deviceWidth;
+
+      animatedWidth.value = withTiming(0, {
+        duration: 5000,
+        easing: Easing.ease,
+      });
+
+      setTimeout(() => {
+        props?.onBackPress();
+      }, 5000);
+    }
+  }, [props.isVisible]);
 
   return (
     <Modal
@@ -25,7 +62,7 @@ export default (props) => {
       style={{ margin: 0 }}
     >
       <View style={[styles.container, { height: modalContainerHeight }]}>
-        <View style={styles.straightLine} />
+        <AnimatedLine animatedProps={straightLineProps} />
         {props.icon ? (
           <View style={styles.iconView}>
             <Icon name={props.icon?.name} size={90} type={props.icon?.type} color={colors.gray} />
@@ -68,13 +105,6 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-  },
-  straightLine: {
-    backgroundColor: colors.orange,
-    height: 5,
-    width: '100%',
-    position: 'absolute',
-    top: 0,
   },
   iconView: {
     justifyContent: 'center',
