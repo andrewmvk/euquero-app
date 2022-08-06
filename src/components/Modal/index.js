@@ -33,8 +33,8 @@ export default (props) => {
         ) : null}
 
         <TextView>
-          <Title>{props?.data?.title ? props?.data.title : 'TÍTULO'}</Title>
-          {props?.data?.text ? <Description>{props?.data.text}</Description> : null}
+          <Title>{props.data?.title ? props.data.title : 'TÍTULO'}</Title>
+          {props.data?.text ? <Description>{props.data.text}</Description> : null}
         </TextView>
 
         {props.onPressYes ? (
@@ -55,8 +55,6 @@ export default (props) => {
             </TouchableOpacity>
           </View>
         ) : null}
-
-        {props.children ? props.children : null}
       </View>
     </Modal>
   );

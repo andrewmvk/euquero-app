@@ -1,32 +1,24 @@
-import React from "react";
-import { TouchableOpacity, StyleSheet, SafeAreaView, Text } from "react-native";
-import { Icon } from "react-native-elements";
-import { ScreenWidth } from "react-native-elements/dist/helpers";
+import React from 'react';
+import { TouchableOpacity, StyleSheet, SafeAreaView, Text } from 'react-native';
+import { Icon } from 'react-native-elements';
+import { ScreenWidth } from 'react-native-elements/dist/helpers';
 
-import { colors, fonts, buttonOpacity } from "../defaultStyles";
+import { colors, fonts, buttonOpacity } from '../defaultStyles';
 
 export default (props) => {
   return (
     <SafeAreaView
-      style={[
-        styles.container,
-        { position: props.absolute ? "absolute" : "relative" },
-      ]}
+      style={[styles.container, { position: props.absolute ? 'absolute' : 'relative' }]}
     >
-      <TouchableOpacity
-        {...props}
-        activeOpacity={buttonOpacity}
-        style={styles.arrowBack}
-      >
+      <TouchableOpacity {...props} activeOpacity={buttonOpacity} style={styles.arrowBack}>
         <Icon
           name="chevron-back-outline"
           type="ionicon"
           color={props.color ? props.color : colors.orange}
         />
       </TouchableOpacity>
-      {props.text ? (
-        <Text style={styles.text} numberOfLines={1}>{`${props.text}`}</Text>
-      ) : null}
+      {props.text ? <Text style={styles.text} numberOfLines={1}>{`${props.text}`}</Text> : null}
+      {props.children ? props.children : null}
     </SafeAreaView>
   );
 };
@@ -34,17 +26,17 @@ export default (props) => {
 const styles = StyleSheet.create({
   container: {
     height: 30,
-    width: "100%",
+    width: '100%',
     marginTop: 50,
-    paddingHorizontal: "5%",
-    flexDirection: "row",
-    alignItems: "center",
+    paddingHorizontal: '5%',
+    flexDirection: 'row',
+    alignItems: 'center',
     zIndex: 5,
   },
   arrowBack: {
-    height: "100%",
+    height: '100%',
     width: 30,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   text: {
     fontFamily: fonts.spartanBold,

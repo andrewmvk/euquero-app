@@ -128,6 +128,7 @@ const customButtonShadow = {
   small: {
     distance: 0,
     startColor: 'rgba(0,0,0,0.1)',
+    distance: 10,
     offset: [0, 4],
     radius: 20,
     containerViewStyle: { paddingBottom: 2 },
@@ -135,16 +136,25 @@ const customButtonShadow = {
   large: {
     distance: 0,
     startColor: 'rgba(0,0,0,0.1)',
+    distance: 10,
     offset: [0, 4],
     radius: 25,
     containerViewStyle: { paddingBottom: 2 },
   },
   rounded: {
     distance: 0,
-    startColor: 'rgba(0,0,0,0.1)',
-    finalColor: 'rgba(0,0,0,0.0)',
-    radius: 25,
-    containerViewStyle: { margin: 20 },
+    startColor: 'rgba(0,0,0,0.05)',
+    finalColor: 'rgba(0,0,0,0)',
+    radius: 35,
+    distance: 10,
+    containerViewStyle: {
+      margin: 20,
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+    },
   },
 };
 
@@ -237,7 +247,7 @@ const RoundedButton = styled.TouchableOpacity`
   z-index: 5;
   height: 70px;
   width: 70px;
-  border-radius: 50px;
+  border-radius: 35px;
   background-color: white;
   justify-content: center;
   align-items: center;
@@ -245,21 +255,11 @@ const RoundedButton = styled.TouchableOpacity`
 
 export function AddButton(props) {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
-      }}
-    >
-      <Shadow {...customButtonShadow.rounded}>
-        <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
-          <Icon name="plus" size={35} type="material-community" color={colors.orange} />
-        </RoundedButton>
-      </Shadow>
-    </View>
+    <Shadow {...customButtonShadow.rounded}>
+      <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
+        <Icon name="plus" size={35} type="material-community" color={colors.orange} />
+      </RoundedButton>
+    </Shadow>
   );
 }
 
@@ -299,9 +299,10 @@ const cardStyles = StyleSheet.create({
 
 const cardShadow = {
   distance: 2,
-  startColor: 'rgba(0,0,0,0.025)',
+  startColor: 'rgba(0,0,0,0.035)',
   finalColor: 'rgba(0,0,0,0.0)',
-  radius: 9,
+  distance: 10,
+  radius: 5,
   containerViewStyle: {
     marginVertical: 7,
     height: 71,

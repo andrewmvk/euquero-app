@@ -6,6 +6,15 @@ export const Container = styled.SafeAreaView`
   align-items: center;
 `;
 
+export const LogoutButton = styled.TouchableOpacity`
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 5;
+  margin-right: 20px;
+  transform: rotate(180deg);
+`;
+
 export const ManageText = styled.Text`
   padding-top: 10px;
   font-family: ${defaultS.fonts.spartanR};
