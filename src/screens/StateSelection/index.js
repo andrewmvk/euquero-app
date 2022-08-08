@@ -19,35 +19,40 @@ export default (props) => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      let statesArray = [];
 
-      const response = await axios.get(
-        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
-      );
+      try {
+        const response = await axios.get(
+          'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
+        );
 
-      const ubsAmountSnap = await getDocs(collection(db, 'ubsCount'));
+        const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountStates'));
 
-      for (i = 0; i < response.data.length; i++) {
-        let ubsAmount = 0;
-        for (j = 0; j < ubsAmountSnap.docs.length; j++) {
-          if (+ubsAmountSnap.docs[j].id === response.data[i].id) {
-            ubsAmount = ubsAmountSnap.docs[j].data().amount;
+        let statesArray = [];
+        for (i = 0; i < response.data.length; i++) {
+          let stateObject = {
+            id: response.data[i].id,
+            nome: response.data[i].nome,
+            ubsAmount: 0,
+          };
+          const index = ubsAmountSnap.docs.findIndex((state) => {
+            return +state.id === response.data[i].id;
+          });
+          if (index !== -1) {
+            stateObject.ubsAmount = ubsAmountSnap.docs[index].data().amount;
           }
+          statesArray.push(stateObject);
         }
-        const stateObject = {
-          nome: response.data[i].nome,
-          id: response.data[i].id,
-          ubsAmount: ubsAmount ? ubsAmount : 0,
-        };
-        statesArray.push(stateObject);
+
+        statesArray.sort((a, b) =>
+          a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
+        );
+
+        setBrazilianStates(statesArray);
+        setOriginalData(statesArray);
+      } catch (err) {
+        console.log('Something went wrong while trying to fetch data from database or State API.');
+        console.log(err);
       }
-
-      statesArray.sort((a, b) =>
-        a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
-      );
-
-      setBrazilianStates(statesArray);
-      setOriginalData(statesArray);
     };
 
     fetchData().then(() => setIsLoading(false));

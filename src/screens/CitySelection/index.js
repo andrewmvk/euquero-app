@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
 import { FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import axios from 'axios';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../services/firebase.config';
+
 import { colors, EmptyListMessage } from '../../defaultStyles';
 import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
 import { Card } from '../../defaultStyles';
@@ -11,32 +14,50 @@ import DashedCircle from '../../components/DashedCircle';
 export default (props) => {
   const [cities, setCities] = useState([]);
   const [originalData, setOriginalData] = useState([]);
-  const [isLoading, setIsloading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  //api request
   useEffect(() => {
     async function fetchData() {
-      const response = await axios
-        .get(
+      try {
+        const response = await axios.get(
           `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`,
-        )
-        .finally(() => setIsloading(false));
+        );
 
-      let treatedData = [];
-      for (i = 0; i < response.data.length; i++) {
-        const cityObject = {
-          id: response.data[i].id,
-          nome: response.data[i].nome,
-        };
-        treatedData.push(cityObject);
+        const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountCities'));
+
+        let citiesArray = [];
+        for (i = 0; i < response.data.length; i++) {
+          const cityIDSlice = response.data[i].id.toString().slice(0, -1);
+          const cityID = +cityIDSlice;
+
+          let cityObject = {
+            id: cityID,
+            nome: response.data[i].nome,
+            ubsAmount: 0,
+          };
+          const index = ubsAmountSnap.docs.findIndex((city) => {
+            return +city.id === cityID;
+          });
+          if (index !== -1) {
+            cityObject.ubsAmount = ubsAmountSnap.docs[index].data().amount;
+          }
+          citiesArray.push(cityObject);
+        }
+
+        citiesArray.sort((a, b) =>
+          a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
+        );
+
+        setCities(citiesArray);
+
+        setOriginalData(citiesArray);
+      } catch (err) {
+        console.log('Something went wrong while trying to fetch data from database or Cities API.');
+        console.log(err);
       }
-
-      setCities(response.data);
-
-      setOriginalData(response.data);
     }
 
-    fetchData();
+    fetchData().then(() => setIsLoading(false));
   }, []);
 
   const handleCardPress = (item) => {
@@ -54,9 +75,10 @@ export default (props) => {
       <Card
         value={item.id}
         key={item.id}
-        color={colors.orange}
+        color={item.ubsAmount == 0 ? colors.gray : colors.orange}
         onPress={() => handleCardPress(item)}
         text={item.nome}
+        ubsCount={`${item.ubsAmount}`}
       />
     );
   };

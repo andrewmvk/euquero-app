@@ -28,8 +28,7 @@ export default (props) => {
       setIsLoading(true);
       let list = [];
       try {
-        const cityIDSlice = props.route.params.cityID.toString().slice(0, -1);
-        const cityID = +cityIDSlice;
+        const cityID = props.route.params.cityID;
         const ubsQuery = query(collection(db, 'ubs'), where('city', '==', cityID));
         const ubsSnapshot = await getDocs(ubsQuery);
 
