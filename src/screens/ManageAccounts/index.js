@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Switch } from 'react-native';
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { ActivityIndicator, FlatList, Switch } from 'react-native';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 
 import { Container, SwitchView } from './styles';
@@ -11,61 +11,97 @@ import Modal from '../../components/Modal';
 
 export default (props) => {
   const [accounts, setAccounts] = useState([]);
-  const [modalData, setModalData] = useState({ email: '', type: '' });
+  const [modalData, setModalData] = useState({ title: '', text: '', iconName: '', iconType: '' });
   const [modalVisibility, setModalVisibility] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       let list = [];
       try {
-        const querySnapshot = await getDocs(collection(db, 'users'));
+        const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        if (currentUserSnap.data().isAdmin) {
+          const querySnapshot = await getDocs(collection(db, 'users'));
 
-        querySnapshot.forEach((doc) => {
-          if (doc.data().email != auth.currentUser.email) {
-            list.push({ id: doc.id, ...doc.data() });
-          }
-        });
+          querySnapshot.forEach((doc) => {
+            if (doc.data().email != auth.currentUser.email) {
+              list.push({ id: doc.id, ...doc.data() });
+            }
+          });
 
-        setAccounts(list);
+          list.sort((a, b) => {
+            return a.disabled === b.disabled ? 0 : a.disabled ? 1 : -1;
+          });
+          setAccounts(list);
+        } else {
+          console.log('This account does not have a admin permission to access other accounts');
+        }
       } catch (err) {
+        console.log('Something went wront while trying to access database accounts');
         console.log(err);
       }
     };
+
     if (!props.route.params?.newUser) {
-      fetchData();
+      fetchData().then(() => setIsLoading(false));
     } else {
-      switchModal(props.route.params.newUser, 'add');
-      setAccounts([...accounts, props.route.params.newUser]);
+      setIsLoading(true);
+      const title = 'Conta cadastrada com sucesso';
+      const text = props.route.params.newUser.email;
+      const icon = { name: 'check', type: 'material-community' };
+      setModalData({ title, text, iconName: icon.name, iconType: icon.type });
+      setSelectedUser(null);
+      toggleModal();
+
+      setAccounts([props.route.params.newUser, ...accounts]);
+      setIsLoading(false);
     }
   }, [props.route.params?.newUser]);
 
-  const disableAccount = async (user) => {
+  const enableDisableAccount = async () => {
     try {
-      await updateDoc(doc(db, 'users', user.id), {
-        disabled: !user.disabled,
-        maximumAcessAttempts: !user.disabled ? 3 : null,
+      await updateDoc(doc(db, 'users', selectedUser.id), {
+        disabled: !selectedUser.disabled,
+        maximumAcessAttempts: !selectedUser.disabled ? 3 : null,
       }).then(() => {
-        const filteredData = accounts.filter((item) => item.id !== user.id);
-        user.disabled = !user.disabled;
-        if (user.disabled) {
-          setAccounts([...filteredData, user]);
+        const filteredData = accounts.filter((item) => item.id !== selectedUser.id);
+        selectedUser.disabled = !selectedUser.disabled;
+        if (selectedUser.disabled) {
+          setAccounts([...filteredData, selectedUser]);
         } else {
-          setAccounts([user, ...filteredData]);
+          setAccounts([selectedUser, ...filteredData]);
         }
+        setSelectedUser(null);
       });
     } catch (err) {
+      console.log('Erro while trying to disable/enable account in the database');
       console.log(err);
     }
   };
 
-  function switchModal(user, type) {
-    setModalData({ ...user, type: type ? type : null });
+  function enableDisableAccountModal(account) {
+    let title = 'Deseja mesmo ';
+    let iconData = {};
+
+    if (account.disabled) {
+      title += 'REATIVAR esta conta ?';
+      iconData = { name: 'account-reactivate', type: 'material-community' };
+    } else {
+      title += 'DESATIVAR esta conta ?';
+      iconData = { name: 'trash-can-outline', type: 'material-community' };
+    }
+
+    setModalData({ title, text: account.email, iconName: iconData.name, iconType: iconData.type });
     toggleModal();
+    setSelectedUser(account);
   }
 
-  function onPressYes(user) {
+  function onPressYes() {
     toggleModal();
-    disableAccount(user);
+    enableDisableAccount();
   }
 
   function toggleModal() {
@@ -80,7 +116,7 @@ export default (props) => {
         text={item.email}
         color={item.disabled ? colors.gray : colors.orange}
       >
-        <SwitchView onPress={() => switchModal(item)} activeOpacity={buttonOpacity}>
+        <SwitchView onPress={() => enableDisableAccountModal(item)} activeOpacity={buttonOpacity}>
           <Switch
             trackColor={{ false: colors.gray, true: colors.orange }}
             thumbColor={item.disabled ? colors.gray : colors.orange}
@@ -96,23 +132,26 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header
-          text={"Administrativo - Contas"}
-          onPress={() => props.navigation.goBack()}
-        />
-        <FlatList
-          style={{ marginTop: 45, marginBottom: 25 }}
-          data={accounts}
-          renderItem={stateCard}
-          keyExtractor={(item) => item.id}
-        />
+        <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
+        {isLoading ? (
+          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+        ) : (
+          <FlatList
+            style={{ marginTop: 45, marginBottom: 25, width: '100%' }}
+            contentContainerStyle={{ alignItems: 'center' }}
+            data={accounts}
+            renderItem={stateCard}
+            keyExtractor={(item) => item.id}
+          />
+        )}
       </Container>
       <AddButton onPress={() => props.navigation.navigate('RegisterAccounts')} />
       <Modal
         isVisible={modalVisibility}
-        params={modalData}
-        onPress={toggleModal}
-        onPressYes={onPressYes}
+        onPressYes={selectedUser ? onPressYes : null}
+        onBackPress={toggleModal}
+        icon={{ name: modalData.iconName, type: modalData.iconType }}
+        data={{ title: modalData.title, text: modalData.text }}
       />
     </>
   );

@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
-import {
-  Container,
-  LogoView,
-  Subtitle,
-  Buttons,
-  AdminBtn,
-  extraStyles,
-} from './styles';
+import { Container, LogoView, Subtitle, Buttons, AdminBtn, extraStyles } from './styles';
 
 import Wave from '../../components/Waves/Wave';
 import DashedWave from '../../components/Waves/DashedWave';
@@ -51,7 +44,7 @@ export default (props) => {
         <Buttons>
           <View style={{ marginBottom: 35 }}>
             <LargeButton
-              text='Buscar UBS'
+              text="Buscar UBS"
               onPress={() => {
                 handleNavigateTo('StateSelection');
               }}
@@ -59,7 +52,7 @@ export default (props) => {
           </View>
           <View style={{ marginBottom: 20 }}>
             <SmallButton
-              text='Como usar o App'
+              text="Como usar o App"
               onPress={() => {
                 handleNavigateTo('ComoUsarOApp');
               }}
@@ -67,7 +60,7 @@ export default (props) => {
           </View>
           <View>
             <SmallButton
-              text='Sobre o Projeto'
+              text="Sobre o Projeto"
               onPress={() => {
                 handleNavigateTo('SobreOProjeto');
               }}
@@ -81,9 +74,9 @@ export default (props) => {
         onPress={() => props.navigation.navigate('AdminLogin')}
       >
         <Icon
-          name='shield-account'
-          type='material-community'
-          color='#56A8C5'
+          name="shield-account"
+          type="material-community"
+          color="#56A8C5"
           size={40}
           style={{ ...extraStyles.adminIcon }}
         />

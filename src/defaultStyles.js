@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Text,
   Dimensions,
+  Image,
+  ActivityIndicator,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
@@ -127,6 +129,7 @@ const customButtonShadow = {
   small: {
     distance: 0,
     startColor: 'rgba(0,0,0,0.1)',
+    distance: 10,
     offset: [0, 4],
     radius: 20,
     containerViewStyle: { paddingBottom: 2 },
@@ -134,16 +137,25 @@ const customButtonShadow = {
   large: {
     distance: 0,
     startColor: 'rgba(0,0,0,0.1)',
+    distance: 10,
     offset: [0, 4],
     radius: 25,
     containerViewStyle: { paddingBottom: 2 },
   },
   rounded: {
     distance: 0,
-    startColor: 'rgba(0,0,0,0.1)',
-    finalColor: 'rgba(0,0,0,0.0)',
-    radius: 25,
-    containerViewStyle: { margin: 20 },
+    startColor: 'rgba(0,0,0,0.05)',
+    finalColor: 'rgba(0,0,0,0)',
+    radius: 35,
+    distance: 10,
+    containerViewStyle: {
+      margin: 20,
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+    },
   },
 };
 
@@ -227,9 +239,11 @@ export function RegisterButton(props) {
       style={buttonStyles.register}
       onPress={props.onPress}
     >
-      <RegisterButtonText>
-        {props.text ? props.text : 'TEXT'}
-      </RegisterButtonText>
+      {props.isLoading ? (
+        <ActivityIndicator size="large" color="#fff" />
+      ) : (
+        <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
+      )}
     </TouchableOpacity>
   );
 }
@@ -238,7 +252,7 @@ const RoundedButton = styled.TouchableOpacity`
   z-index: 5;
   height: 70px;
   width: 70px;
-  border-radius: 50px;
+  border-radius: 35px;
   background-color: white;
   justify-content: center;
   align-items: center;
@@ -246,26 +260,11 @@ const RoundedButton = styled.TouchableOpacity`
 
 export function AddButton(props) {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
-      }}
-    >
-      <Shadow {...customButtonShadow.rounded}>
-        <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
-          <Icon
-            name='plus'
-            size={35}
-            type='material-community'
-            color={colors.orange}
-          />
-        </RoundedButton>
-      </Shadow>
-    </View>
+    <Shadow {...customButtonShadow.rounded}>
+      <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
+        <Icon name="plus" size={35} type="material-community" color={colors.orange} />
+      </RoundedButton>
+    </Shadow>
   );
 }
 
@@ -305,9 +304,10 @@ const cardStyles = StyleSheet.create({
 
 const cardShadow = {
   distance: 2,
-  startColor: 'rgba(0,0,0,0.025)',
+  startColor: 'rgba(0,0,0,0.035)',
   finalColor: 'rgba(0,0,0,0.0)',
-  radius: 9,
+  distance: 10,
+  radius: 5,
   containerViewStyle: {
     marginVertical: 7,
     height: 71,
@@ -332,7 +332,7 @@ export const Card = (props) => {
           </Text>
         ) : null}
         {props.ubsCount ? (
-          <Text style={cardStyles.avaibleUBSText}>{props.ubsCount}</Text>
+          <Text style={cardStyles.avaibleUBSText}>{props.ubsCount + ' UBS'}</Text>
         ) : null}
         {props.children ? { ...props.children } : null}
       </TouchableOpacity>
@@ -371,10 +371,8 @@ export const InputBox = (props) => {
     <Shadow {...inputBoxShadow}>
       <View style={inputBoxStyles.searchInput}>
         <Icon
-          name={
-            props.type === 'password' ? 'lock-closed-outline' : 'person-outline'
-          }
-          type='ionicon'
+          name={props.type === 'password' ? 'lock-closed-outline' : 'person-outline'}
+          type="ionicon"
           color={colors.gray}
           style={{
             paddingHorizontal: 15,
@@ -390,5 +388,42 @@ export const InputBox = (props) => {
         />
       </View>
     </Shadow>
+  );
+};
+
+const NoResults = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  margin-top: 100px;
+`;
+
+const Title = styled.Text`
+  font-size: 24px;
+  color: #9bb5cc;
+  font-family: ${fonts.spartanBold};
+  margin-top: 16px;
+`;
+
+const SimpleText = styled.Text`
+  font-size: 20px;
+  font-family: ${fonts.spartanR};
+  color: #808080;
+  text-align: center;
+  margin: 16px 30px 16px 30px;
+`;
+
+export const EmptyListMessage = () => {
+  return (
+    <NoResults>
+      <View>
+        <Image
+          source={require('../assets/images/noResultsImg.png')}
+          style={{ resizeMode: 'contain', height: 200 }}
+        />
+      </View>
+      <Title>NADA POR AQUI!</Title>
+      <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
+    </NoResults>
   );
 };

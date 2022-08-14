@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 // import { colors } from '../../defaultStyles';
 import { Container, Map, UBSName } from './styles';
-import { Card } from '../../defaultStyles';
+import { Card, EmptyListMessage } from '../../defaultStyles';
 import Header from '../../components/Header';
 
 import services from './services';
 
-export default props => {
+export default (props) => {
   const [isLoading, setIsloading] = useState(true);
 
   const serviceCard = ({ item }) => {
@@ -30,7 +30,8 @@ export default props => {
           style={{ width: '85%', marginTop: 25, marginBottom: 25 }}
           data={services}
           renderItem={serviceCard}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={EmptyListMessage}
         />
       </Container>
     </>

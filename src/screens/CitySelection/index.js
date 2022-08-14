@@ -1,24 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import {
-  FlatList,
-  TouchableOpacity,
-  Text,
-  Image,
-  View,
-  ActivityIndicator,
-} from 'react-native';
+import { FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import axios from 'axios';
-import { colors } from '../../defaultStyles';
-import {
-  Container,
-  SearchInput,
-  SearchInputText,
-  SearchArea,
-  NoResults,
-  Title,
-  SimpleText,
-} from './styles';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../services/firebase.config';
+
+import { colors, EmptyListMessage } from '../../defaultStyles';
+import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
 import { Card } from '../../defaultStyles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
@@ -26,28 +14,56 @@ import DashedCircle from '../../components/DashedCircle';
 export default (props) => {
   const [cities, setCities] = useState([]);
   const [originalData, setOriginalData] = useState([]);
-  const [isLoading, setIsloading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  //api request
   useEffect(() => {
     async function fetchData() {
-      const response = await axios
-        .get(
-          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`
-        )
-        .finally(() => setIsloading(false));
+      try {
+        const response = await axios.get(
+          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`,
+        );
 
-      setCities(response.data);
+        const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountCities'));
 
-      setOriginalData(response.data);
+        let citiesArray = [];
+        for (i = 0; i < response.data.length; i++) {
+          const cityIDSlice = response.data[i].id.toString().slice(0, -1);
+          const cityID = +cityIDSlice;
+
+          let cityObject = {
+            id: cityID,
+            nome: response.data[i].nome,
+            ubsAmount: 0,
+          };
+          const index = ubsAmountSnap.docs.findIndex((city) => {
+            return +city.id === cityID;
+          });
+          if (index !== -1) {
+            cityObject.ubsAmount = ubsAmountSnap.docs[index].data().amount;
+          }
+          citiesArray.push(cityObject);
+        }
+
+        citiesArray.sort((a, b) =>
+          a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
+        );
+
+        setCities(citiesArray);
+
+        setOriginalData(citiesArray);
+      } catch (err) {
+        console.log('Something went wrong while trying to fetch data from database or Cities API.');
+        console.log(err);
+      }
     }
 
-    fetchData();
+    fetchData().then(() => setIsLoading(false));
   }, []);
 
   const handleCardPress = (item) => {
     props.navigation.navigate('UBSSelection', {
       cityID: item.id,
+      stateID: props.route.params.stateID,
       stateName: props.route.params.stateName,
       cityName: item.nome,
     });
@@ -59,9 +75,10 @@ export default (props) => {
       <Card
         value={item.id}
         key={item.id}
+        color={item.ubsAmount == 0 ? colors.gray : colors.orange}
         onPress={() => handleCardPress(item)}
         text={item.nome}
-        ubsCount={'00 UBS'}
+        ubsCount={`${item.ubsAmount}`}
       />
     );
   };
@@ -78,9 +95,9 @@ export default (props) => {
             t
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase()
-          )
-      )
+              .toLowerCase(),
+          ),
+      ),
     );
   };
 
@@ -92,39 +109,18 @@ export default (props) => {
     setCities(newList);
   };
 
-  const EmptyListMessage = () => {
-    return (
-      <NoResults>
-        <Image
-          source={require('../../../assets/images/noResultsImg.png')}
-          style={{ resizeMode: 'contain', height: 200 }}
-        />
-        <Title>NADA POR AQUI!</Title>
-        <SimpleText>
-          Não encontramos nenhum item correspondente à sua pesquisa.
-        </SimpleText>
-      </NoResults>
-    );
-  };
-
   return (
     <>
       <DashedCircle />
       <Container>
-        <Header
-          text={props.route.params.stateName}
-          onPress={() => props.navigation.goBack()}
-        />
+        <Header text={props.route.params.stateName} onPress={() => props.navigation.goBack()} />
         <SearchArea>
           <SearchInput>
-            <SearchInputText
-              placeholder='Buscar cidade'
-              onChangeText={(t) => search(t)}
-            />
+            <SearchInputText placeholder="Buscar cidade" onChangeText={(t) => search(t)} />
             <Icon
-              name='search-outline'
-              type='ionicon'
-              color='#c4c4c4'
+              name="search-outline"
+              type="ionicon"
+              color="#c4c4c4"
               style={{
                 paddingHorizontal: 15,
                 paddingVertical: 15,
@@ -133,8 +129,8 @@ export default (props) => {
           </SearchInput>
           <TouchableOpacity onPress={handleOrderClick}>
             <Icon
-              name='order-alphabetical-ascending'
-              type='material-community'
+              name="order-alphabetical-ascending"
+              type="material-community"
               color={colors.gray}
               size={32}
               style={{ marginTop: 25, marginLeft: 25 }}
@@ -142,11 +138,7 @@ export default (props) => {
           </TouchableOpacity>
         </SearchArea>
         {isLoading ? (
-          <ActivityIndicator
-            size='large'
-            color='#FF6B0F'
-            style={{ marginTop: 50 }}
-          />
+          <ActivityIndicator size="large" color="#FF6B0F" style={{ marginTop: 50 }} />
         ) : (
           <FlatList
             style={{

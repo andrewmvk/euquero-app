@@ -9,13 +9,15 @@ import { BigTitle, InputBox, RegisterButton } from '../../defaultStyles';
 import { ButtonView, Container, InputArea } from './styles';
 
 export default (props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSignUp = async () => {
+    setIsLoading(true);
     if (password != confirmPassword) {
-      return console.warn('Senha e confirmar senha estão diferentes');
+      return console.log('Password and confirm password do not match');
     } else {
       try {
         const res = await createUserWithEmailAndPassword(authSecondary, email, password);
@@ -34,7 +36,10 @@ export default (props) => {
           props.navigation.navigate('ManageAccounts', { newUser });
         });
       } catch (err) {
-        console.warn(err);
+        console.log(
+          'Error while trying to create new user, already exists or e-mail/password are invalid!',
+        );
+        console.log(err);
       }
     }
   };
@@ -62,7 +67,12 @@ export default (props) => {
         </InputArea>
       </Container>
       <ButtonView pointerEvents={'box-none'}>
-        <RegisterButton text="CADASTRAR" onPress={handleSignUp} />
+        <RegisterButton
+          text="CADASTRAR"
+          pointerEvents={isLoading ? 'none' : 'auto'}
+          isLoading={isLoading}
+          onPress={() => handleSignUp().then(() => setIsLoading(false))}
+        />
       </ButtonView>
     </>
   );

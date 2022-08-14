@@ -2,7 +2,6 @@ import React from 'react';
 import { Icon } from 'react-native-elements';
 import { View } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
-import { auth } from '../../services/firebase.config';
 
 import { Container, ManageTouchableBox, ManageBoxShadow, ManageText } from './styles';
 import Header from '../../components/Header';
@@ -10,22 +9,11 @@ import DashedCircle from '../../components/DashedCircle';
 import { buttonOpacity, colors } from '../../defaultStyles';
 
 export default (props) => {
-  function handleSignOut() {
-    auth
-      .signOut()
-      .then(() => {
-        props.navigation.goBack();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
   return (
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo'} onPress={handleSignOut} />
+        <Header text={'Administrativo'} onPress={() => props.navigation.goBack()} />
 
         <View style={{ alignItems: 'center', marginTop: 50 }}>
           {props.route.params.isAdmin ? (
