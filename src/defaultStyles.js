@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   TextInput,
   TouchableOpacity,
@@ -8,6 +8,8 @@ import {
   Dimensions,
   Image,
   ActivityIndicator,
+  ScrollView,
+  FlatList,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
@@ -240,9 +242,11 @@ export function RegisterButton(props) {
       onPress={props.onPress}
     >
       {props.isLoading ? (
-        <ActivityIndicator size="large" color="#fff" />
+        <ActivityIndicator size='large' color='#fff' />
       ) : (
-        <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
+        <RegisterButtonText>
+          {props.text ? props.text : 'TEXT'}
+        </RegisterButtonText>
       )}
     </TouchableOpacity>
   );
@@ -262,7 +266,12 @@ export function AddButton(props) {
   return (
     <Shadow {...customButtonShadow.rounded}>
       <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
-        <Icon name="plus" size={35} type="material-community" color={colors.orange} />
+        <Icon
+          name='plus'
+          size={35}
+          type='material-community'
+          color={colors.orange}
+        />
       </RoundedButton>
     </Shadow>
   );
@@ -312,6 +321,7 @@ const cardShadow = {
     marginVertical: 7,
     height: 71,
     width: screenWidth * 0.85,
+    zIndex: 3,
   },
 };
 
@@ -332,11 +342,100 @@ export const Card = (props) => {
           </Text>
         ) : null}
         {props.ubsCount ? (
-          <Text style={cardStyles.avaibleUBSText}>{props.ubsCount + ' UBS'}</Text>
+          <Text style={cardStyles.avaibleUBSText}>
+            {props.ubsCount + ' UBS'}
+          </Text>
         ) : null}
         {props.children ? { ...props.children } : null}
       </TouchableOpacity>
     </Shadow>
+  );
+};
+
+const cardA = StyleSheet.create({
+  containerA: {
+    width: screenWidth * 0.85,
+    height: 80,
+    backgroundColor: '#fff',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    borderRadius: 5,
+    borderLeftWidth: 7,
+    justifyContent: 'center',
+  },
+  titleCardA: {
+    fontFamily: fonts.spartanR,
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 18,
+    marginLeft: 22,
+    marginTop: -5,
+    color: colors.text,
+  },
+  descriptionCardA: {
+    fontFamily: fonts.spartanR,
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 12,
+    marginLeft: 22,
+    color: colors.text,
+  },
+});
+
+export const InDevelopmentCard = (props) => {
+  const color = props.color ? props.color : colors.gray;
+
+  const DATA = [
+    {
+      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+      title: 'First Item',
+    },
+    {
+      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+      title: 'Second Item',
+    },
+    {
+      id: '58694a0f-3da1-471f-bd96-145571e29d72',
+      title: 'Third Item',
+    },
+  ];
+
+  const Item = ({ item }) => (
+    <Text style={{ color: '#7f7f7f' }}>{item.title}</Text>
+  );
+
+  const [selectedId, setSelectedId] = useState(null);
+
+  const renderItem = ({ item }) => {
+    return <Item item={item} />;
+  };
+
+  return (
+    <>
+      <Shadow {...cardShadow}>
+        <View style={[cardA.containerA, { borderLeftColor: color }]}>
+          <Text style={cardA.titleCardA} numberOfLines={1}>
+            Em desenvolvimento...
+          </Text>
+          <Text style={cardA.descriptionCardA}>
+            Estados a serem cadastrados:
+          </Text>
+        </View>
+      </Shadow>
+      <FlatList
+        data={DATA}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        extraData={selectedId}
+        style={{
+          borderBottomLeftRadius: 5,
+          borderBottomRightRadius: 5,
+          backgroundColor: 'white',
+          width: '80%',
+          paddingHorizontal: 20,
+        }}
+      />
+    </>
   );
 };
 
@@ -371,8 +470,10 @@ export const InputBox = (props) => {
     <Shadow {...inputBoxShadow}>
       <View style={inputBoxStyles.searchInput}>
         <Icon
-          name={props.type === 'password' ? 'lock-closed-outline' : 'person-outline'}
-          type="ionicon"
+          name={
+            props.type === 'password' ? 'lock-closed-outline' : 'person-outline'
+          }
+          type='ionicon'
           color={colors.gray}
           style={{
             paddingHorizontal: 15,
@@ -423,7 +524,9 @@ export const EmptyListMessage = () => {
         />
       </View>
       <Title>NADA POR AQUI!</Title>
-      <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
+      <SimpleText>
+        Não encontramos nenhum item correspondente à sua pesquisa.
+      </SimpleText>
     </NoResults>
   );
 };

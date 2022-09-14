@@ -4,15 +4,32 @@ import { Icon } from 'react-native-elements';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
 
-import { Container, TrashIcon, SearchInput, SearchInputText, SearchArea } from './styles';
+import {
+  Container,
+  TrashIcon,
+  SearchInput,
+  SearchInputText,
+  SearchArea,
+} from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
-import { AddButton, buttonOpacity, Card, colors, EmptyListMessage } from '../../defaultStyles';
+import {
+  AddButton,
+  buttonOpacity,
+  Card,
+  colors,
+  EmptyListMessage,
+} from '../../defaultStyles';
 import Modal from '../../components/Modal';
 
 export default (props) => {
   const [modalVisibility, setModalVisibility] = useState(false);
-  const [modalData, setModalData] = useState({ title: '', text: '', iconName: '', iconType: '' });
+  const [modalData, setModalData] = useState({
+    title: '',
+    text: '',
+    iconName: '',
+    iconType: '',
+  });
   const [selectedUbs, setSelectedUbs] = useState(null);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -51,7 +68,12 @@ export default (props) => {
     const title = 'Deseja mesmo EXCLUIR esta UBS ?';
     const text = item.name;
     const iconData = { name: 'trash-can-outline', type: 'material-community' };
-    setModalData({ title, text, iconName: iconData.name, iconType: iconData.type });
+    setModalData({
+      title,
+      text,
+      iconName: iconData.name,
+      iconType: iconData.type,
+    });
     toggleModal();
   }
 
@@ -77,17 +99,30 @@ export default (props) => {
             t
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase(),
-          ),
-      ),
+              .toLowerCase()
+          )
+      )
     );
   };
 
   const cards = ({ item }) => {
     return (
-      <Card value={item.id} key={item.id} text={item.name} color={colors.orange}>
-        <TrashIcon activeOpacity={buttonOpacity} onPress={() => deleteUbsModal(item)}>
-          <Icon name="trash-can-outline" size={35} type="material-community" color="#c4c4c4" />
+      <Card
+        value={item.id}
+        key={item.id}
+        text={item.name}
+        color={colors.orange}
+      >
+        <TrashIcon
+          activeOpacity={buttonOpacity}
+          onPress={() => deleteUbsModal(item)}
+        >
+          <Icon
+            name='trash-can-outline'
+            size={35}
+            type='material-community'
+            color='#c4c4c4'
+          />
         </TrashIcon>
       </Card>
     );
@@ -97,17 +132,20 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo - UBS'} onPress={() => props.navigation.goBack()} />
+        <Header
+          text={'Administrativo - UBS'}
+          onPress={() => props.navigation.goBack()}
+        />
         <SearchArea>
           <SearchInput>
             <SearchInputText
-              placeholder="Buscar UBS"
+              placeholder='Buscar UBS'
               onChangeText={(t) => search(t).then(() => setIsLoading(false))}
             />
             <Icon
-              name="search-outline"
-              type="ionicon"
-              color="#c4c4c4"
+              name='search-outline'
+              type='ionicon'
+              color='#c4c4c4'
               style={{
                 paddingHorizontal: 15,
                 paddingVertical: 15,
@@ -116,8 +154,8 @@ export default (props) => {
           </SearchInput>
           <TouchableOpacity>
             <Icon
-              name="order-alphabetical-ascending"
-              type="material-community"
+              name='order-alphabetical-ascending'
+              type='material-community'
               color={colors.gray}
               size={32}
               style={{ marginTop: 45, marginLeft: 25 }}
@@ -125,7 +163,11 @@ export default (props) => {
           </TouchableOpacity>
         </SearchArea>
         {isLoading ? (
-          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+          <ActivityIndicator
+            size='large'
+            color={colors.orange}
+            style={{ marginTop: 50 }}
+          />
         ) : (
           <FlatList
             style={{ marginTop: 32, marginBottom: 25, width: '100%' }}
@@ -137,7 +179,7 @@ export default (props) => {
           />
         )}
       </Container>
-      <AddButton onPress={() => props.navigation.navigate('RegisterUBS')} />
+      <AddButton onPress={() => props.navigation.navigate('UploadUBSTable')} />
       <Modal
         isVisible={modalVisibility}
         onPressYes={selectedUbs ? onPressYes : null}

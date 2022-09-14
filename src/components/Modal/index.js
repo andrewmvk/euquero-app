@@ -31,7 +31,7 @@ export default (props) => {
       width: animatedWidth.value,
       style: {
         backgroundColor: colors.orange,
-        height: 5,
+        height: 6,
         left: 0,
         position: 'absolute',
         top: 0,
@@ -65,13 +65,20 @@ export default (props) => {
         <AnimatedLine animatedProps={straightLineProps} />
         {props.icon ? (
           <View style={styles.iconView}>
-            <Icon name={props.icon?.name} size={100} type={props.icon?.type} color={colors.gray} />
+            <Icon
+              name={props.icon?.name}
+              size={100}
+              type={props.icon?.type}
+              color={colors.gray}
+            />
           </View>
         ) : null}
 
         <TextView>
           <Title>{props.data?.title ? props.data.title : 'TÍTULO'}</Title>
-          {props.data?.text ? <Description>{props.data.text}</Description> : null}
+          {props.data?.text ? (
+            <Description>{props.data.text}</Description>
+          ) : null}
         </TextView>
 
         {props.onPressYes ? (

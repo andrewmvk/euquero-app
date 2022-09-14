@@ -14,14 +14,17 @@ export const LogoView = styled.View`
   justify-content: center;
   width: 100%;
   flex: 1.2;
+  margin-top: 20px;
 `;
 
 export const Subtitle = styled.Text`
   color: ${defaultS.colors.titleSubtitle};
-  margin-top: 15px;
-  margin-bottom: 30px;
+  margin-top: 0px;
+  margin-bottom: 60px;
   font-family: ${defaultS.fonts.spartanR};
   font-size: ${defaultS.fontSize.subtitle};
+  text-align: center;
+  line-height: 22px;
 `;
 
 export const Buttons = styled.View`
@@ -57,7 +60,7 @@ export const extraStyles = {
   },
   viewBody: {
     alignItems: 'center',
-    height: Dimensions.get('window').height * 0.55,
-    justifyContent: 'space-evenly',
+    height: Dimensions.get('window').height * 0.5,
+    justifyContent: 'center',
   },
 };

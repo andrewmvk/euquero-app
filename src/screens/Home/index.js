@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 
-import { Container, LogoView, Subtitle, Buttons, AdminBtn, extraStyles } from './styles';
+import {
+  Container,
+  LogoView,
+  Subtitle,
+  Buttons,
+  AdminBtn,
+  extraStyles,
+} from './styles';
 
 import Wave from '../../components/Waves/Wave';
 import DashedWave from '../../components/Waves/DashedWave';
@@ -9,6 +16,10 @@ import DashedWave from '../../components/Waves/DashedWave';
 import { Icon } from '@rneui/themed';
 import Logo from '../../../assets/images/euquero-logo.svg';
 import { LargeButton, SmallButton, buttonOpacity } from '../../defaultStyles';
+
+const B = (props) => (
+  <Text style={{ fontWeight: '900', fontSize: 15 }}>{props.children}</Text>
+);
 
 export default (props) => {
   const [transition, setTransition] = useState({ n: false, type: '' });
@@ -38,13 +49,16 @@ export default (props) => {
       <View style={{ ...extraStyles.viewBody }}>
         <LogoView>
           <Logo />
-          <Subtitle>Encontre a UBS perfeita para o seu caso!</Subtitle>
+          <Subtitle>
+            Fortalecendo o acesso à saúde {'\n'}
+            <B>nos 1000 dias!</B>
+          </Subtitle>
         </LogoView>
 
         <Buttons>
-          <View style={{ marginBottom: 35 }}>
+          <View style={{ marginBottom: 35, marginTop: 50 }}>
             <LargeButton
-              text="Buscar UBS"
+              text='Buscar UBS'
               onPress={() => {
                 handleNavigateTo('StateSelection');
               }}
@@ -52,7 +66,7 @@ export default (props) => {
           </View>
           <View style={{ marginBottom: 20 }}>
             <SmallButton
-              text="Como usar o App"
+              text='Como usar o App'
               onPress={() => {
                 handleNavigateTo('ComoUsarOApp');
               }}
@@ -60,7 +74,7 @@ export default (props) => {
           </View>
           <View>
             <SmallButton
-              text="Sobre o Projeto"
+              text='Sobre o Projeto'
               onPress={() => {
                 handleNavigateTo('SobreOProjeto');
               }}
@@ -74,9 +88,9 @@ export default (props) => {
         onPress={() => props.navigation.navigate('AdminLogin')}
       >
         <Icon
-          name="shield-account"
-          type="material-community"
-          color="#56A8C5"
+          name='shield-account'
+          type='material-community'
+          color='#56A8C5'
           size={40}
           style={{ ...extraStyles.adminIcon }}
         />
