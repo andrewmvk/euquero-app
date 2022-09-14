@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Switch } from 'react-native';
-import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 
 import { Container, SwitchView } from './styles';
@@ -11,7 +17,12 @@ import Modal from '../../components/Modal';
 
 export default (props) => {
   const [accounts, setAccounts] = useState([]);
-  const [modalData, setModalData] = useState({ title: '', text: '', iconName: '', iconType: '' });
+  const [modalData, setModalData] = useState({
+    title: '',
+    text: '',
+    iconName: '',
+    iconType: '',
+  });
   const [modalVisibility, setModalVisibility] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -22,7 +33,9 @@ export default (props) => {
       setIsLoading(true);
       let list = [];
       try {
-        const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        const currentUserSnap = await getDoc(
+          doc(db, 'users', auth.currentUser.uid)
+        );
         if (currentUserSnap.data().isAdmin) {
           const querySnapshot = await getDocs(collection(db, 'users'));
 
@@ -37,10 +50,14 @@ export default (props) => {
           });
           setAccounts(list);
         } else {
-          console.log('This account does not have a admin permission to access other accounts');
+          console.log(
+            'This account does not have a admin permission to access other accounts'
+          );
         }
       } catch (err) {
-        console.log('Something went wront while trying to access database accounts');
+        console.log(
+          'Something went wront while trying to access database accounts'
+        );
         console.log(err);
       }
     };
@@ -67,7 +84,9 @@ export default (props) => {
         disabled: !selectedUser.disabled,
         maximumAcessAttempts: !selectedUser.disabled ? 3 : null,
       }).then(() => {
-        const filteredData = accounts.filter((item) => item.id !== selectedUser.id);
+        const filteredData = accounts.filter(
+          (item) => item.id !== selectedUser.id
+        );
         selectedUser.disabled = !selectedUser.disabled;
         if (selectedUser.disabled) {
           setAccounts([...filteredData, selectedUser]);
@@ -77,7 +96,9 @@ export default (props) => {
         setSelectedUser(null);
       });
     } catch (err) {
-      console.log('Erro while trying to disable/enable account in the database');
+      console.log(
+        'Erro while trying to disable/enable account in the database'
+      );
       console.log(err);
     }
   };
@@ -91,10 +112,18 @@ export default (props) => {
       iconData = { name: 'account-reactivate', type: 'material-community' };
     } else {
       title += 'DESATIVAR esta conta ?';
-      iconData = { name: 'trash-can-outline', type: 'material-community' };
+      iconData = {
+        name: 'close-circle-outline',
+        type: 'material-community',
+      };
     }
 
-    setModalData({ title, text: account.email, iconName: iconData.name, iconType: iconData.type });
+    setModalData({
+      title,
+      text: account.email,
+      iconName: iconData.name,
+      iconType: iconData.type,
+    });
     toggleModal();
     setSelectedUser(account);
   }
@@ -116,7 +145,10 @@ export default (props) => {
         text={item.email}
         color={item.disabled ? colors.gray : colors.orange}
       >
-        <SwitchView onPress={() => enableDisableAccountModal(item)} activeOpacity={buttonOpacity}>
+        <SwitchView
+          onPress={() => enableDisableAccountModal(item)}
+          activeOpacity={buttonOpacity}
+        >
           <Switch
             trackColor={{ false: colors.gray, true: colors.orange }}
             thumbColor={item.disabled ? colors.gray : colors.orange}
@@ -132,9 +164,16 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
+        <Header
+          text={'Administrativo - Contas'}
+          onPress={() => props.navigation.goBack()}
+        />
         {isLoading ? (
-          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+          <ActivityIndicator
+            size='large'
+            color={colors.orange}
+            style={{ marginTop: 50 }}
+          />
         ) : (
           <FlatList
             style={{ marginTop: 45, marginBottom: 25, width: '100%' }}
@@ -145,7 +184,9 @@ export default (props) => {
           />
         )}
       </Container>
-      <AddButton onPress={() => props.navigation.navigate('RegisterAccounts')} />
+      <AddButton
+        onPress={() => props.navigation.navigate('RegisterAccounts')}
+      />
       <Modal
         isVisible={modalVisibility}
         onPressYes={selectedUser ? onPressYes : null}

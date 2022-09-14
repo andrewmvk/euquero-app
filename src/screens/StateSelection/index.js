@@ -4,12 +4,14 @@ import { FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
+import SelectList from 'react-native-dropdown-select-list';
 
 import { colors, EmptyListMessage } from '../../defaultStyles';
 import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
-import { Card } from '../../defaultStyles';
+import { Card, InDevelopmentCard } from '../../defaultStyles';
+import { View } from 'react-native-web';
 
 export default (props) => {
   const [brazilianStates, setBrazilianStates] = useState([]);
@@ -22,7 +24,7 @@ export default (props) => {
 
       try {
         const response = await axios.get(
-          'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
+          'https://servicodados.ibge.gov.br/api/v1/localidades/estados/'
         );
 
         const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountStates'));
@@ -44,13 +46,15 @@ export default (props) => {
         }
 
         statesArray.sort((a, b) =>
-          a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
+          a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0
         );
 
         setBrazilianStates(statesArray);
         setOriginalData(statesArray);
       } catch (err) {
-        console.log('Something went wrong while trying to fetch data from database or State API.');
+        console.log(
+          'Something went wrong while trying to fetch data from database or State API.'
+        );
         console.log(err);
       }
     };
@@ -91,9 +95,9 @@ export default (props) => {
             t
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase(),
-          ),
-      ),
+              .toLowerCase()
+          )
+      )
     );
   };
 
@@ -105,6 +109,8 @@ export default (props) => {
     setBrazilianStates(newList);
   };
 
+  const dataTest = ['abacaxi', 'maca', 'uva', 'pera'];
+
   return (
     <>
       <DashedCircle />
@@ -112,11 +118,14 @@ export default (props) => {
         <Header onPress={() => props.navigation.goBack()} />
         <SearchArea>
           <SearchInput>
-            <SearchInputText placeholder="Buscar estado" onChangeText={(t) => search(t)} />
+            <SearchInputText
+              placeholder='Buscar estado'
+              onChangeText={(t) => search(t)}
+            />
             <Icon
-              name="search-outline"
-              type="ionicon"
-              color="#c4c4c4"
+              name='search-outline'
+              type='ionicon'
+              color='#c4c4c4'
               style={{
                 paddingHorizontal: 15,
                 paddingVertical: 15,
@@ -125,8 +134,8 @@ export default (props) => {
           </SearchInput>
           <TouchableOpacity onPress={handleOrderClick}>
             <Icon
-              name="order-alphabetical-ascending"
-              type="material-community"
+              name='order-alphabetical-ascending'
+              type='material-community'
               color={colors.gray}
               size={32}
               style={{ marginTop: 25, marginLeft: 25 }}
@@ -134,20 +143,27 @@ export default (props) => {
           </TouchableOpacity>
         </SearchArea>
         {isLoading ? (
-          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
-        ) : (
-          <FlatList
-            style={{
-              width: '100%',
-              marginTop: 25,
-              paddingTop: 5,
-            }}
-            contentContainerStyle={{ alignItems: 'center' }}
-            data={brazilianStates}
-            renderItem={stateCard}
-            keyExtractor={(item) => item.id}
-            ListEmptyComponent={EmptyListMessage}
+          <ActivityIndicator
+            size='large'
+            color={colors.orange}
+            style={{ marginTop: 50 }}
           />
+        ) : (
+          <>
+            <FlatList
+              style={{
+                width: '100%',
+                marginTop: 25,
+                paddingTop: 5,
+              }}
+              contentContainerStyle={{ alignItems: 'center' }}
+              data={brazilianStates}
+              renderItem={stateCard}
+              keyExtractor={(item) => item.id}
+              ListEmptyComponent={EmptyListMessage}
+            />
+            <InDevelopmentCard />
+          </>
         )}
       </Container>
     </>
