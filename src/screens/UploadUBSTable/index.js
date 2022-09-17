@@ -8,7 +8,8 @@ import * as XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
 
-import { colors, fonts, RegisterButton } from '../../defaultStyles';
+import { colors, fonts } from '../../defaultStyles';
+import { RegisterButton } from '../../components/common';
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { SimpleText, Title, Container, ButtonView, TouchableText } from './styles';

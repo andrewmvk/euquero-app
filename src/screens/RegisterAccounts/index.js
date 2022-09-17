@@ -5,7 +5,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
-import { BigTitle, InputBox, RegisterButton } from '../../defaultStyles';
+import { BigTitle, InputBox, RegisterButton } from '../../components/common';
 import { ButtonView, Container, InputArea } from './styles';
 
 export default (props) => {
@@ -49,7 +49,7 @@ export default (props) => {
       <DashedCircle />
       <Container>
         <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
-        <BigTitle text="CADASTRAR CONTA" />
+        <BigTitle>CADASTRAR CONTA</BigTitle>
         <InputArea>
           <InputBox type="email" placeholder="E-mail" value={email} onChangeText={setEmail} />
           <InputBox

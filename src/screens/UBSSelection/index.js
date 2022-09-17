@@ -14,7 +14,7 @@ import {
   Title,
   SimpleText,
 } from './styles';
-import { Card } from '../../defaultStyles';
+import { Card } from '../../components/common';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 

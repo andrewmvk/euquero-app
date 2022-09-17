@@ -4,21 +4,13 @@ import { auth, db } from '../../services/firebase.config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 
-import {
-  Container,
-  LogoView,
-  InputArea,
-  Subtitle,
-  Background,
-  extraStyles,
-} from './styles';
+import { Container, LogoView, InputArea, Subtitle, Background, extraStyles } from './styles';
 import Header from '../../components/Header';
-import { SmallButton, InputBox } from '../../defaultStyles';
-import Logo from '../../../assets/images/euquero-logo.svg';
 
 import Wave from '../../components/Waves/Wave';
 import DashedWave from '../../components/Waves/DashedWave';
 import Modal from '../../components/Modal';
+import { SmallButton, InputBox } from '../../components/common';
 
 export default (props) => {
   const [modalData, setModalData] = useState({ email: '', type: '' });
@@ -109,25 +101,21 @@ export default (props) => {
       .catch(() =>
         Alert.alert(
           'Erro de autenticação',
-          'Ops! Email e/ou senha inválido(s), utilize apenas dados de contas já criadas.'
-        )
+          'Ops! Email e/ou senha inválido(s), utilize apenas dados de contas já criadas.',
+        ),
       );
     if (email == '' || password == '') {
       Alert.alert(
         'Erro de autenticação',
-        'Vish! Algum campo não foi preenchido corretamente, verifique novamente.'
+        'Vish! Algum campo não foi preenchido corretamente, verifique novamente.',
       );
     }
   };
 
   return (
     <Background>
-      <Header
-        onPress={() => props.navigation.goBack()}
-        absolute={true}
-        color={'white'}
-      />
-      <View style={{ ...extraStyles.keyboardAvoidView }} pointerEvents='none'>
+      <Header onPress={() => props.navigation.goBack()} absolute={true} color={'white'} />
+      <View style={{ ...extraStyles.keyboardAvoidView }} pointerEvents="none">
         <Wave top={true} transition={animationType} />
         <Wave transition={animationType} />
 
@@ -137,33 +125,27 @@ export default (props) => {
       <Container>
         <View style={{ ...extraStyles.containerView }}>
           <LogoView>
-            <Logo />
+            <Image
+              source={require('../../../assets/images/euquero-logo.png')}
+              style={{ resizeMode: 'contain', height: '65%' }}
+            />
             <Subtitle>Acesso Administrativo</Subtitle>
           </LogoView>
           <InputArea>
+            <InputBox type="email" placeholder="E-mail" value={email} onChangeText={setEmail} />
             <InputBox
-              type='email'
-              placeholder='E-mail'
-              value={email}
-              onChangeText={setEmail}
-            />
-            <InputBox
-              type='password'
-              placeholder='Senha'
+              type="password"
+              placeholder="Senha"
               value={password}
               onChangeText={setPassword}
             />
           </InputArea>
           <View style={{ height: '15%' }}>
-            <SmallButton onPress={signIn} text='Acessar' />
+            <SmallButton onPress={signIn} text="Acessar" />
           </View>
         </View>
       </Container>
-      <Modal
-        isVisible={modalVisibility}
-        params={modalData}
-        onPress={toggleModal}
-      />
+      <Modal isVisible={modalVisibility} params={modalData} onPress={toggleModal} />
     </Background>
   );
 };

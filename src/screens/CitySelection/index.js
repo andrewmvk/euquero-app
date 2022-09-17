@@ -5,9 +5,9 @@ import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
 
-import { colors, EmptyListMessage } from '../../defaultStyles';
+import { colors } from '../../defaultStyles';
 import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
-import { Card } from '../../defaultStyles';
+import { Card, EmptyListMessage } from '../../components/common';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 
