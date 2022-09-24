@@ -7,7 +7,6 @@ import Wave from '../../components/Waves/Wave';
 import DashedWave from '../../components/Waves/DashedWave';
 
 import { Icon } from '@rneui/themed';
-//import Logo from '../../../assets/images/euquero-logo.svg';
 import { buttonOpacity } from '../../defaultStyles';
 import { LargeButton, SmallButton } from '../../components/common';
 
@@ -42,7 +41,7 @@ export default (props) => {
         <LogoView>
           <Image
             source={require('../../../assets/images/euquero-logo.png')}
-            style={{ resizeMode: 'contain', height: '65%' }}
+            style={{ resizeMode: 'contain', height: '60%' }}
           />
           <Subtitle>
             Fortalecendo o acesso à saúde {'\n'}

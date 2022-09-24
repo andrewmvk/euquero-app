@@ -142,6 +142,11 @@ export default (props) => {
     );
   };
 
+  const advice = {
+    title: 'A conta não será excluída...',
+    text: 'Toda conta que estiver desativada não será excluída completamente. O usuário, ao tentar acessá-la, receberá um aviso de que a conta está desativada e que, caso persista em acessá-la (3 vezes), esta será excluída por completo.',
+  };
+
   return (
     <>
       <DashedCircle />
@@ -166,6 +171,7 @@ export default (props) => {
         onBackPress={toggleModal}
         icon={{ name: modalData.iconName, type: modalData.iconType }}
         data={{ title: modalData.title, text: modalData.text }}
+        advice={advice}
       />
     </>
   );

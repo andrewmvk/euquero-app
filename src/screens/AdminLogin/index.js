@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Keyboard, Alert } from 'react-native';
+import { View, Keyboard, Alert, Image, ActivityIndicator } from 'react-native';
 import { auth, db } from '../../services/firebase.config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
@@ -11,10 +11,12 @@ import Wave from '../../components/Waves/Wave';
 import DashedWave from '../../components/Waves/DashedWave';
 import Modal from '../../components/Modal';
 import { SmallButton, InputBox } from '../../components/common';
+import { colors } from '../../defaultStyles';
 
 export default (props) => {
   const [modalData, setModalData] = useState({ email: '', type: '' });
   const [modalVisibility, setModalVisibility] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -93,6 +95,7 @@ export default (props) => {
   }
 
   const signIn = () => {
+    setIsLoading(true);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
@@ -103,7 +106,10 @@ export default (props) => {
           'Erro de autenticação',
           'Ops! Email e/ou senha inválido(s), utilize apenas dados de contas já criadas.',
         ),
-      );
+      )
+      .finally(() => {
+        setIsLoading(false);
+      });
     if (email == '' || password == '') {
       Alert.alert(
         'Erro de autenticação',
@@ -127,7 +133,7 @@ export default (props) => {
           <LogoView>
             <Image
               source={require('../../../assets/images/euquero-logo.png')}
-              style={{ resizeMode: 'contain', height: '65%' }}
+              style={{ resizeMode: 'contain', height: '60%' }}
             />
             <Subtitle>Acesso Administrativo</Subtitle>
           </LogoView>
@@ -140,8 +146,12 @@ export default (props) => {
               onChangeText={setPassword}
             />
           </InputArea>
-          <View style={{ height: '15%' }}>
-            <SmallButton onPress={signIn} text="Acessar" />
+          <View style={{ height: '15%', alignItems: 'center' }}>
+            {isLoading ? (
+              <ActivityIndicator size="large" color={colors.orange} />
+            ) : (
+              <SmallButton onPress={() => handleNavigateTo({ isAdmin: true })} text="Acessar" />
+            )}
           </View>
         </View>
       </Container>
