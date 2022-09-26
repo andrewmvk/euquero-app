@@ -1,30 +1,36 @@
-import React, { useEffect } from 'react';
-import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import Animated, {
+  cancelAnimation,
   Easing,
   useAnimatedProps,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 
-import { buttonOpacity, colors } from '../../defaultStyles';
+import { buttonOpacity, colors, fonts } from '../../defaultStyles';
 import { ButtonText, Description, TextView, Title } from './styles';
 
 const AnimatedLine = Animated.createAnimatedComponent(View);
+const AnimatedContainer = Animated.createAnimatedComponent(View);
 
 export default (props) => {
+  const [showAdvice, setShowAdvice] = useState({ opened: false, title: '', text: '' });
+
   const deviceHeight = Dimensions.get('window').height;
   const deviceWidth = Dimensions.get('window').width;
-  const defaultHeight = deviceHeight * 0.4;
-  let modalContainerHeight = defaultHeight;
-
-  if (props.onPressYes) {
-    modalContainerHeight = deviceHeight * 0.5;
-  }
+  let defaultHeight = deviceHeight * 0.65;
 
   const animatedWidth = useSharedValue(deviceWidth);
+  const animatedHeight = useSharedValue(defaultHeight);
+
+  useEffect(() => {
+    if (props.advice) {
+      setShowAdvice({ opened: false, title: props.advice.title, text: props.advice.text });
+    }
+  }, []);
 
   const straightLineProps = useAnimatedProps(() => {
     return {
@@ -39,20 +45,54 @@ export default (props) => {
     };
   });
 
+  const containerProps = useAnimatedProps(() => {
+    return {
+      height: animatedHeight.value,
+      style: {
+        backgroundColor: '#fff',
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+      },
+    };
+  });
+
   useEffect(() => {
-    if (props.isVisible) {
+    if (props.isVisible && !showAdvice.opened) {
       animatedWidth.value = deviceWidth;
 
-      animatedWidth.value = withTiming(0, {
-        duration: 5000,
-        easing: Easing.ease,
-      });
-
-      setTimeout(() => {
-        props?.onBackPress();
-      }, 5000);
+      animatedWidth.value = withTiming(
+        0,
+        {
+          duration: 5000,
+          easing: Easing.ease,
+        },
+        (finished) => {
+          if (finished) {
+            props.onBackPress();
+          }
+        },
+      );
+    } else if (showAdvice.opened) {
+      cancelAnimation(animatedWidth);
+      animatedWidth.value = deviceWidth;
     }
-  }, [props.isVisible]);
+  }, [props.isVisible, showAdvice.opened]);
+
+  const heightAnimation = () => {
+    const animationDirection = showAdvice.opened ? defaultHeight : deviceHeight * 0.8;
+
+    animatedHeight.value = withTiming(animationDirection, {
+      duration: 500,
+      easing: Easing.ease,
+    });
+
+    const newTitle = !showAdvice.opened ? 'Voltar' : props.advice.title;
+
+    setShowAdvice({ opened: !showAdvice.opened, title: newTitle, text: showAdvice.text });
+  };
 
   return (
     <Modal
@@ -61,27 +101,20 @@ export default (props) => {
       onBackdropPress={props?.onBackPress}
       style={{ margin: 0 }}
     >
-      <View style={[styles.container, { height: modalContainerHeight }]}>
+      <AnimatedContainer animatedProps={containerProps}>
         <AnimatedLine animatedProps={straightLineProps} />
         {props.icon ? (
           <View style={styles.iconView}>
-            <Icon
-              name={props.icon?.name}
-              size={100}
-              type={props.icon?.type}
-              color={colors.gray}
-            />
+            <Icon name={props.icon?.name} size={100} type={props.icon?.type} color={colors.gray} />
           </View>
         ) : null}
 
         <TextView>
           <Title>{props.data?.title ? props.data.title : 'TÍTULO'}</Title>
-          {props.data?.text ? (
-            <Description>{props.data.text}</Description>
-          ) : null}
+          {props.data?.text ? <Description>{props.data.text}</Description> : null}
         </TextView>
 
-        {props.onPressYes ? (
+        {props.onPressYes && !showAdvice.opened ? (
           <View style={styles.buttonView}>
             <TouchableOpacity
               style={[styles.button, { backgroundColor: colors.orange }]}
@@ -98,8 +131,40 @@ export default (props) => {
               <ButtonText>NÃO</ButtonText>
             </TouchableOpacity>
           </View>
+        ) : showAdvice.opened ? (
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              flex: 1.5,
+              width: '80%',
+              lineHeight: 1.5,
+            }}
+          >
+            <Text style={{ fontFamily: fonts.spartanR, color: colors.text, textAlign: 'center' }}>
+              {props.advice.text}
+            </Text>
+          </View>
         ) : null}
-      </View>
+
+        {props.advice ? (
+          <TouchableOpacity
+            activeOpacity={buttonOpacity}
+            style={{ flex: 0.5, alignItems: 'center' }}
+            onPress={heightAnimation}
+          >
+            <Text
+              style={{
+                fontFamily: fonts.spartanR,
+                color: colors.orange,
+                textDecorationLine: 'underline',
+              }}
+            >
+              {showAdvice.title}
+            </Text>
+          </TouchableOpacity>
+        ) : null}
+      </AnimatedContainer>
     </Modal>
   );
 };
@@ -122,6 +187,7 @@ const styles = StyleSheet.create({
     flex: 0.75,
     width: '75%',
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-evenly',
   },
   button: {

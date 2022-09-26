@@ -19,8 +19,9 @@ export const Description = styled.Text`
 
 export const TextView = styled.View`
   width: 100%;
+  justify-content: center;
   align-items: center;
-  flex: 1.25;
+  flex: 0.75;
 `;
 
 export const ButtonText = styled.Text`

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 // import { Icon } from 'react-native-elements';
 import { FlatList, View } from 'react-native';
 // import { colors } from '../../defaultStyles';
 import { Container, Map, UBSName } from './styles';
-import { Card, EmptyListMessage } from '../../defaultStyles';
+import { Card, EmptyListMessage } from '../../components/common';
 import Header from '../../components/Header';
 
 import services from './services';

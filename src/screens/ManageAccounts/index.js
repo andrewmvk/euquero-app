@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Switch } from 'react-native';
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 
 import { Container, SwitchView } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
-import { AddButton, Card, colors, buttonOpacity } from '../../defaultStyles';
+import { colors, buttonOpacity } from '../../defaultStyles';
+import { AddButton, Card } from '../../components/common';
 import Modal from '../../components/Modal';
 
 export default (props) => {
@@ -33,9 +28,7 @@ export default (props) => {
       setIsLoading(true);
       let list = [];
       try {
-        const currentUserSnap = await getDoc(
-          doc(db, 'users', auth.currentUser.uid)
-        );
+        const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
         if (currentUserSnap.data().isAdmin) {
           const querySnapshot = await getDocs(collection(db, 'users'));
 
@@ -50,14 +43,10 @@ export default (props) => {
           });
           setAccounts(list);
         } else {
-          console.log(
-            'This account does not have a admin permission to access other accounts'
-          );
+          console.log('This account does not have a admin permission to access other accounts');
         }
       } catch (err) {
-        console.log(
-          'Something went wront while trying to access database accounts'
-        );
+        console.log('Something went wront while trying to access database accounts');
         console.log(err);
       }
     };
@@ -84,9 +73,7 @@ export default (props) => {
         disabled: !selectedUser.disabled,
         maximumAcessAttempts: !selectedUser.disabled ? 3 : null,
       }).then(() => {
-        const filteredData = accounts.filter(
-          (item) => item.id !== selectedUser.id
-        );
+        const filteredData = accounts.filter((item) => item.id !== selectedUser.id);
         selectedUser.disabled = !selectedUser.disabled;
         if (selectedUser.disabled) {
           setAccounts([...filteredData, selectedUser]);
@@ -96,9 +83,7 @@ export default (props) => {
         setSelectedUser(null);
       });
     } catch (err) {
-      console.log(
-        'Erro while trying to disable/enable account in the database'
-      );
+      console.log('Erro while trying to disable/enable account in the database');
       console.log(err);
     }
   };
@@ -145,10 +130,7 @@ export default (props) => {
         text={item.email}
         color={item.disabled ? colors.gray : colors.orange}
       >
-        <SwitchView
-          onPress={() => enableDisableAccountModal(item)}
-          activeOpacity={buttonOpacity}
-        >
+        <SwitchView onPress={() => enableDisableAccountModal(item)} activeOpacity={buttonOpacity}>
           <Switch
             trackColor={{ false: colors.gray, true: colors.orange }}
             thumbColor={item.disabled ? colors.gray : colors.orange}
@@ -160,20 +142,18 @@ export default (props) => {
     );
   };
 
+  const advice = {
+    title: 'A conta não será excluída...',
+    text: 'Toda conta que estiver desativada não será excluída completamente. O usuário, ao tentar acessá-la, receberá um aviso de que a conta está desativada e que, caso persista em acessá-la (3 vezes), esta será excluída por completo.',
+  };
+
   return (
     <>
       <DashedCircle />
       <Container>
-        <Header
-          text={'Administrativo - Contas'}
-          onPress={() => props.navigation.goBack()}
-        />
+        <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
         {isLoading ? (
-          <ActivityIndicator
-            size='large'
-            color={colors.orange}
-            style={{ marginTop: 50 }}
-          />
+          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
         ) : (
           <FlatList
             style={{ marginTop: 45, marginBottom: 25, width: '100%' }}
@@ -184,15 +164,14 @@ export default (props) => {
           />
         )}
       </Container>
-      <AddButton
-        onPress={() => props.navigation.navigate('RegisterAccounts')}
-      />
+      <AddButton onPress={() => props.navigation.navigate('RegisterAccounts')} />
       <Modal
         isVisible={modalVisibility}
         onPressYes={selectedUser ? onPressYes : null}
         onBackPress={toggleModal}
         icon={{ name: modalData.iconName, type: modalData.iconType }}
         data={{ title: modalData.title, text: modalData.text }}
+        advice={advice}
       />
     </>
   );
