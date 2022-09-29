@@ -9,6 +9,7 @@ import {
   Dimensions,
   ActivityIndicator,
   FlatList,
+  ScrollView,
 } from 'react-native';
 
 import { Icon } from 'react-native-elements';
@@ -458,9 +459,9 @@ const SimpleText = styled.Text`
   margin: 16px 30px 16px 30px;
 `;
 
-export const EmptyListMessage = () => {
+export const EmptyListMessage = (props) => {
   return (
-    <NoResults>
+    <NoResults style={{ ...props?.containerStyle }}>
       <View>
         <Image
           source={require('../../assets/images/noResultsImg.png')}
@@ -470,5 +471,94 @@ export const EmptyListMessage = () => {
       <Title>NADA POR AQUI!</Title>
       <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
     </NoResults>
+  );
+};
+
+const SelectView = styled.TouchableOpacity`
+  height: 55px;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 5px;
+  padding-left: 18px;
+  padding-right: 18px;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+`;
+
+const DropdownText = styled.Text`
+  flex: 1;
+  font-size: ${fontSize.cardText};
+  font-family: ${fonts.spartanR};
+  color: ${colors.text};
+`;
+
+const DropdownView = styled.View`
+  height: 150px;
+  width: 100%;
+  top: 55px;
+  background-color: #fff;
+  z-index: 100;
+  position: absolute;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+`;
+
+const selectBoxShadow = {
+  distance: 2,
+  startColor: 'rgba(0,0,0,0.035)',
+  finalColor: 'rgba(0,0,0,0.0)',
+  distance: 10,
+  radius: 5,
+};
+
+export const DropdownSelection = (props) => {
+  const [opened, setOpened] = useState(false);
+  return (
+    <View style={props?.containerStyle}>
+      <Shadow {...selectBoxShadow} containerViewStyle={{ height: 55, width: '100%' }}>
+        <SelectView
+          style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
+          activeOpacity={buttonOpacity}
+          disabled={props.disabled}
+          onPress={() => setOpened(!opened)}
+        >
+          <DropdownText
+            numberOfLines={1}
+            style={{ color: props.disabled ? colors.gray : colors.text }}
+          >
+            {props.data.selected}
+          </DropdownText>
+          <Icon
+            name="chevron-down"
+            type="material-community"
+            color={props.disabled ? colors.gray : colors.text}
+          />
+        </SelectView>
+      </Shadow>
+      {opened ? (
+        <DropdownView>
+          <ScrollView>
+            {props.data.items.map((item) => {
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  activeOpacity={buttonOpacity}
+                  style={{ paddingBottom: 6, paddingRight: 18, paddingLeft: 18 }}
+                  onPress={() => {
+                    props.onSelect({ ...props.data, selected: item.name, value: item.id });
+                    setOpened(!opened);
+                  }}
+                >
+                  <DropdownText numberOfLines={1} style={{ marginBottom: 10 }}>
+                    {item.name}
+                  </DropdownText>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </DropdownView>
+      ) : null}
+    </View>
   );
 };

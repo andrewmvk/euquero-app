@@ -1,6 +1,6 @@
-import styled from "styled-components/native";
-import { colors, fonts, fontSize } from "../../defaultStyles";
-import * as defaultS from "../../defaultStyles";
+import styled from 'styled-components/native';
+import { colors, fonts, fontSize } from '../../defaultStyles';
+import * as defaultS from '../../defaultStyles';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -39,12 +39,11 @@ export const TrashIcon = styled.TouchableOpacity`
 
 export const SearchInput = styled.View`
   height: 55px;
-  width: 72%;
+  width: 100%;
   background-color: #fff;
   border-radius: 5px;
   padding-left: 18px;
   justify-content: center;
-  margin-top: 45px;
   flex-direction: row;
 `;
 
@@ -56,6 +55,7 @@ export const SearchInputText = styled.TextInput`
 `;
 
 export const SearchArea = styled.View`
+  width: 85%;
   flex-direction: row;
   align-items: center;
 `;
