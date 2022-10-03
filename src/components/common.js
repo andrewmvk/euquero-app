@@ -16,7 +16,13 @@ import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
 import styled from 'styled-components/native';
 
-import { fonts, fontSize, fontSizeNoUnits, colors, buttonOpacity } from '../defaultStyles';
+import {
+  fonts,
+  fontSize,
+  fontSizeNoUnits,
+  colors,
+  buttonOpacity,
+} from '../defaultStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -202,9 +208,11 @@ export function RegisterButton(props) {
       onPress={props.onPress}
     >
       {props.isLoading ? (
-        <ActivityIndicator size="large" color="#fff" />
+        <ActivityIndicator size='large' color='#fff' />
       ) : (
-        <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
+        <RegisterButtonText>
+          {props.text ? props.text : 'TEXT'}
+        </RegisterButtonText>
       )}
     </TouchableOpacity>
   );
@@ -224,7 +232,12 @@ export function AddButton(props) {
   return (
     <Shadow {...customButtonShadow.rounded}>
       <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
-        <Icon name="plus" size={35} type="material-community" color={colors.orange} />
+        <Icon
+          name='plus'
+          size={35}
+          type='material-community'
+          color={colors.orange}
+        />
       </RoundedButton>
     </Shadow>
   );
@@ -295,7 +308,9 @@ export const Card = (props) => {
           </Text>
         ) : null}
         {props.ubsCount ? (
-          <Text style={cardStyles.avaibleUBSText}>{props.ubsCount + ' UBS'}</Text>
+          <Text style={cardStyles.avaibleUBSText}>
+            {props.ubsCount + ' UBS'}
+          </Text>
         ) : null}
         {props.children ? { ...props.children } : null}
       </TouchableOpacity>
@@ -349,39 +364,69 @@ export const InDevelopmentCard = (props) => {
       id: '58694a0f-3da1-471f-bd96-145571e29d72',
       title: 'Third Item',
     },
+    {
+      id: '58694a0f-3da1-471f-bd96-145571e29d722',
+      title: 'Third Item',
+    },
+    {
+      id: '58694a0f-3da1-471f-bd96-145571e29d723g',
+      title: 'Third Item',
+    },
+    {
+      id: '58694a0f-3da1-471f-bd96-145571e29d723h',
+      title: 'Third Item',
+    },
+    {
+      id: '58694a0f-3da1-471f-bd96-145571e29d723j',
+      title: 'Third Item',
+    },
+    {
+      id: '58694a0f-3da1-471f-bd96-145571e29d723k',
+      title: 'Third Item',
+    },
   ];
-
-  const Item = ({ item }) => <Text style={{ color: '#7f7f7f' }}>{item.title}</Text>;
 
   const [selectedId, setSelectedId] = useState(null);
 
   const renderItem = ({ item }) => {
-    return <Item item={item} />;
+    return (
+      <Text style={{ color: '#7f7f7f', marginBottom: 5 }}>{item.title}</Text>
+    );
   };
 
   return (
     <>
-      <Shadow {...cardShadow}>
-        <View style={[cardA.containerA, { borderLeftColor: color }]}>
-          <Text style={cardA.titleCardA} numberOfLines={1}>
-            Em desenvolvimento...
-          </Text>
-          <Text style={cardA.descriptionCardA}>Estados a serem cadastrados:</Text>
-        </View>
-      </Shadow>
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        extraData={selectedId}
-        style={{
-          borderBottomLeftRadius: 5,
-          borderBottomRightRadius: 5,
-          backgroundColor: 'white',
-          width: '80%',
-          paddingHorizontal: 20,
-        }}
-      />
+      <View>
+        <Shadow {...cardShadow}>
+          <View style={[cardA.containerA, { borderLeftColor: color }]}>
+            <Text style={cardA.titleCardA} numberOfLines={1}>
+              Em desenvolvimento...
+            </Text>
+            <Text style={cardA.descriptionCardA}>
+              Estados a serem cadastrados:
+            </Text>
+          </View>
+        </Shadow>
+        <FlatList
+          data={DATA}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          extraData={selectedId}
+          style={{
+            borderBottomLeftRadius: 5,
+            borderBottomRightRadius: 5,
+            backgroundColor: 'white',
+            width: '95%',
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            alignSelf: 'center',
+            marginBottom: 30,
+          }}
+          contentContainerStyle={{
+            overflow: 'hidden',
+          }}
+        />
+      </View>
     </>
   );
 };
@@ -417,8 +462,10 @@ export const InputBox = (props) => {
     <Shadow {...inputBoxShadow}>
       <View style={inputBoxStyles.searchInput}>
         <Icon
-          name={props.type === 'password' ? 'lock-closed-outline' : 'person-outline'}
-          type="ionicon"
+          name={
+            props.type === 'password' ? 'lock-closed-outline' : 'person-outline'
+          }
+          type='ionicon'
           color={colors.gray}
           style={{
             paddingHorizontal: 15,
@@ -469,7 +516,9 @@ export const EmptyListMessage = (props) => {
         />
       </View>
       <Title>NADA POR AQUI!</Title>
-      <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
+      <SimpleText>
+        Não encontramos nenhum item correspondente à sua pesquisa.
+      </SimpleText>
     </NoResults>
   );
 };
