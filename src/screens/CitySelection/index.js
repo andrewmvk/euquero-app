@@ -7,7 +7,11 @@ import { db } from '../../services/firebase.config';
 
 import { colors } from '../../defaultStyles';
 import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
-import { Card, EmptyListMessage } from '../../components/common';
+import {
+  Card,
+  EmptyListMessage,
+  InDevelopmentCard,
+} from '../../components/common';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 
@@ -20,7 +24,7 @@ export default (props) => {
     async function fetchData() {
       try {
         const response = await axios.get(
-          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`,
+          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`
         );
 
         const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountCities'));
@@ -45,14 +49,16 @@ export default (props) => {
         }
 
         citiesArray.sort((a, b) =>
-          a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
+          a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0
         );
 
         setCities(citiesArray);
 
         setOriginalData(citiesArray);
       } catch (err) {
-        console.log('Something went wrong while trying to fetch data from database or Cities API.');
+        console.log(
+          'Something went wrong while trying to fetch data from database or Cities API.'
+        );
         console.log(err);
       }
     }
@@ -95,9 +101,9 @@ export default (props) => {
             t
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase(),
-          ),
-      ),
+              .toLowerCase()
+          )
+      )
     );
   };
 
@@ -113,14 +119,20 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={props.route.params.stateName} onPress={() => props.navigation.goBack()} />
+        <Header
+          text={props.route.params.stateName}
+          onPress={() => props.navigation.goBack()}
+        />
         <SearchArea>
           <SearchInput>
-            <SearchInputText placeholder="Buscar cidade" onChangeText={(t) => search(t)} />
+            <SearchInputText
+              placeholder='Buscar cidade'
+              onChangeText={(t) => search(t)}
+            />
             <Icon
-              name="search-outline"
-              type="ionicon"
-              color="#c4c4c4"
+              name='search-outline'
+              type='ionicon'
+              color='#c4c4c4'
               style={{
                 paddingHorizontal: 15,
                 paddingVertical: 15,
@@ -129,8 +141,8 @@ export default (props) => {
           </SearchInput>
           <TouchableOpacity onPress={handleOrderClick}>
             <Icon
-              name="order-alphabetical-ascending"
-              type="material-community"
+              name='order-alphabetical-ascending'
+              type='material-community'
               color={colors.gray}
               size={32}
               style={{ marginTop: 25, marginLeft: 25 }}
@@ -138,7 +150,11 @@ export default (props) => {
           </TouchableOpacity>
         </SearchArea>
         {isLoading ? (
-          <ActivityIndicator size="large" color="#FF6B0F" style={{ marginTop: 50 }} />
+          <ActivityIndicator
+            size='large'
+            color='#FF6B0F'
+            style={{ marginTop: 50 }}
+          />
         ) : (
           <FlatList
             style={{
@@ -151,6 +167,7 @@ export default (props) => {
             renderItem={cityCard}
             keyExtractor={(item) => item.id}
             ListEmptyComponent={EmptyListMessage}
+            ListFooterComponent={InDevelopmentCard}
           />
         )}
       </Container>
