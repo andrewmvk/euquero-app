@@ -18,6 +18,7 @@ const AnimatedContainer = Animated.createAnimatedComponent(View);
 
 export default (props) => {
   const [showAdvice, setShowAdvice] = useState({ opened: false, title: '', text: '' });
+  const [timer, setTimer] = useState();
 
   const deviceHeight = Dimensions.get('window').height;
   const deviceWidth = Dimensions.get('window').width;
@@ -63,17 +64,14 @@ export default (props) => {
     if (props.isVisible && !showAdvice.opened) {
       animatedWidth.value = deviceWidth;
 
-      animatedWidth.value = withTiming(
-        0,
-        {
-          duration: 5000,
-          easing: Easing.ease,
-        },
-        (finished) => {
-          if (finished) {
-            props.onBackPress();
-          }
-        },
+      animatedWidth.value = withTiming(0, {
+        duration: 5000,
+        easing: Easing.ease,
+      });
+      setTimer(
+        setTimeout(() => {
+          props.onBackPress();
+        }, 5100),
       );
     } else if (showAdvice.opened) {
       cancelAnimation(animatedWidth);
@@ -90,7 +88,9 @@ export default (props) => {
     });
 
     const newTitle = !showAdvice.opened ? 'Voltar' : props.advice.title;
-
+    if (!showAdvice.opened) {
+      clearTimeout(timer);
+    }
     setShowAdvice({ opened: !showAdvice.opened, title: newTitle, text: showAdvice.text });
   };
 
@@ -119,14 +119,20 @@ export default (props) => {
             <TouchableOpacity
               style={[styles.button, { backgroundColor: colors.orange }]}
               activeOpacity={buttonOpacity}
-              onPress={() => props.onPressYes()}
+              onPress={() => {
+                props.onPressYes();
+                clearTimeout(timer);
+              }}
             >
               <ButtonText>SIM</ButtonText>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.button, { backgroundColor: colors.gray }]}
               activeOpacity={buttonOpacity}
-              onPress={() => props.onBackPress()}
+              onPress={() => {
+                props.onBackPress();
+                clearTimeout(timer);
+              }}
             >
               <ButtonText>NÃO</ButtonText>
             </TouchableOpacity>
