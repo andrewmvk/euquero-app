@@ -16,13 +16,7 @@ import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
 import styled from 'styled-components/native';
 
-import {
-  fonts,
-  fontSize,
-  fontSizeNoUnits,
-  colors,
-  buttonOpacity,
-} from '../defaultStyles';
+import { fonts, fontSize, fontSizeNoUnits, colors, buttonOpacity } from '../defaultStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -208,11 +202,9 @@ export function RegisterButton(props) {
       onPress={props.onPress}
     >
       {props.isLoading ? (
-        <ActivityIndicator size='large' color='#fff' />
+        <ActivityIndicator size="large" color="#fff" />
       ) : (
-        <RegisterButtonText>
-          {props.text ? props.text : 'TEXT'}
-        </RegisterButtonText>
+        <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
       )}
     </TouchableOpacity>
   );
@@ -232,12 +224,7 @@ export function AddButton(props) {
   return (
     <Shadow {...customButtonShadow.rounded}>
       <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
-        <Icon
-          name='plus'
-          size={35}
-          type='material-community'
-          color={colors.orange}
-        />
+        <Icon name="plus" size={35} type="material-community" color={colors.orange} />
       </RoundedButton>
     </Shadow>
   );
@@ -308,9 +295,7 @@ export const Card = (props) => {
           </Text>
         ) : null}
         {props.ubsCount ? (
-          <Text style={cardStyles.avaibleUBSText}>
-            {props.ubsCount + ' UBS'}
-          </Text>
+          <Text style={cardStyles.avaibleUBSText}>{props.ubsCount + ' UBS'}</Text>
         ) : null}
         {props.children ? { ...props.children } : null}
       </TouchableOpacity>
@@ -389,9 +374,7 @@ export const InDevelopmentCard = (props) => {
   const [selectedId, setSelectedId] = useState(null);
 
   const renderItem = ({ item }) => {
-    return (
-      <Text style={{ color: '#7f7f7f', marginBottom: 5 }}>{item.title}</Text>
-    );
+    return <Text style={{ color: '#7f7f7f', marginBottom: 5 }}>{item.title}</Text>;
   };
 
   return (
@@ -402,9 +385,7 @@ export const InDevelopmentCard = (props) => {
             <Text style={cardA.titleCardA} numberOfLines={1}>
               Em desenvolvimento...
             </Text>
-            <Text style={cardA.descriptionCardA}>
-              Estados a serem cadastrados:
-            </Text>
+            <Text style={cardA.descriptionCardA}>Estados a serem cadastrados:</Text>
           </View>
         </Shadow>
         <FlatList
@@ -462,10 +443,8 @@ export const InputBox = (props) => {
     <Shadow {...inputBoxShadow}>
       <View style={inputBoxStyles.searchInput}>
         <Icon
-          name={
-            props.type === 'password' ? 'lock-closed-outline' : 'person-outline'
-          }
-          type='ionicon'
+          name={props.type === 'password' ? 'lock-closed-outline' : 'person-outline'}
+          type="ionicon"
           color={colors.gray}
           style={{
             paddingHorizontal: 15,
@@ -516,9 +495,7 @@ export const EmptyListMessage = (props) => {
         />
       </View>
       <Title>NADA POR AQUI!</Title>
-      <SimpleText>
-        Não encontramos nenhum item correspondente à sua pesquisa.
-      </SimpleText>
+      <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
     </NoResults>
   );
 };
@@ -543,7 +520,7 @@ const DropdownText = styled.Text`
 `;
 
 const DropdownView = styled.View`
-  height: 150px;
+  height: 120px;
   width: 100%;
   top: 55px;
   background-color: #fff;
@@ -563,6 +540,8 @@ const selectBoxShadow = {
 
 export const DropdownSelection = (props) => {
   const [opened, setOpened] = useState(false);
+  const [placeholder, setPlaceholder] = useState(props.placeholder ? props.placeholder : false);
+
   return (
     <View style={props?.containerStyle}>
       <Shadow {...selectBoxShadow} containerViewStyle={{ height: 55, width: '100%' }}>
@@ -574,7 +553,7 @@ export const DropdownSelection = (props) => {
         >
           <DropdownText
             numberOfLines={1}
-            style={{ color: props.disabled ? colors.gray : colors.text }}
+            style={{ color: props.disabled || placeholder ? colors.gray : colors.text }}
           >
             {props.data.selected}
           </DropdownText>
@@ -586,7 +565,7 @@ export const DropdownSelection = (props) => {
         </SelectView>
       </Shadow>
       {opened ? (
-        <DropdownView>
+        <DropdownView style={{ height: props.data.items.length > 3 ? 160 : 135 }}>
           <ScrollView>
             {props.data.items.map((item) => {
               return (
@@ -596,6 +575,7 @@ export const DropdownSelection = (props) => {
                   style={{ paddingBottom: 6, paddingRight: 18, paddingLeft: 18 }}
                   onPress={() => {
                     props.onSelect({ ...props.data, selected: item.name, value: item.id });
+                    setPlaceholder(false);
                     setOpened(!opened);
                   }}
                 >

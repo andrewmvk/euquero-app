@@ -1,6 +1,5 @@
 import styled from 'styled-components/native';
 import { colors, fonts, fontSize } from '../../defaultStyles';
-import * as defaultS from '../../defaultStyles';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -34,7 +33,6 @@ export const TrashIcon = styled.TouchableOpacity`
   justify-content: center;
   height: 90%;
   padding-right: 5%;
-  font-weight: 200;
 `;
 
 export const SearchInput = styled.View`
@@ -49,9 +47,9 @@ export const SearchInput = styled.View`
 
 export const SearchInputText = styled.TextInput`
   flex: 1;
-  font-size: ${defaultS.fontSize.cardText};
-  font-family: ${defaultS.fonts.spartanR};
-  color: ${defaultS.colors.text};
+  font-size: ${fontSize.cardText};
+  font-family: ${fonts.spartanR};
+  color: ${colors.text};
 `;
 
 export const SearchArea = styled.View`
