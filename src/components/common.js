@@ -198,7 +198,7 @@ export function RegisterButton(props) {
   return (
     <TouchableOpacity
       activeOpacity={buttonOpacity}
-      style={buttonStyles.register}
+      style={[buttonStyles.register, props.containerStyle]}
       onPress={props.onPress}
     >
       {props.isLoading ? (
@@ -540,7 +540,6 @@ const selectBoxShadow = {
 
 export const DropdownSelection = (props) => {
   const [opened, setOpened] = useState(false);
-  const [placeholder, setPlaceholder] = useState(props.placeholder ? props.placeholder : false);
 
   return (
     <View style={props?.containerStyle}>
@@ -553,7 +552,7 @@ export const DropdownSelection = (props) => {
         >
           <DropdownText
             numberOfLines={1}
-            style={{ color: props.disabled || placeholder ? colors.gray : colors.text }}
+            style={{ color: props.disabled || props.placeholder ? colors.gray : colors.text }}
           >
             {props.data.selected}
           </DropdownText>
@@ -575,7 +574,6 @@ export const DropdownSelection = (props) => {
                   style={{ paddingBottom: 6, paddingRight: 18, paddingLeft: 18 }}
                   onPress={() => {
                     props.onSelect({ ...props.data, selected: item.name, value: item.id });
-                    setPlaceholder(false);
                     setOpened(!opened);
                   }}
                 >

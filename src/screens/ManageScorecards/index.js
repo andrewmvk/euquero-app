@@ -1,40 +1,44 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList } from 'react-native';
+import { ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { AddButton, EmptyListMessage } from '../../components/common';
-import { colors } from '../../defaultStyles';
+import { buttonOpacity, colors } from '../../defaultStyles';
 import { Container, SearchArea, SearchInput, SearchInputText } from './styles';
 import EditableCard from '../../components/EditableCard';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../services/firebase.config';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [scorecards, setScoreCards] = useState([
-    {
-      id: 0,
-      name: 'teste',
-      description: 'Description of the test',
-    },
-    {
-      id: 1,
-      name: 'teste',
-      description: 'Description of the test',
-    },
-    {
-      id: 2,
-      name: 'teste',
-      description: 'Description of the test',
-    },
-    {
-      id: 3,
-      name: 'teste',
-      description: 'Description of the test',
-    },
-  ]);
+  const [scorecards, setScoreCards] = useState([]);
+  const [scorecardsBackup, setScoreCardsBackup] = useState([]);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    const querySnapshot = await getDocs(collection(db, 'scorecards'));
+
+    let scorecardsArray = [];
+    querySnapshot.forEach((doc) => {
+      const scorecard = {
+        name: doc.data().name,
+        description: doc.data().description,
+        id: doc.data().id,
+      };
+      scorecardsArray.push(scorecard);
+    });
+
+    setScoreCards(scorecardsArray);
+    setScoreCardsBackup(scorecardsArray);
+  };
+
+  useEffect(() => {
+    fetchData().then(() => setIsLoading(false));
+  }, []);
 
   const searchBoxShadow = {
     distance: 2,
@@ -45,10 +49,10 @@ export default (props) => {
   };
 
   const search = (t) => {
-    if (ubsBackup.length > 0) {
+    if (scorecardsBackup.length > 0) {
       setIsLoading(true);
-      /*let arr = [...ubsBackup];
-      setUbs(
+      let arr = [...scorecardsBackup];
+      setScoreCards(
         arr.filter((d) =>
           d.name
             .normalize('NFD')
@@ -61,14 +65,14 @@ export default (props) => {
                 .toLowerCase(),
             ),
         ),
-      );*/
+      );
       setIsLoading(false);
     }
   };
 
-  const setItemData = (item) => {
+  const deleteItem = (item) => {
     const newData = scorecards.filter((cards) => cards.id != item.id);
-    setScoreCards([...newData, { id: item.id, name: item.name, description: item.description }]);
+    setScoreCards(newData);
   };
 
   const cards = ({ item }) => {
@@ -78,7 +82,7 @@ export default (props) => {
         key={item.id}
         text={item.name}
         description={item.description}
-        setData={() => setItemData(item)}
+        deletedItem={() => deleteItem(item)}
       />
     );
   };
@@ -87,7 +91,15 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo - Indicadores'} onPress={() => props.navigation.goBack()} />
+        <Header text={'Administrativo - Indicadores'} onPress={() => props.navigation.goBack()}>
+          <TouchableOpacity
+            activeOpacity={buttonOpacity}
+            onPress={() => fetchData().then(() => setIsLoading(false))}
+            style={{ justifyContent: 'center', flex: 1, alignItems: 'flex-end', marginRight: '5%' }}
+          >
+            <Icon name="reload" size={25} type="material-community" color={colors.text} />
+          </TouchableOpacity>
+        </Header>
         <SearchArea>
           <Shadow
             {...searchBoxShadow}
@@ -126,7 +138,7 @@ export default (props) => {
           />
         )}
       </Container>
-      <AddButton onPress={() => props.navigation.navigate('NewScorecard')} />
+      <AddButton onPress={() => props.navigation.navigate('NewScorecard', deleteItem)} />
     </>
   );
 };

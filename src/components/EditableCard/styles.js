@@ -7,7 +7,6 @@ const screenWidth = Dimensions.get('window').width;
 export const TouchableIcon = styled.TouchableOpacity`
   justify-content: center;
   height: 90%;
-  margin-right: 5%;
 `;
 
 export const TouchableCard = styled.TouchableOpacity`
@@ -26,6 +25,7 @@ export const Icons = styled.View`
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
+  margin-right: 10px;
 `;
 
 export const Description = styled.TextInput`

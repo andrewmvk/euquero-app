@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import { Dimensions, View, StyleSheet, TextInput, Text } from 'react-native';
+import { deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { Dimensions, View, StyleSheet, TextInput, Text, ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Animated, { useAnimatedProps, useSharedValue, withSpring } from 'react-native-reanimated';
 import { Shadow } from 'react-native-shadow-2';
 
 import { buttonOpacity, colors, fonts, fontSizeNoUnits } from '../../defaultStyles';
+import { db } from '../../services/firebase.config';
 import { Description, Icons, TouchableCard, TouchableIcon } from './styles';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 export default (props) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [itemName, setItemName] = useState(props.text);
   const [itemDescription, setItemDescription] = useState(props.description);
 
@@ -31,9 +34,37 @@ export default (props) => {
     };
   }, [isEditing]);
 
-  const increaseHeight = () => {
+  const increaseDecreaseHeight = () => {
     setIsEditing(!isEditing);
     animatedHeight.value = withSpring(!isEditing ? 150 : 10);
+  };
+
+  const save = () => {
+    setIsLoading(true);
+    setDoc(doc(db, 'scorecards', props.value.toString()), {
+      name: itemName,
+      description: itemDescription,
+      id: props.value,
+    })
+      .catch((err) => console.log(err))
+      .then(() => setIsLoading(false));
+  };
+
+  const deleteOrCancel = () => {
+    if (isEditing) {
+      increaseDecreaseHeight();
+    } else {
+      setIsLoading(true);
+      deleteScorecard().then(() => setIsLoading(false));
+    }
+  };
+
+  const deleteScorecard = async () => {
+    await deleteDoc(doc(db, 'scorecards', props.value.toString()))
+      .catch((err) => {
+        console.log(err);
+      })
+      .then(() => props.deletedItem());
   };
 
   const cardShadow = {
@@ -58,31 +89,51 @@ export default (props) => {
           disabled={props.onPress === undefined ? true : false}
         >
           {isEditing ? (
-            <TextInput
-              style={[styles.title, { textDecorationLine: 'underline' }]}
-              numberOfLines={1}
-              value={itemName}
-              placeholder="Nome"
-              onChangeText={setItemName}
+            <>
+              <Text style={styles.number}>{props.value}</Text>
+              <TextInput
+                style={[styles.title, { textDecorationLine: 'underline' }]}
+                numberOfLines={1}
+                value={itemName}
+                placeholder="Nome"
+                onChangeText={setItemName}
+              />
+            </>
+          ) : isLoading ? (
+            <ActivityIndicator
+              size="large"
+              color={colors.orange}
+              style={{ flex: 2.5, marginLeft: 15, paddingRight: 5 }}
             />
           ) : (
-            <Text style={styles.title} numberOfLines={1}>
-              {itemName}
-            </Text>
+            <>
+              <Text style={styles.number}>{props.value}</Text>
+              <Text style={styles.title} numberOfLines={1}>
+                {itemName}
+              </Text>
+            </>
           )}
 
           <Icons>
-            <TouchableIcon activeOpacity={buttonOpacity} onPress={increaseHeight}>
+            <TouchableIcon
+              activeOpacity={buttonOpacity}
+              onPress={() => {
+                increaseDecreaseHeight();
+                if (isEditing) {
+                  save();
+                }
+              }}
+            >
               <Icon
                 name={isEditing ? 'check' : 'pencil-outline'}
                 size={35}
                 type="material-community"
-                color={colors.gray}
+                color={isEditing ? colors.orange : colors.gray}
               />
             </TouchableIcon>
-            <TouchableIcon activeOpacity={buttonOpacity}>
+            <TouchableIcon activeOpacity={buttonOpacity} onPress={deleteOrCancel}>
               <Icon
-                name="trash-can-outline"
+                name={isEditing ? 'close' : 'trash-can-outline'}
                 size={35}
                 type="material-community"
                 color={colors.gray}
@@ -112,8 +163,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: fontSizeNoUnits.cardText,
-    marginLeft: 22,
+    marginLeft: 5,
+    paddingRight: 5,
     color: colors.text,
     flex: 2,
+  },
+  number: {
+    textAlign: 'center',
+    fontFamily: fonts.spartanR,
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: fontSizeNoUnits.text,
+    color: colors.orange,
+    marginLeft: 10,
+    flex: 0.5,
   },
 });
