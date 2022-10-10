@@ -43,6 +43,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.gray,
     marginLeft: 10,
-    width: ScreenWidth * 0.6,
+    flex: 4,
   },
 });
