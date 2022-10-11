@@ -541,11 +541,15 @@ const selectBoxShadow = {
 export const DropdownSelection = (props) => {
   const [opened, setOpened] = useState(false);
 
+  const roundedView = props?.rounded
+    ? { borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }
+    : { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 };
+
   return (
-    <View style={props?.containerStyle}>
+    <View style={[{ alignItems: 'center' }, props?.containerStyle]}>
       <Shadow {...selectBoxShadow} containerViewStyle={{ height: 55, width: '100%' }}>
         <SelectView
-          style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
+          style={[roundedView, props?.selectContainerStyle]}
           activeOpacity={buttonOpacity}
           disabled={props.disabled}
           onPress={() => setOpened(!opened)}
@@ -564,7 +568,12 @@ export const DropdownSelection = (props) => {
         </SelectView>
       </Shadow>
       {opened ? (
-        <DropdownView style={{ height: props.data.items.length > 3 ? 160 : 135 }}>
+        <DropdownView
+          style={[
+            { height: props.data.items.length > 3 ? 160 : 135 },
+            props?.dropdownContainerStyle,
+          ]}
+        >
           <ScrollView>
             {props.data.items.map((item) => {
               return (

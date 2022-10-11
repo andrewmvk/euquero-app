@@ -9,16 +9,25 @@ import * as FileSystem from 'expo-file-system';
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
 
 import { colors, fonts } from '../../defaultStyles';
-import { RegisterButton } from '../../components/common';
+import { DropdownSelection, RegisterButton } from '../../components/common';
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { SimpleText, Title, Container, ButtonView, TouchableText } from './styles';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [fileType, setFileType] = useState({
+    items: [
+      { name: 'UBS', id: 1 },
+      { name: 'Serviços', id: 2 },
+      { name: 'Indicadores', id: 3 },
+    ],
+    selected: 'Escolha o tipo de arquivo',
+    value: -1,
+  });
 
   const downloadDefaultExcel = async () => {
-    const fileName = 'cadastro_estabelecimentos_final10.xlsx';
+    const fileName = 'services.xlsx';
     const pathReference = ref(storage, fileName);
 
     await getDownloadURL(pathReference).then(async (url) => {
@@ -41,25 +50,56 @@ export default (props) => {
         return Alert.alert('Não foi possivel carregar o arquivo');
       }
 
+      let pageErrors = [];
+      let numberOfPages = 0;
+
       await FileSystem.readAsStringAsync(`${fileDoc.uri}`, {
         encoding: FileSystem.EncodingType.Base64,
       })
         .then(async (b64) => XLSX.read(b64, { type: 'base64' }))
         .then(async (workbook) => {
-          const worksheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[worksheetName];
+          for (i = 0; i < workbook.SheetNames.length; i++) {
+            numberOfPages = workbook.SheetNames.length;
+            const worksheetName = workbook.SheetNames[i];
+            const worksheet = workbook.Sheets[worksheetName];
 
-          const dataFile = XLSX.utils.sheet_to_json(worksheet, { header: 0 });
-          await uploadToDatabase(dataFile)
-            .then(async () => {
-              await updateUbsCount();
-            })
-            .finally(() => {
-              Alert.alert(
-                'Upload completo!',
-                'Todos os dados foram carregados e enviados com sucesso.',
-              );
-            });
+            const dataFile = XLSX.utils.sheet_to_json(worksheet, { header: 0 });
+            const error = await uploadToDatabase(dataFile, worksheetName);
+            if (error != null) {
+              pageErrors.push(error);
+            }
+          }
+        })
+        .finally(() => {
+          if (fileType != -1) {
+            let alertDescription = {
+              title: 'Upload completo!',
+              text: 'Todos os dados foram carregados e enviados com sucesso.',
+            };
+            if (pageErrors.length != 0) {
+              let errorMessage = '';
+              for (i = 0; i < pageErrors.length; i++) {
+                errorMessage += pageErrors[i];
+                if (i != pageErrors.length - 1) {
+                  errorMessage += ', ';
+                }
+              }
+              const finalMessage =
+                numberOfPages == pageErrors.length
+                  ? '. Nenhum dado foi enviado.'
+                  : '. Todos os outros dados das outras páginas do arquivo foram enviados.';
+
+              alertDescription = {
+                title: 'Upload completo!',
+                text:
+                  pageErrors.length +
+                  ' erro(s) encontrado(s) na(s) página(s) do arquivo: ' +
+                  `"${errorMessage}"` +
+                  finalMessage,
+              };
+            }
+            Alert.alert(alertDescription.title, alertDescription.text);
+          }
         });
     } catch (err) {
       console.log(err);
@@ -70,42 +110,72 @@ export default (props) => {
     }
   };
 
-  const uploadToDatabase = async (dataFile) => {
-    try {
-      for (i = 0; i < dataFile.length; i++) {
-        let location = {
-          latitude: 0,
-          longitude: 0,
-        };
+  const uploadUbs = async (dataFile) => {
+    const promises = dataFile.map(async (data) => {
+      await setDoc(doc(db, 'ubs', data.id.toString()), {
+        uf: data.uf,
+        city: data.city, //#TODO: formatar o código da cidade
+        name: data.name,
+        location: {
+          latitude: data?.latitude ? data.latitude : undefined,
+          longitude: data?.longitude ? data.longitude : undefined,
+        },
+      });
+    });
 
-        if (dataFile[i].latitude && dataFile[i].longitude) {
-          location = {
-            latitude: dataFile[i].latitude,
-            longitude: dataFile[i].longitude,
-          };
-        }
+    await Promise.all(promises);
+  };
 
-        const promises = dataFile.map(async (data) => {
-          await setDoc(doc(db, 'ubs', data.id.toString()), {
-            uf: data.uf,
-            city: data.city,
-            name: data.name,
-            location,
-          });
+  const uploadScorecards = async (dataFile) => {
+    const promises = dataFile.map(async (data) => {
+      await setDoc(doc(db, 'ubsScorecards', data.scorecard.toString() + data.ubsid.toString()), {
+        ubsid: data.ubsid,
+        scorecard: data.scorecard,
+        score: data.score,
+      });
+    });
+
+    await Promise.all(promises);
+  };
+
+  const uploadServices = async (dataFile) => {
+    const promises = dataFile.map(async (data) => {
+      await setDoc(doc(db, 'ubsServices', data.id.toString() + data.ubsid.toString()), {
+        ubsid: data.ubsid,
+        name: data.name,
+        id: data.id,
+      });
+    });
+
+    await Promise.all(promises);
+  };
+
+  const uploadToDatabase = async (dataFile, worksheetName) => {
+    let error = null;
+    if (fileType.value === 1) {
+      await uploadUbs(dataFile)
+        .then(async () => {
+          await updateUbsCount();
+        })
+        .catch(() => {
+          error = worksheetName;
         });
-
-        await Promise.all(promises).catch((err) => {
-          console.log('Error while trying to send the data from the datafile');
-          console.log(err);
-        });
-      }
-    } catch (err) {
+    } else if (fileType.value === 2) {
+      await uploadServices(dataFile).catch(() => {
+        error = worksheetName;
+      });
+    } else if (fileType.value === 3) {
+      await uploadScorecards(dataFile).catch(() => {
+        error = worksheetName;
+      });
+    } else {
       Alert.alert(
-        'Algo deu errado!',
-        'Durante a inserção dos dados o programa falhou, por favor verifique a formatação do arquivo o mesmo deve seguir o modelo.',
+        'Selecione um tipo de arquivo',
+        'Para adicionar os dados escolhidos é necessário selecionar qual tipo de arquivo você está enviando.',
       );
-      console.log(err);
     }
+
+    return error;
   };
 
   const updateUbsCount = async () => {
@@ -179,32 +249,45 @@ export default (props) => {
         pointerEvents={isLoading ? 'none' : 'auto'}
       />
       <Container>
-        <View style={{ marginTop: '25%' }}>
+        <View style={{ marginTop: '10%' }}>
           <Icon
             name="file-excel-outline"
             type="material-community"
-            size={120}
+            size={110}
             color={colors.orange}
           />
         </View>
 
-        <Title>Adicionar UBS</Title>
+        <Title>Adicionar novos dados</Title>
 
         <SimpleText>
           <Text>
-            Para adicionar várias UBS's ao mesmo tempo, faça UPLOAD do arquivo .xlsx contendo os
-            dados das UBS's e{' '}
+            Abaixo escolha o tipo de arquivo que deseja inserir, faça upload do arquivo .xlsx com a{' '}
           </Text>
-          <Text style={{ fontFamily: fonts.spartanBold }}>seguindo a formatação padrão.</Text>
+          <Text style={{ fontFamily: fonts.spartanBold }}>formatação padrão.</Text>
         </SimpleText>
 
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
         ) : (
           <ButtonView>
+            <DropdownSelection
+              data={fileType}
+              onSelect={setFileType}
+              disabled={false}
+              dropdownContainerStyle={{ width: '95%' }}
+              selectContainerStyle={{ borderLeftColor: colors.orange, borderLeftWidth: 7 }}
+              rounded
+              placeholder={fileType.value == -1 ? true : false}
+            />
             <RegisterButton
-              text="Fazer Upload"
+              text="CADASTRAR"
               pointerEvents={isLoading ? 'none' : 'auto'}
+              containerStyle={{
+                marginTop: 150,
+                backgroundColor: fileType.value == -1 ? colors.gray : colors.orange,
+              }}
+              isLoading={isLoading}
               onPress={() => handleDocument().then(() => setIsLoading(false))}
             />
           </ButtonView>
