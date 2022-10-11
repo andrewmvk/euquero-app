@@ -52,6 +52,7 @@ export default (props) => {
 
       let pageErrors = [];
       let numberOfPages = 0;
+      let amountUploaded = 0;
 
       await FileSystem.readAsStringAsync(`${fileDoc.uri}`, {
         encoding: FileSystem.EncodingType.Base64,
@@ -67,6 +68,8 @@ export default (props) => {
             const error = await uploadToDatabase(dataFile, worksheetName);
             if (error != null) {
               pageErrors.push(error);
+            } else {
+              amountUploaded += dataFile.length;
             }
           }
         })
@@ -87,7 +90,9 @@ export default (props) => {
               const finalMessage =
                 numberOfPages == pageErrors.length
                   ? '. Nenhum dado foi enviado.'
-                  : '. Todos os outros dados das outras páginas do arquivo foram enviados.';
+                  : '. Todos os outros ' +
+                    amountUploaded +
+                    ' dados das outras páginas do arquivo foram adicionados.';
 
               alertDescription = {
                 title: 'Upload completo!',

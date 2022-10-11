@@ -45,13 +45,19 @@ export default (props) => {
         if (querySnapshot.empty) {
           setNewScorecard(periods.value * 100 + 1);
         } else {
-          let highestValue = 0;
-          querySnapshot.forEach((doc) => {
-            if (doc.data().id > highestValue) {
-              highestValue = doc.data().id;
-            }
+          let array = querySnapshot.docs.sort((a, b) => {
+            if (a.id > b.id) return 1;
+            if (a.id < b.id) return -1;
+            return 0;
           });
-          setNewScorecard(highestValue + 1);
+
+          let j = 100 * periods.value + 1;
+          for (i = 0; i < array.length; i++) {
+            if (array[i].id > j) break;
+            j++;
+          }
+
+          setNewScorecard(j);
         }
       } catch (err) {
         console.log(err);
