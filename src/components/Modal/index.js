@@ -22,7 +22,7 @@ export default (props) => {
 
   const deviceHeight = Dimensions.get('window').height;
   const deviceWidth = Dimensions.get('window').width;
-  let defaultHeight = deviceHeight * 0.65;
+  let defaultHeight = props.onPressYes ? deviceHeight * 0.75 : deviceHeight * 0.6;
 
   const animatedWidth = useSharedValue(deviceWidth);
   const animatedHeight = useSharedValue(defaultHeight);
@@ -50,6 +50,7 @@ export default (props) => {
     return {
       height: animatedHeight.value,
       style: {
+        ...props?.containerStyle,
         backgroundColor: '#fff',
         position: 'absolute',
         bottom: 0,
@@ -109,7 +110,7 @@ export default (props) => {
           </View>
         ) : null}
 
-        <TextView>
+        <TextView style={{ marginBottom: 25 }}>
           <Title>{props.data?.title ? props.data.title : 'TÍTULO'}</Title>
           {props.data?.text ? <Description>{props.data.text}</Description> : null}
         </TextView>
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
   iconView: {
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1.75,
+    flex: 1.5,
   },
   buttonView: {
     flex: 0.75,

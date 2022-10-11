@@ -12,6 +12,7 @@ export const Title = styled.Text`
 
 export const Description = styled.Text`
   text-align: center;
+  width: 80%;
   font-size: ${fontSize.text};
   color: ${colors.text};
   font-family: ${fonts.spartanBold};
