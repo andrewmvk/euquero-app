@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { Dimensions, View, StyleSheet, TextInput, Text, ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Animated, { useAnimatedProps, useSharedValue, withSpring } from 'react-native-reanimated';
@@ -8,6 +8,7 @@ import { Shadow } from 'react-native-shadow-2';
 import { buttonOpacity, colors, fonts, fontSizeNoUnits } from '../../defaultStyles';
 import { db } from '../../services/firebase.config';
 import { Description, Icons, TouchableCard, TouchableIcon } from './styles';
+import { Alert } from 'react-native';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -60,11 +61,33 @@ export default (props) => {
   };
 
   const deleteScorecard = async () => {
+    const scorecardsQuery = query(
+      collection(db, 'ubsScorecards'),
+      where('scorecard', '==', props.value),
+    );
+    const scorecardsSnapshot = await getDocs(scorecardsQuery);
+
+    const promises = scorecardsSnapshot.docs.map(async (data) => {
+      await deleteDoc(doc(db, 'ubsScorecards', data.id));
+    });
+
+    await Promise.all(promises);
+
     await deleteDoc(doc(db, 'scorecards', props.value.toString()))
       .catch((err) => {
         console.log(err);
       })
-      .then(() => props.deletedItem());
+      .then(() => props.deletedItem())
+      .finally(() => {
+        Alert.alert(
+          'Indicador excluído!',
+          'O indicador ' +
+            `"${itemName}"` +
+            ' e sua(s) ' +
+            scorecardsSnapshot.docs.length +
+            ' referência(s) foram excluídos.',
+        );
+      });
   };
 
   const cardShadow = {

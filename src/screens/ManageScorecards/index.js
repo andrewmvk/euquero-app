@@ -37,7 +37,10 @@ export default (props) => {
   };
 
   useEffect(() => {
-    fetchData().then(() => setIsLoading(false));
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      fetchData().then(() => setIsLoading(false));
+    });
+    return () => unsubscribe();
   }, []);
 
   const searchBoxShadow = {
@@ -91,15 +94,7 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo - Indicadores'} onPress={() => props.navigation.goBack()}>
-          <TouchableOpacity
-            activeOpacity={buttonOpacity}
-            onPress={() => fetchData().then(() => setIsLoading(false))}
-            style={{ justifyContent: 'center', flex: 1, alignItems: 'flex-end', marginRight: '5%' }}
-          >
-            <Icon name="reload" size={25} type="material-community" color={colors.text} />
-          </TouchableOpacity>
-        </Header>
+        <Header text={'Administrativo - Indicadores'} onPress={() => props.navigation.goBack()} />
         <SearchArea>
           <Shadow
             {...searchBoxShadow}
@@ -138,7 +133,7 @@ export default (props) => {
           />
         )}
       </Container>
-      <AddButton onPress={() => props.navigation.navigate('NewScorecard', deleteItem)} />
+      <AddButton onPress={() => props.navigation.navigate('NewScorecard')} />
     </>
   );
 };

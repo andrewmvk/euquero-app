@@ -17,6 +17,10 @@ export default (props) => {
     text: '',
     iconName: '',
     iconType: '',
+    advice: {
+      title: 'A conta não será excluída...',
+      text: 'Toda conta que estiver desativada não será excluída completamente. O usuário, ao tentar acessá-la, receberá um aviso de que a conta está desativada e que, caso persista em acessá-la (3 vezes), esta será excluída por completo.',
+    },
   });
   const [modalVisibility, setModalVisibility] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -51,14 +55,16 @@ export default (props) => {
       }
     };
 
-    if (!props.route.params?.newUser) {
-      fetchData().then(() => setIsLoading(false));
-    } else {
+    fetchData().then(() => setIsLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (props.route.params?.newUser) {
       setIsLoading(true);
       const title = 'Conta cadastrada com sucesso';
       const text = props.route.params.newUser.email;
       const icon = { name: 'check', type: 'material-community' };
-      setModalData({ title, text, iconName: icon.name, iconType: icon.type });
+      setModalData({ title, text, iconName: icon.name, iconType: icon.type, advice: null });
       setSelectedUser(null);
       toggleModal();
 
@@ -108,6 +114,10 @@ export default (props) => {
       text: account.email,
       iconName: iconData.name,
       iconType: iconData.type,
+      advice: {
+        title: 'A conta não será excluída...',
+        text: 'Toda conta que estiver desativada não será excluída completamente. O usuário, ao tentar acessá-la, receberá um aviso de que a conta está desativada e que, caso persista em acessá-la (3 vezes), esta será excluída por completo.',
+      },
     });
     toggleModal();
     setSelectedUser(account);
@@ -142,11 +152,6 @@ export default (props) => {
     );
   };
 
-  const advice = {
-    title: 'A conta não será excluída...',
-    text: 'Toda conta que estiver desativada não será excluída completamente. O usuário, ao tentar acessá-la, receberá um aviso de que a conta está desativada e que, caso persista em acessá-la (3 vezes), esta será excluída por completo.',
-  };
-
   return (
     <>
       <DashedCircle />
@@ -171,7 +176,7 @@ export default (props) => {
         onBackPress={toggleModal}
         icon={{ name: modalData.iconName, type: modalData.iconType }}
         data={{ title: modalData.title, text: modalData.text }}
-        advice={advice}
+        advice={modalData.advice}
       />
     </>
   );
