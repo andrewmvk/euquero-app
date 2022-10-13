@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { FlatList, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
@@ -13,9 +13,10 @@ import {
   Card,
   InDevelopmentCard,
   EmptyListMessage,
+  SortButton
 } from '../../components/common';
 
-export default (props) => {
+export default props => {
   const [brazilianStates, setBrazilianStates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [originalData, setOriginalData] = useState([]);
@@ -36,9 +37,9 @@ export default (props) => {
           let stateObject = {
             id: response.data[i].id,
             nome: response.data[i].nome,
-            ubsAmount: 0,
+            ubsAmount: 0
           };
-          const index = ubsAmountSnap.docs.findIndex((state) => {
+          const index = ubsAmountSnap.docs.findIndex(state => {
             return +state.id === response.data[i].id;
           });
           if (index !== -1) {
@@ -64,10 +65,10 @@ export default (props) => {
     fetchData().then(() => setIsLoading(false));
   }, []);
 
-  const handleCardPress = (item) => {
+  const handleCardPress = item => {
     props.navigation.navigate('CitySelection', {
       stateID: item.id,
-      stateName: item.nome,
+      stateName: item.nome
     });
   };
 
@@ -85,10 +86,10 @@ export default (props) => {
     );
   };
 
-  const search = (t) => {
+  const search = t => {
     let arr = [...originalData];
     setBrazilianStates(
-      arr.filter((d) =>
+      arr.filter(d =>
         d.nome
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
@@ -103,16 +104,6 @@ export default (props) => {
     );
   };
 
-  const handleOrderClick = () => {
-    let newList = [...brazilianStates];
-
-    newList.sort((a, b) => (a.nome > b.nome ? 1 : b.nome > a.nome ? -1 : 0));
-
-    setBrazilianStates(newList);
-  };
-
-  const dataTest = ['abacaxi', 'maca', 'uva', 'pera'];
-
   return (
     <>
       <DashedCircle />
@@ -121,32 +112,28 @@ export default (props) => {
         <SearchArea>
           <SearchInput>
             <SearchInputText
-              placeholder='Buscar estado'
-              onChangeText={(t) => search(t)}
+              placeholder="Buscar estado"
+              onChangeText={t => search(t)}
             />
             <Icon
-              name='search-outline'
-              type='ionicon'
-              color='#c4c4c4'
+              name="search-outline"
+              type="ionicon"
+              color="#c4c4c4"
               style={{
                 paddingHorizontal: 15,
-                paddingVertical: 15,
+                paddingVertical: 15
               }}
             />
           </SearchInput>
-          <TouchableOpacity onPress={handleOrderClick}>
-            <Icon
-              name='order-alphabetical-ascending'
-              type='material-community'
-              color={colors.gray}
-              size={32}
-              style={{ marginTop: 25, marginLeft: 25 }}
-            />
-          </TouchableOpacity>
+          <SortButton
+            data={brazilianStates}
+            setData={setBrazilianStates}
+            dataBackup={originalData}
+          />
         </SearchArea>
         {isLoading ? (
           <ActivityIndicator
-            size='large'
+            size="large"
             color={colors.orange}
             style={{ marginTop: 50 }}
           />
@@ -156,12 +143,12 @@ export default (props) => {
               style={{
                 width: '100%',
                 marginTop: 25,
-                paddingTop: 5,
+                paddingTop: 5
               }}
               contentContainerStyle={{ alignItems: 'center' }}
               data={brazilianStates}
               renderItem={stateCard}
-              keyExtractor={(item) => item.id}
+              keyExtractor={item => item.id}
               ListEmptyComponent={EmptyListMessage}
               ListFooterComponent={InDevelopmentCard}
             />
