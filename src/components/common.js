@@ -9,20 +9,14 @@ import {
   Dimensions,
   ActivityIndicator,
   FlatList,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
 import styled from 'styled-components/native';
 
-import {
-  fonts,
-  fontSize,
-  fontSizeNoUnits,
-  colors,
-  buttonOpacity
-} from '../defaultStyles';
+import { fonts, fontSize, fontSizeNoUnits, colors, buttonOpacity } from '../defaultStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -47,14 +41,14 @@ const Line = styled.View`
   background-color: ${colors.orange};
 `;
 
-export const BigTitle = props => {
+export const BigTitle = (props) => {
   return (
     <BigTitleView>
       <View
         style={{
           justifyContent: 'space-around',
           width: '100%',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
         <BigTitleText>{props.children}</BigTitleText>
@@ -77,14 +71,14 @@ const MediumTitleText = styled.Text`
   color: ${colors.text};
 `;
 
-export const MediumTitle = props => {
+export const MediumTitle = (props) => {
   return (
     <MediumTitleView>
       <View
         style={{
           justifyContent: 'space-around',
           width: '100%',
-          alignItems: 'flex-start'
+          alignItems: 'flex-start',
         }}
       >
         <MediumTitleText>{props.text}</MediumTitleText>
@@ -100,7 +94,7 @@ const customButtonShadow = {
     distance: 10,
     offset: [0, 4],
     radius: 20,
-    containerViewStyle: { paddingBottom: 2 }
+    containerViewStyle: { paddingBottom: 2 },
   },
   large: {
     distance: 0,
@@ -108,7 +102,7 @@ const customButtonShadow = {
     distance: 10,
     offset: [0, 4],
     radius: 25,
-    containerViewStyle: { paddingBottom: 2 }
+    containerViewStyle: { paddingBottom: 2 },
   },
   rounded: {
     distance: 0,
@@ -122,9 +116,9 @@ const customButtonShadow = {
       justifyContent: 'flex-end',
       position: 'absolute',
       bottom: 0,
-      right: 0
-    }
-  }
+      right: 0,
+    },
+  },
 };
 
 const buttonStyles = StyleSheet.create({
@@ -134,7 +128,7 @@ const buttonStyles = StyleSheet.create({
     backgroundColor: colors.orange,
     borderRadius: 20,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   large: {
     width: 250,
@@ -142,7 +136,7 @@ const buttonStyles = StyleSheet.create({
     backgroundColor: colors.orange,
     borderRadius: 25,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   register: {
     width: '90%',
@@ -150,8 +144,8 @@ const buttonStyles = StyleSheet.create({
     backgroundColor: colors.orange,
     borderRadius: 5,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
 
 const SmallButtonText = styled.Text`
@@ -210,9 +204,7 @@ export function RegisterButton(props) {
       {props.isLoading ? (
         <ActivityIndicator size="large" color="#fff" />
       ) : (
-        <RegisterButtonText>
-          {props.text ? props.text : 'TEXT'}
-        </RegisterButtonText>
+        <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
       )}
     </TouchableOpacity>
   );
@@ -232,12 +224,7 @@ export function AddButton(props) {
   return (
     <Shadow {...customButtonShadow.rounded}>
       <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
-        <Icon
-          name="plus"
-          size={35}
-          type="material-community"
-          color={colors.orange}
-        />
+        <Icon name="plus" size={35} type="material-community" color={colors.orange} />
       </RoundedButton>
     </Shadow>
   );
@@ -252,7 +239,7 @@ const cardStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 5,
-    borderLeftWidth: 7
+    borderLeftWidth: 7,
   },
   cardText: {
     textAlign: 'left',
@@ -262,7 +249,7 @@ const cardStyles = StyleSheet.create({
     fontSize: fontSizeNoUnits.cardText,
     marginLeft: 22,
     color: colors.text,
-    width: screenWidth * 0.6
+    width: screenWidth * 0.6,
   },
   avaibleUBSText: {
     fontFamily: fonts.spartanR,
@@ -273,8 +260,8 @@ const cardStyles = StyleSheet.create({
     fontSize: fontSizeNoUnits.subtitle,
     bottom: 10,
     right: 22,
-    color: colors.text
-  }
+    color: colors.text,
+  },
 });
 
 const cardShadow = {
@@ -287,11 +274,11 @@ const cardShadow = {
     marginVertical: 7,
     height: 71,
     width: screenWidth * 0.85,
-    zIndex: 3
-  }
+    zIndex: 3,
+  },
 };
 
-export const Card = props => {
+export const Card = (props) => {
   const color = props.color ? props.color : colors.gray;
 
   return (
@@ -308,9 +295,7 @@ export const Card = props => {
           </Text>
         ) : null}
         {props.ubsCount ? (
-          <Text style={cardStyles.avaibleUBSText}>
-            {props.ubsCount + ' UBS'}
-          </Text>
+          <Text style={cardStyles.avaibleUBSText}>{props.ubsCount + ' UBS'}</Text>
         ) : null}
         {props.children ? { ...props.children } : null}
       </TouchableOpacity>
@@ -327,7 +312,7 @@ const cardA = StyleSheet.create({
     alignItems: 'flex-start',
     borderRadius: 5,
     borderLeftWidth: 7,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   titleCardA: {
     fontFamily: fonts.spartanR,
@@ -336,7 +321,7 @@ const cardA = StyleSheet.create({
     fontSize: 18,
     marginLeft: 22,
     marginTop: -5,
-    color: colors.text
+    color: colors.text,
   },
   descriptionCardA: {
     fontFamily: fonts.spartanR,
@@ -344,54 +329,52 @@ const cardA = StyleSheet.create({
     justifyContent: 'center',
     fontSize: 12,
     marginLeft: 22,
-    color: colors.text
-  }
+    color: colors.text,
+  },
 });
 
-export const InDevelopmentCard = props => {
+export const InDevelopmentCard = (props) => {
   const color = props.color ? props.color : colors.gray;
 
   const DATA = [
     {
       id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item'
+      title: 'First Item',
     },
     {
       id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item'
+      title: 'Second Item',
     },
     {
       id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item'
+      title: 'Third Item',
     },
     {
       id: '58694a0f-3da1-471f-bd96-145571e29d722',
-      title: 'Third Item'
+      title: 'Third Item',
     },
     {
       id: '58694a0f-3da1-471f-bd96-145571e29d723g',
-      title: 'Third Item'
+      title: 'Third Item',
     },
     {
       id: '58694a0f-3da1-471f-bd96-145571e29d723h',
-      title: 'Third Item'
+      title: 'Third Item',
     },
     {
       id: '58694a0f-3da1-471f-bd96-145571e29d723j',
-      title: 'Third Item'
+      title: 'Third Item',
     },
     {
       id: '58694a0f-3da1-471f-bd96-145571e29d723k',
-      title: 'Third Item'
-    }
+      title: 'Third Item',
+    },
   ];
 
   const [selectedId, setSelectedId] = useState(null);
 
   const renderItem = ({ item }) => {
-    return (
-      <Text style={{ color: '#7f7f7f', marginBottom: 5 }}>{item.title}</Text>
-    );
+    return <Text style={{ color: '#7f7f7f', marginBottom: 5 }}>{item.title}</Text>;
   };
 
   return (
@@ -402,15 +385,13 @@ export const InDevelopmentCard = props => {
             <Text style={cardA.titleCardA} numberOfLines={1}>
               Em desenvolvimento...
             </Text>
-            <Text style={cardA.descriptionCardA}>
-              Estados a serem cadastrados:
-            </Text>
+            <Text style={cardA.descriptionCardA}>Estados a serem cadastrados:</Text>
           </View>
         </Shadow>
         <FlatList
           data={DATA}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           extraData={selectedId}
           style={{
             borderBottomLeftRadius: 5,
@@ -420,10 +401,10 @@ export const InDevelopmentCard = props => {
             paddingHorizontal: 20,
             paddingVertical: 10,
             alignSelf: 'center',
-            marginBottom: 30
+            marginBottom: 30,
           }}
           contentContainerStyle={{
-            overflow: 'hidden'
+            overflow: 'hidden',
           }}
         />
       </View>
@@ -438,15 +419,15 @@ const inputBoxStyles = StyleSheet.create({
     height: 50,
     width: '100%',
     backgroundColor: '#fff',
-    borderRadius: 5
+    borderRadius: 5,
   },
   searchInputText: {
     flex: 1,
     fontSize: fontSizeNoUnits.textInput,
     fontFamily: fonts.spartanR,
     color: colors.text,
-    paddingRight: 15
-  }
+    paddingRight: 15,
+  },
 });
 
 const inputBoxShadow = {
@@ -454,21 +435,19 @@ const inputBoxShadow = {
   startColor: 'rgba(0,0,0,0.025)',
   finalColor: 'rgba(0,0,0,0.0)',
   radius: 5,
-  containerViewStyle: { marginTop: 25, height: 50, width: '100%' }
+  containerViewStyle: { marginTop: 25, height: 50, width: '100%' },
 };
 
-export const InputBox = props => {
+export const InputBox = (props) => {
   return (
     <Shadow {...inputBoxShadow}>
       <View style={inputBoxStyles.searchInput}>
         <Icon
-          name={
-            props.type === 'password' ? 'lock-closed-outline' : 'person-outline'
-          }
+          name={props.type === 'password' ? 'lock-closed-outline' : 'person-outline'}
           type="ionicon"
           color={colors.gray}
           style={{
-            paddingHorizontal: 15
+            paddingHorizontal: 15,
           }}
         />
         <TextInput
@@ -506,7 +485,7 @@ const SimpleText = styled.Text`
   margin: 16px 30px 16px 30px;
 `;
 
-export const EmptyListMessage = props => {
+export const EmptyListMessage = (props) => {
   return (
     <NoResults style={{ ...props?.containerStyle }}>
       <View>
@@ -516,9 +495,7 @@ export const EmptyListMessage = props => {
         />
       </View>
       <Title>NADA POR AQUI!</Title>
-      <SimpleText>
-        Não encontramos nenhum item correspondente à sua pesquisa.
-      </SimpleText>
+      <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
     </NoResults>
   );
 };
@@ -558,10 +535,10 @@ const selectBoxShadow = {
   startColor: 'rgba(0,0,0,0.035)',
   finalColor: 'rgba(0,0,0,0.0)',
   distance: 10,
-  radius: 5
+  radius: 5,
 };
 
-export const DropdownSelection = props => {
+export const DropdownSelection = (props) => {
   const [opened, setOpened] = useState(false);
 
   const roundedView = props?.rounded
@@ -570,10 +547,7 @@ export const DropdownSelection = props => {
 
   return (
     <View style={[{ alignItems: 'center' }, props?.containerStyle]}>
-      <Shadow
-        {...selectBoxShadow}
-        containerViewStyle={{ height: 55, width: '100%' }}
-      >
+      <Shadow {...selectBoxShadow} containerViewStyle={{ height: 55, width: '100%' }}>
         <SelectView
           style={[roundedView, props?.selectContainerStyle]}
           activeOpacity={buttonOpacity}
@@ -583,8 +557,7 @@ export const DropdownSelection = props => {
           <DropdownText
             numberOfLines={1}
             style={{
-              color:
-                props.disabled || props.placeholder ? colors.gray : colors.text
+              color: props.disabled || props.placeholder ? colors.gray : colors.text,
             }}
           >
             {props.data.selected}
@@ -600,11 +573,11 @@ export const DropdownSelection = props => {
         <DropdownView
           style={[
             { height: props.data.items.length > 3 ? 160 : 135 },
-            props?.dropdownContainerStyle
+            props?.dropdownContainerStyle,
           ]}
         >
           <ScrollView>
-            {props.data.items.map(item => {
+            {props.data.items.map((item) => {
               return (
                 <TouchableOpacity
                   key={item.id}
@@ -612,13 +585,13 @@ export const DropdownSelection = props => {
                   style={{
                     paddingBottom: 6,
                     paddingRight: 18,
-                    paddingLeft: 18
+                    paddingLeft: 18,
                   }}
                   onPress={() => {
                     props.onSelect({
                       ...props.data,
                       selected: item.name,
-                      value: item.id
+                      value: item.id,
                     });
                     setOpened(!opened);
                   }}
@@ -636,26 +609,28 @@ export const DropdownSelection = props => {
   );
 };
 
-export const SortButton = props => {
+export const SortButton = (props) => {
+  const [sorted, setSorted] = useState(true);
+
   const handleSortClick = () => {
-    const [sorted, setSorted] = useState(false);
     setSorted(!sorted);
     if (sorted) {
       let newList = [...props.data];
 
-      newList.sort((a, b) => (a.nome > b.nome ? 1 : b.nome > a.nome ? -1 : 0));
+      newList.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
 
       props.setData(newList);
     } else {
       props.setData(props.dataBackup);
     }
   };
+
   return (
-    <TouchableOpacity onPress={handleSortClick}>
+    <TouchableOpacity onPress={() => handleSortClick()}>
       <Icon
         name="order-alphabetical-ascending"
         type="material-community"
-        color={colors.gray}
+        color={!sorted ? colors.orange : colors.gray}
         size={32}
         style={{ marginTop: 25, marginLeft: 25 }}
       />

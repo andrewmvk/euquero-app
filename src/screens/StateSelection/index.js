@@ -9,14 +9,9 @@ import { colors } from '../../defaultStyles';
 import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
-import {
-  Card,
-  InDevelopmentCard,
-  EmptyListMessage,
-  SortButton
-} from '../../components/common';
+import { Card, InDevelopmentCard, EmptyListMessage, SortButton } from '../../components/common';
 
-export default props => {
+export default (props) => {
   const [brazilianStates, setBrazilianStates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [originalData, setOriginalData] = useState([]);
@@ -27,7 +22,7 @@ export default props => {
 
       try {
         const response = await axios.get(
-          'https://servicodados.ibge.gov.br/api/v1/localidades/estados/'
+          'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
         );
 
         const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountStates'));
@@ -36,10 +31,10 @@ export default props => {
         for (i = 0; i < response.data.length; i++) {
           let stateObject = {
             id: response.data[i].id,
-            nome: response.data[i].nome,
-            ubsAmount: 0
+            name: response.data[i].nome,
+            ubsAmount: 0,
           };
-          const index = ubsAmountSnap.docs.findIndex(state => {
+          const index = ubsAmountSnap.docs.findIndex((state) => {
             return +state.id === response.data[i].id;
           });
           if (index !== -1) {
@@ -49,15 +44,13 @@ export default props => {
         }
 
         statesArray.sort((a, b) =>
-          a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0
+          a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
         );
 
         setBrazilianStates(statesArray);
         setOriginalData(statesArray);
       } catch (err) {
-        console.log(
-          'Something went wrong while trying to fetch data from database or State API.'
-        );
+        console.log('Something went wrong while trying to fetch data from database or State API.');
         console.log(err);
       }
     };
@@ -65,10 +58,10 @@ export default props => {
     fetchData().then(() => setIsLoading(false));
   }, []);
 
-  const handleCardPress = item => {
+  const handleCardPress = (item) => {
     props.navigation.navigate('CitySelection', {
       stateID: item.id,
-      stateName: item.nome
+      stateName: item.name,
     });
   };
 
@@ -80,17 +73,17 @@ export default props => {
         key={item.id}
         color={item.ubsAmount != 0 ? colors.orange : colors.gray}
         onPress={() => handleCardPress(item)}
-        text={item.nome}
+        text={item.name}
         ubsCount={`${item.ubsAmount}`}
       />
     );
   };
 
-  const search = t => {
+  const search = (t) => {
     let arr = [...originalData];
     setBrazilianStates(
-      arr.filter(d =>
-        d.nome
+      arr.filter((d) =>
+        d.name
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
           .toLowerCase()
@@ -98,9 +91,9 @@ export default props => {
             t
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase()
-          )
-      )
+              .toLowerCase(),
+          ),
+      ),
     );
   };
 
@@ -111,17 +104,14 @@ export default props => {
         <Header onPress={() => props.navigation.goBack()} />
         <SearchArea>
           <SearchInput>
-            <SearchInputText
-              placeholder="Buscar estado"
-              onChangeText={t => search(t)}
-            />
+            <SearchInputText placeholder="Buscar estado" onChangeText={(t) => search(t)} />
             <Icon
               name="search-outline"
               type="ionicon"
               color="#c4c4c4"
               style={{
                 paddingHorizontal: 15,
-                paddingVertical: 15
+                paddingVertical: 15,
               }}
             />
           </SearchInput>
@@ -132,26 +122,22 @@ export default props => {
           />
         </SearchArea>
         {isLoading ? (
-          <ActivityIndicator
-            size="large"
-            color={colors.orange}
-            style={{ marginTop: 50 }}
-          />
+          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
         ) : (
           <>
             <FlatList
               style={{
                 width: '100%',
                 marginTop: 25,
-                paddingTop: 5
+                paddingTop: 5,
               }}
               contentContainerStyle={{ alignItems: 'center' }}
               data={brazilianStates}
               renderItem={stateCard}
-              keyExtractor={item => item.id}
+              keyExtractor={(item) => item.id}
               ListEmptyComponent={EmptyListMessage}
-              ListFooterComponent={InDevelopmentCard}
             />
+            {/*<InDevelopmentCard />*/}
           </>
         )}
       </Container>
