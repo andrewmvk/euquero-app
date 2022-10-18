@@ -277,7 +277,7 @@ const cardStyles = StyleSheet.create({
   },
 });
 
-const cardShadow = {
+export const cardShadow = {
   distance: 2,
   startColor: 'rgba(0,0,0,0.035)',
   finalColor: 'rgba(0,0,0,0.0)',
@@ -565,7 +565,10 @@ export const DropdownSelection = (props) => {
   const [opened, setOpened] = useState(false);
   return (
     <View style={props?.containerStyle}>
-      <Shadow {...selectBoxShadow} containerViewStyle={{ height: 55, width: '100%' }}>
+      <Shadow
+        {...selectBoxShadow}
+        containerViewStyle={{ height: 55, width: '100%' }}
+      >
         <SelectView
           style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
           activeOpacity={buttonOpacity}
@@ -579,8 +582,8 @@ export const DropdownSelection = (props) => {
             {props.data.selected}
           </DropdownText>
           <Icon
-            name="chevron-down"
-            type="material-community"
+            name='chevron-down'
+            type='material-community'
             color={props.disabled ? colors.gray : colors.text}
           />
         </SelectView>
@@ -593,9 +596,17 @@ export const DropdownSelection = (props) => {
                 <TouchableOpacity
                   key={item.id}
                   activeOpacity={buttonOpacity}
-                  style={{ paddingBottom: 6, paddingRight: 18, paddingLeft: 18 }}
+                  style={{
+                    paddingBottom: 6,
+                    paddingRight: 18,
+                    paddingLeft: 18,
+                  }}
                   onPress={() => {
-                    props.onSelect({ ...props.data, selected: item.name, value: item.id });
+                    props.onSelect({
+                      ...props.data,
+                      selected: item.name,
+                      value: item.id,
+                    });
                     setOpened(!opened);
                   }}
                 >

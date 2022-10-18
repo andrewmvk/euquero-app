@@ -8,10 +8,9 @@ export const Container = styled.SafeAreaView`
 `;
 
 export const Map = styled.View`
-  margin-top: 30px;
-  margin-bottom: 30px;
   width: 100%;
-  height: 35%;
+  height: 30%;
+  margin-top: 20px;
   background-color: ${defaultS.colors.text};
 `;
 
@@ -20,4 +19,54 @@ export const UBSName = styled.Text`
   font-size: ${defaultS.fontSize.bigTitle};
   color: ${defaultS.colors.text};
   text-align: left;
+  margin-bottom: 30px;
+`;
+
+export const Menu = styled.View`
+  width: 80%;
+  height: 100%;
+  margin-top: 30px;
+  margin-bottom: 20px;
+`;
+
+export const PeriodosCard = styled.View`
+  border-left-color: #ff6b0f;
+
+  height: 80px;
+  background-color: #fff;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 5px;
+  border-left-width: 7px;
+  justify-content: center;
+`;
+
+export const Periodos = styled.View`
+  width: 95%;
+  background-color: #fff;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 5px 20px 15px 20px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  align-self: center;
+`;
+
+export const OptionText = styled.Text`
+  font-family: 'Spartan_400Regular';
+  font-size: 15px;
+  color: ${defaultS.colors.text};
+`;
+
+export const Option = styled.TouchableOpacity`
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+`;
+
+export const OrText = styled.Text`
+  font-family: 'Spartan_400Regular';
+  font-size: 15px;
+  color: ${defaultS.colors.text};
 `;
