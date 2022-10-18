@@ -26,7 +26,7 @@ export const SimpleText = styled.Text`
 `;
 
 export const ButtonView = styled.View`
-  margin-top: 20px;
+  margin-top: 10px;
   width: 80%;
   justify-content: center;
   align-items: center;

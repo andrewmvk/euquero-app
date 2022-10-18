@@ -16,13 +16,7 @@ import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
 import styled from 'styled-components/native';
 
-import {
-  fonts,
-  fontSize,
-  fontSizeNoUnits,
-  colors,
-  buttonOpacity,
-} from '../defaultStyles';
+import { fonts, fontSize, fontSizeNoUnits, colors, buttonOpacity } from '../defaultStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -204,15 +198,13 @@ export function RegisterButton(props) {
   return (
     <TouchableOpacity
       activeOpacity={buttonOpacity}
-      style={buttonStyles.register}
+      style={[buttonStyles.register, props.containerStyle]}
       onPress={props.onPress}
     >
       {props.isLoading ? (
-        <ActivityIndicator size='large' color='#fff' />
+        <ActivityIndicator size="large" color="#fff" />
       ) : (
-        <RegisterButtonText>
-          {props.text ? props.text : 'TEXT'}
-        </RegisterButtonText>
+        <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
       )}
     </TouchableOpacity>
   );
@@ -232,12 +224,7 @@ export function AddButton(props) {
   return (
     <Shadow {...customButtonShadow.rounded}>
       <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
-        <Icon
-          name='plus'
-          size={35}
-          type='material-community'
-          color={colors.orange}
-        />
+        <Icon name="plus" size={35} type="material-community" color={colors.orange} />
       </RoundedButton>
     </Shadow>
   );
@@ -308,9 +295,7 @@ export const Card = (props) => {
           </Text>
         ) : null}
         {props.ubsCount ? (
-          <Text style={cardStyles.avaibleUBSText}>
-            {props.ubsCount + ' UBS'}
-          </Text>
+          <Text style={cardStyles.avaibleUBSText}>{props.ubsCount + ' UBS'}</Text>
         ) : null}
         {props.children ? { ...props.children } : null}
       </TouchableOpacity>
@@ -389,9 +374,7 @@ export const InDevelopmentCard = (props) => {
   const [selectedId, setSelectedId] = useState(null);
 
   const renderItem = ({ item }) => {
-    return (
-      <Text style={{ color: '#7f7f7f', marginBottom: 5 }}>{item.title}</Text>
-    );
+    return <Text style={{ color: '#7f7f7f', marginBottom: 5 }}>{item.title}</Text>;
   };
 
   return (
@@ -402,9 +385,7 @@ export const InDevelopmentCard = (props) => {
             <Text style={cardA.titleCardA} numberOfLines={1}>
               Em desenvolvimento...
             </Text>
-            <Text style={cardA.descriptionCardA}>
-              Estados a serem cadastrados:
-            </Text>
+            <Text style={cardA.descriptionCardA}>Estados a serem cadastrados:</Text>
           </View>
         </Shadow>
         <FlatList
@@ -462,10 +443,8 @@ export const InputBox = (props) => {
     <Shadow {...inputBoxShadow}>
       <View style={inputBoxStyles.searchInput}>
         <Icon
-          name={
-            props.type === 'password' ? 'lock-closed-outline' : 'person-outline'
-          }
-          type='ionicon'
+          name={props.type === 'password' ? 'lock-closed-outline' : 'person-outline'}
+          type="ionicon"
           color={colors.gray}
           style={{
             paddingHorizontal: 15,
@@ -516,9 +495,7 @@ export const EmptyListMessage = (props) => {
         />
       </View>
       <Title>NADA POR AQUI!</Title>
-      <SimpleText>
-        Não encontramos nenhum item correspondente à sua pesquisa.
-      </SimpleText>
+      <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
     </NoResults>
   );
 };
@@ -543,7 +520,7 @@ const DropdownText = styled.Text`
 `;
 
 const DropdownView = styled.View`
-  height: 150px;
+  height: 120px;
   width: 100%;
   top: 55px;
   background-color: #fff;
@@ -563,21 +540,25 @@ const selectBoxShadow = {
 
 export const DropdownSelection = (props) => {
   const [opened, setOpened] = useState(false);
+
+  const roundedView = props?.rounded
+    ? { borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }
+    : { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 };
+
   return (
-    <View style={props?.containerStyle}>
-      <Shadow
-        {...selectBoxShadow}
-        containerViewStyle={{ height: 55, width: '100%' }}
-      >
+    <View style={[{ alignItems: 'center' }, props?.containerStyle]}>
+      <Shadow {...selectBoxShadow} containerViewStyle={{ height: 55, width: '100%' }}>
         <SelectView
-          style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
+          style={[roundedView, props?.selectContainerStyle]}
           activeOpacity={buttonOpacity}
           disabled={props.disabled}
           onPress={() => setOpened(!opened)}
         >
           <DropdownText
             numberOfLines={1}
-            style={{ color: props.disabled ? colors.gray : colors.text }}
+            style={{
+              color: props.disabled || props.placeholder ? colors.gray : colors.text,
+            }}
           >
             {props.data.selected}
           </DropdownText>
@@ -589,7 +570,12 @@ export const DropdownSelection = (props) => {
         </SelectView>
       </Shadow>
       {opened ? (
-        <DropdownView>
+        <DropdownView
+          style={[
+            { height: props.data.items.length > 3 ? 160 : 135 },
+            props?.dropdownContainerStyle,
+          ]}
+        >
           <ScrollView>
             {props.data.items.map((item) => {
               return (
@@ -620,5 +606,34 @@ export const DropdownSelection = (props) => {
         </DropdownView>
       ) : null}
     </View>
+  );
+};
+
+export const SortButton = (props) => {
+  const [sorted, setSorted] = useState(true);
+
+  const handleSortClick = () => {
+    setSorted(!sorted);
+    if (sorted) {
+      let newList = [...props.data];
+
+      newList.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
+
+      props.setData(newList);
+    } else {
+      props.setData(props.dataBackup);
+    }
+  };
+
+  return (
+    <TouchableOpacity onPress={() => handleSortClick()}>
+      <Icon
+        name="order-alphabetical-ascending"
+        type="material-community"
+        color={!sorted ? colors.orange : colors.gray}
+        size={32}
+        style={{ marginTop: 25, marginLeft: 25 }}
+      />
+    </TouchableOpacity>
   );
 };

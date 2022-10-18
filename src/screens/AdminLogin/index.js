@@ -14,7 +14,7 @@ import { SmallButton, InputBox } from '../../components/common';
 import { colors } from '../../defaultStyles';
 
 export default (props) => {
-  const [modalData, setModalData] = useState({ email: '', type: '' });
+  const [modalData, setModalData] = useState({ email: '', text: '' });
   const [modalVisibility, setModalVisibility] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,9 +56,16 @@ export default (props) => {
         } else if (!userData.disabled) {
           handleNavigateTo(userData);
         } else {
-          if (userData.maximumAcessAttempts - 1 >= 0) {
+          const maximumAttempts = userData.maximumAcessAttempts - 1;
+          if (maximumAttempts >= 0) {
             setTimeout(() => {
-              setModalData({ ...userData, type: 'disabledAccountAdvice' });
+              setModalData({
+                email: userData.email,
+                text:
+                  'Esta conta está desativada e deve ser excluída caso seja acessada mais ' +
+                  userData.maximumAcessAttempts +
+                  ' vez(es).',
+              });
               toggleModal();
             }, 500);
 
@@ -113,7 +120,7 @@ export default (props) => {
     if (email == '' || password == '') {
       Alert.alert(
         'Erro de autenticação',
-        'Vish! Algum campo não foi preenchido corretamente, verifique novamente.',
+        'Ops! Algum campo não foi preenchido corretamente, verifique novamente.',
       );
     }
   };
@@ -155,7 +162,13 @@ export default (props) => {
           </View>
         </View>
       </Container>
-      <Modal isVisible={modalVisibility} params={modalData} onPress={toggleModal} />
+      <Modal
+        isVisible={modalVisibility}
+        onBackPress={toggleModal}
+        icon={{ name: 'account-off', type: 'material-community' }}
+        data={{ title: modalData.text, text: modalData.email }}
+        containerStyle={{ justifyContent: 'center' }}
+      />
     </Background>
   );
 };

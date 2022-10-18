@@ -20,7 +20,7 @@ import {
   Title,
   SimpleText,
 } from './styles';
-import { Card } from '../../components/common';
+import { Card, SortButton } from '../../components/common';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 
@@ -141,15 +141,7 @@ export default (props) => {
               }}
             />
           </SearchInput>
-          <TouchableOpacity>
-            <Icon
-              name='order-alphabetical-ascending'
-              type='material-community'
-              color={colors.gray}
-              size={32}
-              style={{ marginTop: 25, marginLeft: 25 }}
-            />
-          </TouchableOpacity>
+          <SortButton data={ubs} setData={setUbs} dataBackup={ubsBackup} />
         </SearchArea>
         {isLoading ? (
           <ActivityIndicator
