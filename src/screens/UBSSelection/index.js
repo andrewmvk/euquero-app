@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { FlatList, TouchableOpacity, Image, View, ActivityIndicator } from 'react-native';
+import {
+  FlatList,
+  TouchableOpacity,
+  Image,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
 
@@ -29,11 +35,17 @@ export default (props) => {
       let list = [];
       try {
         const cityID = props.route.params.cityID;
-        const ubsQuery = query(collection(db, 'ubs'), where('city', '==', cityID));
+        const ubsQuery = query(
+          collection(db, 'ubs'),
+          where('city', '==', cityID)
+        );
         const ubsSnapshot = await getDocs(ubsQuery);
 
         for (i = 0; i < ubsSnapshot.docs.length; i++) {
-          list.push({ id: ubsSnapshot.docs[i].id, ...ubsSnapshot.docs[i].data() });
+          list.push({
+            id: ubsSnapshot.docs[i].id,
+            ...ubsSnapshot.docs[i].data(),
+          });
         }
 
         setUbs(list);
@@ -60,14 +72,14 @@ export default (props) => {
             t
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase(),
-          ),
-      ),
+              .toLowerCase()
+          )
+      )
     );
   };
 
   const handleCardPress = (item) => {
-    props.navigation.navigate('ServiceSelection', {
+    props.navigation.navigate('UBSMenu', {
       ubsID: item.id,
       stateID: props.route.params.stateID,
       stateName: props.route.params.stateName,
@@ -98,7 +110,9 @@ export default (props) => {
           />
         </View>
         <Title>NADA POR AQUI!</Title>
-        <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
+        <SimpleText>
+          Não encontramos nenhum item correspondente à sua pesquisa.
+        </SimpleText>
       </NoResults>
     );
   };
@@ -114,13 +128,13 @@ export default (props) => {
         <SearchArea>
           <SearchInput>
             <SearchInputText
-              placeholder="Buscar UBS"
+              placeholder='Buscar UBS'
               onChangeText={(t) => search(t).then(() => setIsLoading(false))}
             />
             <Icon
-              name="search-outline"
-              type="ionicon"
-              color="#c4c4c4"
+              name='search-outline'
+              type='ionicon'
+              color='#c4c4c4'
               style={{
                 paddingHorizontal: 15,
                 paddingVertical: 15,
@@ -130,7 +144,11 @@ export default (props) => {
           <SortButton data={ubs} setData={setUbs} dataBackup={ubsBackup} />
         </SearchArea>
         {isLoading ? (
-          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+          <ActivityIndicator
+            size='large'
+            color={colors.orange}
+            style={{ marginTop: 50 }}
+          />
         ) : (
           <FlatList
             style={{

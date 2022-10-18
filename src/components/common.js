@@ -264,7 +264,7 @@ const cardStyles = StyleSheet.create({
   },
 });
 
-const cardShadow = {
+export const cardShadow = {
   distance: 2,
   startColor: 'rgba(0,0,0,0.035)',
   finalColor: 'rgba(0,0,0,0.0)',
@@ -563,8 +563,8 @@ export const DropdownSelection = (props) => {
             {props.data.selected}
           </DropdownText>
           <Icon
-            name="chevron-down"
-            type="material-community"
+            name='chevron-down'
+            type='material-community'
             color={props.disabled ? colors.gray : colors.text}
           />
         </SelectView>
