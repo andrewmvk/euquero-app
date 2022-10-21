@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image } from 'react-native';
+import { Icon } from '@rneui/themed';
 
 import { Container, LogoView, Subtitle, Buttons, AdminBtn, extraStyles } from './styles';
-
 import Wave from '../../components/Waves/Wave';
 import DashedWave from '../../components/Waves/DashedWave';
-
-import { Icon } from '@rneui/themed';
 import { buttonOpacity } from '../../defaultStyles';
 import { LargeButton, SmallButton } from '../../components/common';
 

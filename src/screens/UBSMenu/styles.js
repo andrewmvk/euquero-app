@@ -59,8 +59,8 @@ export const Space = styled.View`
   align-self: center;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 
 export const OptionText = styled.Text`

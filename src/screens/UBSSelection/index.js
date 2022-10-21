@@ -51,7 +51,6 @@ export default (props) => {
   }, []);
 
   const search = (t) => {
-    setIsLoading(false);
     let arr = [...ubsBackup];
     setUbs(
       arr.filter((d) =>
@@ -115,10 +114,7 @@ export default (props) => {
         />
         <SearchArea>
           <SearchInput>
-            <SearchInputText
-              placeholder="Buscar UBS"
-              onChangeText={(t) => search(t).then(() => setIsLoading(false))}
-            />
+            <SearchInputText placeholder="Buscar UBS" onChangeText={(t) => search(t)} />
             <Icon
               name="search-outline"
               type="ionicon"

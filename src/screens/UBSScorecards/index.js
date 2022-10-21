@@ -22,7 +22,7 @@ export default (props) => {
       setIsLoading(true);
       const ubsScorecardQuery = query(
         collection(db, 'ubsScorecards'),
-        where('ubsid', '==', props.route.params.ubsID),
+        where('ubsid', '==', +props.route.params.ubsID),
       );
 
       const ubsScorecardSnap = await getDocs(ubsScorecardQuery);
@@ -60,17 +60,12 @@ export default (props) => {
 
   return (
     <Container>
-      <Header
-        text={headerName ? headerName : 'Rota da página'}
-        onPress={() => props.navigation.goBack()}
-      />
+      <Header text={headerName} onPress={() => props.navigation.goBack()} />
       <Map />
 
       <TextView>
-        <Period>{routeParams?.periodName ? routeParams.periodName : 'Nome do período'}</Period>
-        <UBSName numberOfLines={2}>
-          {routeParams?.ubsName ? routeParams.ubsName : 'Nome da UBS'}
-        </UBSName>
+        <Period>{routeParams.periodName}</Period>
+        <UBSName numberOfLines={2}>{routeParams.ubsName}</UBSName>
       </TextView>
 
       {isLoading ? (
@@ -82,7 +77,9 @@ export default (props) => {
           data={scorecards}
           renderItem={cards}
           keyExtractor={(item) => item.id}
-          ListEmptyComponent={<EmptyListMessage containerStyle={{ marginTop: '0%' }} />}
+          ListEmptyComponent={
+            <EmptyListMessage containerStyle={{ marginTop: '0%', width: '80%', height: '65%' }} />
+          }
         />
       )}
     </Container>

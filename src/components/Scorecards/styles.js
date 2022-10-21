@@ -5,12 +5,12 @@ import { fonts, colors, fontSize } from '../../defaultStyles';
 export const Scorecard = styled.TouchableOpacity`
   height: 80px;
   width: ${Dimensions.get('window').width * 0.8}px;
+  align-items: center;
   background-color: #fff;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
   border-radius: 5px;
   border-right-width: 7px;
-  justify-content: center;
+  justify-content: space-between;
 `;
 
 export const Description = styled.Text`
