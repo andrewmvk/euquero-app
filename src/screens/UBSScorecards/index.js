@@ -1,86 +1,90 @@
-import React, { useState } from 'react';
-import { FlatList, ScrollView, TouchableOpacity, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import React, { useState, useEffect } from 'react';
+import { collection, getDoc, getDocs, query, where, doc } from 'firebase/firestore';
+import { FlatList, ActivityIndicator } from 'react-native';
 import { EmptyListMessage } from '../../components/common';
 
 import Header from '../../components/Header';
 import Scorecards from '../../components/Scorecards';
-import {
-  Container,
-  Description,
-  Map,
-  Period,
-  Scorecard,
-  ScorecardText,
-  ScorecardTitle,
-  TextView,
-  UBSName,
-} from './styles';
-
-const bigDescription =
-  'Esse indicador qualifica a oferta de canais de comunicação para os usuárias opinarem, avaliação de satisfação do usuária, discussão interna e com a gestão sobre as demandas sugestões/reclamações dos usuárias, conselho local de saúde na unidade de saúde ou afins com participação popular, existência de telefone da ouvidoria ou central de reclamações do município ou Ministério da Saúde, oportunidade de expressar a opinião sobre o funcionamento e organização desta UBS. Presença de profissionais atenciosos, claros em suas orientações demonstram interesse. Respeito e acolhimento pelos profissionais em relação a hábitos culturais e religião. Profissionais procuram saber o motivo da ausência na consulta. Além disso, ações de promoção do aleitamento materno exclusivo para crianças até seis meses, estímulo à introdução alimentar saudável e aleitamento materno continuado, utilização do novo “Guia Alimentar para a População Brasileira” do Ministério da Saúde, orientações às gestantes em relação a vacina contra tétano, alimentação saudável atividade física.';
-const test = [
-  {
-    name: 'Respeito e empoderamento no pré-natal',
-    score: 3,
-    scorecard: 102,
-    description: bigDescription,
-  },
-  {
-    name: 'Respeito e empoderamento no pré-natal',
-    score: 1,
-    scorecard: 103,
-    description: bigDescription,
-  },
-  {
-    name: 'Respeito e empoderamento no pré-natal',
-    score: 2,
-    scorecard: 104,
-    description: bigDescription,
-  },
-  {
-    name: 'Respeito e empoderamento no pré-natal',
-    score: 4,
-    scorecard: 105,
-    description: bigDescription,
-  },
-  {
-    name: 'Respeito e empoderamento no pré-natal',
-    score: 2,
-    scorecard: 106,
-    description: bigDescription,
-  },
-  {
-    name: 'Respeito e empoderamento no pré-natal',
-    score: 3,
-    scorecard: 107,
-    description: bigDescription,
-  },
-];
+import { db } from '../../services/firebase.config';
+import { Container, Map, Period, TextView, UBSName } from './styles';
+import { colors } from '../../defaultStyles';
 
 const cards = ({ item }) => {
   return <Scorecards item={item} />;
 };
 
-export default () => {
+export default (props) => {
+  const [scorecards, setScorecards] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const ubsScorecardQuery = query(
+        collection(db, 'ubsScorecards'),
+        where('ubsid', '==', props.route.params.ubsID),
+      );
+
+      const ubsScorecardSnap = await getDocs(ubsScorecardQuery);
+      let scorecardsArray = [];
+
+      const promises = ubsScorecardSnap.docs.map(async (item) => {
+        if (item?.data()) {
+          const docRef = doc(db, 'scorecards', item.data().scorecard.toString());
+          const scorecardData = await getDoc(docRef);
+
+          if (scorecardData?.data()) {
+            const scorecard = {
+              name: scorecardData.data().name,
+              description: scorecardData.data().description,
+              score: item.data().score,
+              id: item.data().scorecard,
+            };
+
+            scorecardsArray.push(scorecard);
+          }
+        }
+      });
+
+      await Promise.all(promises).then(() => {
+        setScorecards(scorecardsArray);
+      });
+    };
+    fetchData().then(() => {
+      setIsLoading(false);
+    });
+  }, []);
+
+  const routeParams = props.route.params;
+  const headerName = `${routeParams.stateName} - ${routeParams.cityName} - ${routeParams.ubsName}`;
+
   return (
     <Container>
-      <Header text={'UBS'} onPress={() => props.navigation.goBack()} />
+      <Header
+        text={headerName ? headerName : 'Rota da página'}
+        onPress={() => props.navigation.goBack()}
+      />
       <Map />
 
       <TextView>
-        <Period>Pré-Natal</Period>
-        <UBSName>UBS Santo Antônio</UBSName>
+        <Period>{routeParams?.periodName ? routeParams.periodName : 'Nome do período'}</Period>
+        <UBSName numberOfLines={2}>
+          {routeParams?.ubsName ? routeParams.ubsName : 'Nome da UBS'}
+        </UBSName>
       </TextView>
 
-      <FlatList
-        style={{ marginBottom: 25, width: '100%', zIndex: 0 }}
-        contentContainerStyle={{ alignItems: 'center' }}
-        data={test}
-        renderItem={cards}
-        keyExtractor={(item) => item.scorecard}
-        ListEmptyComponent={<EmptyListMessage containerStyle={{ marginTop: '0%' }} />}
-      />
+      {isLoading ? (
+        <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+      ) : (
+        <FlatList
+          style={{ marginBottom: 25, width: '100%', zIndex: 0 }}
+          contentContainerStyle={{ alignItems: 'center' }}
+          data={scorecards}
+          renderItem={cards}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={<EmptyListMessage containerStyle={{ marginTop: '0%' }} />}
+        />
+      )}
     </Container>
   );
 };

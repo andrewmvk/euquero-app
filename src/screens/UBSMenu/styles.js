@@ -31,7 +31,7 @@ export const Menu = styled.View`
 
 export const PeriodosCard = styled.View`
   border-left-color: #ff6b0f;
-
+  width: ${Dimensions.get('window').width * 0.8}px;
   height: 80px;
   background-color: #fff;
   flex-direction: column;
@@ -53,6 +53,16 @@ export const Periodos = styled.View`
   align-self: center;
 `;
 
+export const Space = styled.View`
+  flex-direction: row;
+  width: 20%;
+  align-self: center;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
+
 export const OptionText = styled.Text`
   font-family: 'Spartan_400Regular';
   font-size: 15px;
@@ -63,10 +73,4 @@ export const Option = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
   margin-top: 5px;
-`;
-
-export const OrText = styled.Text`
-  font-family: 'Spartan_400Regular';
-  font-size: 15px;
-  color: ${defaultS.colors.text};
 `;
