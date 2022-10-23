@@ -32,7 +32,7 @@ export const Menu = styled.View`
 export const PeriodosCard = styled.View`
   border-left-color: #ff6b0f;
 
-  height: 80px;
+  height: 65px;
   background-color: #fff;
   flex-direction: column;
   align-items: flex-start;
