@@ -9,6 +9,7 @@ import { buttonOpacity, colors, fonts, fontSizeNoUnits } from '../../defaultStyl
 import { db } from '../../services/firebase.config';
 import { Description, Icons, TouchableCard, TouchableIcon } from './styles';
 import { Alert } from 'react-native';
+import { ScrollView } from 'react-native';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -91,7 +92,6 @@ export default (props) => {
   };
 
   const cardShadow = {
-    distance: 2,
     startColor: 'rgba(0,0,0,0.035)',
     finalColor: 'rgba(0,0,0,0.0)',
     distance: 10,
@@ -167,12 +167,14 @@ export default (props) => {
       </Shadow>
       <AnimatedView animatedProps={viewProps}>
         {isEditing ? (
-          <Description
-            multiline
-            value={itemDescription}
-            placeholder="Descrição"
-            onChangeText={setItemDescription}
-          />
+          <ScrollView nestedScrollEnabled={true}>
+            <Description
+              multiline
+              value={itemDescription}
+              placeholder="Descrição"
+              onChangeText={setItemDescription}
+            />
+          </ScrollView>
         ) : null}
       </AnimatedView>
     </View>

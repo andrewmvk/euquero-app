@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
 
@@ -123,14 +123,22 @@ export default (props) => {
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
         ) : (
-          <FlatList
+          <ScrollView
             style={{ marginTop: 32, marginBottom: 25, width: '100%', zIndex: 0 }}
             contentContainerStyle={{ alignItems: 'center' }}
-            data={scorecards}
-            renderItem={cards}
-            keyExtractor={(item) => item.id}
-            ListEmptyComponent={<EmptyListMessage containerStyle={{ marginTop: '0%' }} />}
-          />
+          >
+            {scorecards.map((item) => {
+              return (
+                <EditableCard
+                  value={item.id}
+                  key={item.id}
+                  text={item.name}
+                  description={item.description}
+                  deletedItem={() => deleteItem(item)}
+                />
+              );
+            })}
+          </ScrollView>
         )}
       </Container>
       <AddButton onPress={() => props.navigation.navigate('NewScorecard')} />
