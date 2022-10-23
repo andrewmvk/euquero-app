@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import {
@@ -15,7 +15,12 @@ import {
 import { Icon } from 'react-native-elements';
 import Header from '../../components/Header';
 
-import { buttonOpacity, colors, fonts, fontSizeNoUnits } from '../../defaultStyles';
+import {
+  buttonOpacity,
+  colors,
+  fonts,
+  fontSizeNoUnits,
+} from '../../defaultStyles';
 
 const periods = [
   { name: 'Pré-Natal', id: 1 },
@@ -28,7 +33,7 @@ export default (props) => {
   const headerName = `${routeParams.stateName} - ${routeParams.cityName} - ${routeParams.ubsName}`;
 
   const handlePeriodChoice = (item) => {
-    props.navigation.navigate('UBSScorecards', {
+    props.navigation.navigate('UBSServices', {
       ubsID: routeParams?.ubsID,
       stateName: routeParams?.stateName,
       cityName: routeParams?.cityName,
@@ -49,6 +54,22 @@ export default (props) => {
       zIndex: 3,
     },
   };
+
+  const [transition, setTransition] = useState({ n: false, type: '' });
+
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      setTransition({ n: true, type: 'from' });
+    });
+    return () => unsubscribe();
+  }, []);
+
+  function handleNavigateTo(page) {
+    setTransition({ n: true, type: 'to' });
+    setTimeout(() => {
+      props.navigation.navigate(page);
+    }, 400);
+  }
 
   return (
     <>
@@ -79,9 +100,9 @@ export default (props) => {
                   >
                     <OptionText>{item.name}</OptionText>
                     <Icon
-                      name="chevron-forward-outline"
-                      type="ionicon"
-                      color="rgba(127, 127, 127, 0.4)"
+                      name='chevron-forward-outline'
+                      type='ionicon'
+                      color='rgba(127, 127, 127, 0.4)'
                       style={{ marginLeft: 5 }}
                     />
                   </Option>
@@ -95,11 +116,17 @@ export default (props) => {
             <View style={styles.line} />
           </Space>
 
-          <PeriodosCard>
+          <PeriodosCard
+            onPress={() => {
+              handleNavigateTo('UBSServices');
+            }}
+          >
             <Text style={styles.cardTitle} numberOfLines={1}>
               Serviços
             </Text>
-            <Text style={styles.cardText}>Veja a lista de serviços disponíveis</Text>
+            <Text style={styles.cardText}>
+              Veja a lista de serviços disponíveis
+            </Text>
           </PeriodosCard>
         </Menu>
       </Container>

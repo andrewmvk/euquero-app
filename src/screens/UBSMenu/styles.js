@@ -29,7 +29,7 @@ export const Menu = styled.View`
   margin-bottom: 20px;
 `;
 
-export const PeriodosCard = styled.View`
+export const PeriodosCard = styled.TouchableOpacity`
   border-left-color: #ff6b0f;
   width: ${Dimensions.get('window').width * 0.8}px;
   height: 80px;
