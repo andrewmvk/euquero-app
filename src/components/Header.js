@@ -1,7 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, SafeAreaView, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { ScreenWidth } from 'react-native-elements/dist/helpers';
 
 import { colors, fonts, buttonOpacity } from '../defaultStyles';
 

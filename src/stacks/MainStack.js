@@ -16,6 +16,7 @@ import UploadUBSTable from '../screens/UploadUBSTable';
 import UBSMenu from '../screens/UBSMenu';
 import ManageScorecards from '../screens/ManageScorecards';
 import NewScorecard from '../screens/NewScorecard';
+import UBSScorecards from '../screens/UBSScorecards';
 
 const Stack = createStackNavigator();
 
@@ -42,5 +43,6 @@ export default () => (
     <Stack.Screen name="UBSMenu" component={UBSMenu} />
     <Stack.Screen name="ManageScorecards" component={ManageScorecards} />
     <Stack.Screen name="NewScorecard" component={NewScorecard} />
+    <Stack.Screen name="UBSScorecards" component={UBSScorecards} />
   </Stack.Navigator>
 );
