@@ -20,6 +20,7 @@ import UBSMenu from '../screens/UBSMenu';
 import ManageScorecards from '../screens/ManageScorecards';
 import NewScorecard from '../screens/NewScorecard';
 import UBSScorecards from '../screens/UBSScorecards';
+import UBSServices from '../screens/UBSServices';
 
 const Stack = createStackNavigator();
 
@@ -31,21 +32,26 @@ export default () => (
       cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
     }}
   >
-    <Stack.Screen name="Home" component={Home} />
-    <Stack.Screen name="AdminLogin" component={AdminLogin} options={{ animationEnabled: false }} />
-    <Stack.Screen name="AdminMainMenu" component={AdminMainMenu} />
-    <Stack.Screen name="ManageAccounts" component={ManageAccounts} />
-    <Stack.Screen name="RegisterAccounts" component={RegisterAccounts} />
-    <Stack.Screen name="ComoUsarOApp" component={ComoUsarOApp} />
-    <Stack.Screen name="SobreOProjeto" component={SobreOProjeto} />
-    <Stack.Screen name="StateSelection" component={StateSelection} />
-    <Stack.Screen name="CitySelection" component={CitySelection} />
-    <Stack.Screen name="UBSSelection" component={UBSSelection} />
-    <Stack.Screen name="ManageUBS" component={ManageUBS} />
-    <Stack.Screen name="UploadUBSTable" component={UploadUBSTable} />
-    <Stack.Screen name="UBSMenu" component={UBSMenu} />
-    <Stack.Screen name="ManageScorecards" component={ManageScorecards} />
-    <Stack.Screen name="NewScorecard" component={NewScorecard} />
-    <Stack.Screen name="UBSScorecards" component={UBSScorecards} />
+    <Stack.Screen name='Home' component={Home} />
+    <Stack.Screen
+      name='AdminLogin'
+      component={AdminLogin}
+      options={{ animationEnabled: false }}
+    />
+    <Stack.Screen name='AdminMainMenu' component={AdminMainMenu} />
+    <Stack.Screen name='ManageAccounts' component={ManageAccounts} />
+    <Stack.Screen name='RegisterAccounts' component={RegisterAccounts} />
+    <Stack.Screen name='ComoUsarOApp' component={ComoUsarOApp} />
+    <Stack.Screen name='SobreOProjeto' component={SobreOProjeto} />
+    <Stack.Screen name='StateSelection' component={StateSelection} />
+    <Stack.Screen name='CitySelection' component={CitySelection} />
+    <Stack.Screen name='UBSSelection' component={UBSSelection} />
+    <Stack.Screen name='ManageUBS' component={ManageUBS} />
+    <Stack.Screen name='UploadUBSTable' component={UploadUBSTable} />
+    <Stack.Screen name='UBSMenu' component={UBSMenu} />
+    <Stack.Screen name='ManageScorecards' component={ManageScorecards} />
+    <Stack.Screen name='NewScorecard' component={NewScorecard} />
+    <Stack.Screen name='UBSScorecards' component={UBSScorecards} />
+    <Stack.Screen name='UBSServices' component={UBSServices} />
   </Stack.Navigator>
 );
