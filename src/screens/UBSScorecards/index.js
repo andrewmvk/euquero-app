@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDoc, getDocs, query, where, doc } from 'firebase/firestore';
-import { FlatList, ActivityIndicator } from 'react-native';
-import { EmptyListMessage } from '../../components/common';
+import { FlatList, ActivityIndicator, Dimensions } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
+import { EmptyListMessage } from '../../components/common';
 import Header from '../../components/Header';
 import Scorecards from '../../components/Scorecards';
 import { db } from '../../services/firebase.config';
-import { Container, Map, Period, TextView, UBSName } from './styles';
+import { Container, Period, TextView, UBSName } from './styles';
 import { colors } from '../../defaultStyles';
+import Pin from '../../../assets/images/map-pin.svg';
 
 const cards = ({ item }) => {
   return <Scorecards item={item} />;
@@ -19,10 +21,12 @@ export default (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const routeParams = props.route?.params;
+
       setIsLoading(true);
       const ubsScorecardQuery = query(
         collection(db, 'ubsScorecards'),
-        where('ubsid', '==', +props.route.params.ubsID),
+        where('ubsid', '==', +routeParams.ubsID),
       );
 
       const ubsScorecardSnap = await getDocs(ubsScorecardQuery);
@@ -30,18 +34,23 @@ export default (props) => {
 
       const promises = ubsScorecardSnap.docs.map(async (item) => {
         if (item?.data()) {
-          const docRef = doc(db, 'scorecards', item.data().scorecard.toString());
-          const scorecardData = await getDoc(docRef);
+          if (
+            item.data().scorecard > 100 * routeParams.periodID &&
+            item.data().scorecard < 100 * routeParams.periodID + 100
+          ) {
+            const docRef = doc(db, 'scorecards', item.data().scorecard.toString());
+            const scorecardData = await getDoc(docRef);
 
-          if (scorecardData?.data()) {
-            const scorecard = {
-              name: scorecardData.data().name,
-              description: scorecardData.data().description,
-              score: item.data().score,
-              id: item.data().scorecard,
-            };
+            if (scorecardData?.data()) {
+              const scorecard = {
+                name: scorecardData.data().name,
+                description: scorecardData.data().description,
+                score: item.data().score,
+                id: item.data().scorecard,
+              };
 
-            scorecardsArray.push(scorecard);
+              scorecardsArray.push(scorecard);
+            }
           }
         }
       });
@@ -61,7 +70,22 @@ export default (props) => {
   return (
     <Container>
       <Header text={headerName} onPress={() => props.navigation.goBack()} />
-      <Map />
+      <MapView
+        style={{
+          marginTop: 20,
+          height: Dimensions.get('window').height * 0.3,
+          width: Dimensions.get('window').width,
+        }}
+        initialRegion={{
+          ...routeParams.coordinate,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}
+      >
+        <Marker coordinate={routeParams.coordinate} provider={PROVIDER_GOOGLE}>
+          <Pin width={31} height={48} />
+        </Marker>
+      </MapView>
 
       <TextView>
         <Period>{routeParams.periodName}</Period>
@@ -72,13 +96,16 @@ export default (props) => {
         <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
       ) : (
         <FlatList
-          style={{ marginBottom: 25, width: '100%', zIndex: 0 }}
+          style={{ paddingBottom: 25, width: '100%', zIndex: 0 }}
           contentContainerStyle={{ alignItems: 'center' }}
           data={scorecards}
           renderItem={cards}
           keyExtractor={(item) => item.id}
           ListEmptyComponent={
-            <EmptyListMessage containerStyle={{ marginTop: '0%', width: '80%', height: '65%' }} />
+            <EmptyListMessage
+              containerStyle={{ marginTop: '0%', width: '80%', height: '65%' }}
+              alterText
+            />
           }
         />
       )}

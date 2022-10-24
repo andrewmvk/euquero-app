@@ -13,6 +13,7 @@ import DashedCircle from '../../components/DashedCircle';
 
 export default (props) => {
   const [cities, setCities] = useState([]);
+  const [noUbsCities, setNoUbsCities] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,12 +45,15 @@ export default (props) => {
           citiesArray.push(cityObject);
         }
 
+        const noUbsCitiesArray = citiesArray.filter((item) => item.ubsAmount === 0);
+        citiesArray = citiesArray.filter((item) => item.ubsAmount != 0);
+
         citiesArray.sort((a, b) =>
           a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
         );
 
         setCities(citiesArray);
-
+        setNoUbsCities(noUbsCitiesArray);
         setOriginalData(citiesArray);
       } catch (err) {
         console.log('Something went wrong while trying to fetch data from database or Cities API.');
@@ -135,7 +139,7 @@ export default (props) => {
             renderItem={cityCard}
             keyExtractor={(item) => item.id}
             ListEmptyComponent={EmptyListMessage}
-            ListFooterComponent={InDevelopmentCard}
+            ListFooterComponent={<InDevelopmentCard data={noUbsCities} />}
           />
         )}
       </Container>

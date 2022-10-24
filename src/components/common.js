@@ -249,7 +249,6 @@ const cardStyles = StyleSheet.create({
     fontSize: fontSizeNoUnits.cardText,
     marginLeft: 22,
     color: colors.text,
-    width: screenWidth * 0.6,
   },
   avaibleUBSText: {
     fontFamily: fonts.spartanR,
@@ -280,6 +279,7 @@ export const cardShadow = {
 
 export const Card = (props) => {
   const color = props.color ? props.color : colors.gray;
+  const textWidth = props.ubsCount ? screenWidth * 0.6 : screenWidth * 0.75;
 
   return (
     <Shadow {...cardShadow}>
@@ -290,12 +290,16 @@ export const Card = (props) => {
         disabled={props.onPress === undefined ? true : false}
       >
         {props.text ? (
-          <Text style={cardStyles.cardText} numberOfLines={1}>
-            {props.text}
-          </Text>
+          <View style={{ width: textWidth }}>
+            <Text style={cardStyles.cardText} numberOfLines={1}>
+              {props.text}
+            </Text>
+          </View>
         ) : null}
         {props.ubsCount ? (
-          <Text style={cardStyles.avaibleUBSText}>{props.ubsCount + ' UBS'}</Text>
+          <Text style={[cardStyles.avaibleUBSText, { width: textWidth }]}>
+            {props.ubsCount + ' UBS'}
+          </Text>
         ) : null}
         {props.children ? { ...props.children } : null}
       </TouchableOpacity>
@@ -335,46 +339,9 @@ const cardA = StyleSheet.create({
 
 export const InDevelopmentCard = (props) => {
   const color = props.color ? props.color : colors.gray;
-
-  const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d722',
-      title: 'Third Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d723g',
-      title: 'Third Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d723h',
-      title: 'Third Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d723j',
-      title: 'Third Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d723k',
-      title: 'Third Item',
-    },
-  ];
-
-  const [selectedId, setSelectedId] = useState(null);
-
-  const renderItem = ({ item }) => {
-    return <Text style={{ color: '#7f7f7f', marginBottom: 5 }}>{item.title}</Text>;
+  const height = () => {
+    const a = props.data.length * 31;
+    return a > 160 ? 160 : a;
   };
 
   return (
@@ -388,25 +355,28 @@ export const InDevelopmentCard = (props) => {
             <Text style={cardA.descriptionCardA}>Estados a serem cadastrados:</Text>
           </View>
         </Shadow>
-        <FlatList
-          data={DATA}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          extraData={selectedId}
+        <View
           style={{
             borderBottomLeftRadius: 5,
             borderBottomRightRadius: 5,
             backgroundColor: 'white',
             width: '95%',
-            paddingHorizontal: 20,
-            paddingVertical: 10,
+            height: height(),
             alignSelf: 'center',
             marginBottom: 30,
           }}
-          contentContainerStyle={{
-            overflow: 'hidden',
-          }}
-        />
+        >
+          <ScrollView nestedScrollEnabled style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+            {props.data.map((item) => {
+              return (
+                <Text key={item.id} style={{ color: '#7f7f7f', marginBottom: 5 }}>
+                  {item.name}
+                </Text>
+              );
+            })}
+            <View style={{ height: 15 }} />
+          </ScrollView>
+        </View>
       </View>
     </>
   );
@@ -495,7 +465,11 @@ export const EmptyListMessage = (props) => {
         />
       </View>
       <Title>NADA POR AQUI!</Title>
-      <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
+      {props.alterText ? (
+        <SimpleText>Nenhum item nesta lista.</SimpleText>
+      ) : (
+        <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
+      )}
     </NoResults>
   );
 };
@@ -563,8 +537,8 @@ export const DropdownSelection = (props) => {
             {props.data.selected}
           </DropdownText>
           <Icon
-            name='chevron-down'
-            type='material-community'
+            name="chevron-down"
+            type="material-community"
             color={props.disabled ? colors.gray : colors.text}
           />
         </SelectView>

@@ -13,6 +13,7 @@ import { Card, InDevelopmentCard, EmptyListMessage, SortButton } from '../../com
 
 export default (props) => {
   const [brazilianStates, setBrazilianStates] = useState([]);
+  const [noUbsStates, setNoUbsStates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [originalData, setOriginalData] = useState([]);
 
@@ -43,10 +44,14 @@ export default (props) => {
           statesArray.push(stateObject);
         }
 
+        const noUbsStatesArray = statesArray.filter((item) => item.ubsAmount === 0);
+        statesArray = statesArray.filter((item) => item.ubsAmount != 0);
+
         statesArray.sort((a, b) =>
           a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
         );
 
+        setNoUbsStates(noUbsStatesArray);
         setBrazilianStates(statesArray);
         setOriginalData(statesArray);
       } catch (err) {
@@ -124,21 +129,19 @@ export default (props) => {
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
         ) : (
-          <>
-            <FlatList
-              style={{
-                width: '100%',
-                marginTop: 25,
-                paddingTop: 5,
-              }}
-              contentContainerStyle={{ alignItems: 'center' }}
-              data={brazilianStates}
-              renderItem={stateCard}
-              keyExtractor={(item) => item.id}
-              ListEmptyComponent={EmptyListMessage}
-            />
-            {/*<InDevelopmentCard />*/}
-          </>
+          <FlatList
+            style={{
+              width: '100%',
+              marginTop: 25,
+              paddingTop: 5,
+            }}
+            contentContainerStyle={{ alignItems: 'center' }}
+            data={brazilianStates}
+            renderItem={stateCard}
+            keyExtractor={(item) => item.id}
+            ListEmptyComponent={EmptyListMessage}
+            ListFooterComponent={<InDevelopmentCard data={noUbsStates} />}
+          />
         )}
       </Container>
     </>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { FlatList, TouchableOpacity, Image, View, ActivityIndicator } from 'react-native';
+import { FlatList, Image, View, ActivityIndicator } from 'react-native';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
 
@@ -71,6 +71,7 @@ export default (props) => {
   const handleCardPress = (item) => {
     props.navigation.navigate('UBSMenu', {
       ubsID: item.id,
+      coordinate: item.location,
       stateName: props.route.params.stateName,
       cityName: props.route.params.cityName,
       ubsName: item.name,

@@ -1,67 +1,91 @@
 import React, { useState, useEffect } from 'react';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../../services/firebase.config';
 
 import { Card, EmptyListMessage } from '../../components/common';
-import { FlatList, ActivityIndicator, Text, View } from 'react-native';
+import { FlatList, ActivityIndicator, Dimensions } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import Header from '../../components/Header';
-import { Container, Map, Period, TextView, UBSName } from './styles';
+import { Container, Period, TextView, UBSName } from './styles';
+import Pin from '../../../assets/images/map-pin.svg';
 import { colors } from '../../defaultStyles';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [services, setServices] = useState([]);
 
-  const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'Arroz',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Feijão',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Batata',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d723',
-      title: 'Batata',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d724',
-      title: 'Batata',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d725',
-      title: 'Batata',
-    },
-  ];
+  const routeParams = props.route?.params;
 
-  const serviceCard = ({ item }) => <Card color={'#fff'} text={item.title} />;
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const ubsServicesQuery = query(
+        collection(db, 'ubsServices'),
+        where('ubsid', '==', +routeParams.ubsID),
+      );
+
+      const ubsServicesSnap = await getDocs(ubsServicesQuery);
+      let servicesArray = [];
+      for (i = 0; i < ubsServicesSnap.docs.length; i++) {
+        const service = ubsServicesSnap.docs[i].data();
+        let servicesObject = {
+          name: service.name,
+          id: service.id,
+        };
+        servicesArray.push(servicesObject);
+      }
+
+      setServices(servicesArray);
+    };
+    fetchData().then(() => {
+      setIsLoading(false);
+    });
+  }, []);
+
+  const serviceCard = ({ item }) => <Card color={'#fff'} text={item.name} />;
+  const headerName = `${routeParams.stateName} - ${routeParams.cityName} - ${routeParams.ubsName}`;
 
   return (
     <Container>
-      <Header onPress={() => props.navigation.goBack()} />
-      <Map />
+      <Header text={headerName} onPress={() => props.navigation.goBack()} />
+      <MapView
+        style={{
+          marginTop: 20,
+          height: Dimensions.get('window').height * 0.3,
+          width: Dimensions.get('window').width,
+        }}
+        initialRegion={{
+          ...routeParams.coordinate,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}
+      >
+        <Marker coordinate={routeParams.coordinate} provider={PROVIDER_GOOGLE}>
+          <Pin width={31} height={48} />
+        </Marker>
+      </MapView>
 
       <TextView>
         <Period>Serviços</Period>
-        <UBSName numberOfLines={2}>Nome da UBS</UBSName>
+        <UBSName numberOfLines={2}>{routeParams.ubsName}</UBSName>
       </TextView>
 
       {isLoading ? (
-        <ActivityIndicator
-          size='large'
-          color={colors.orange}
-          style={{ marginTop: 50 }}
-        />
+        <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
       ) : (
         <FlatList
-          style={{ marginBottom: 25, width: '100%', zIndex: 0 }}
+          style={{ paddingBottom: 25, width: '100%', zIndex: 0 }}
           contentContainerStyle={{ alignItems: 'center' }}
-          data={DATA}
+          data={services}
           renderItem={serviceCard}
           keyExtractor={(item) => item.id}
+          ListEmptyComponent={
+            <EmptyListMessage
+              containerStyle={{ marginTop: '0%', width: '80%', height: '65%' }}
+              alterText
+            />
+          }
         />
       )}
     </Container>

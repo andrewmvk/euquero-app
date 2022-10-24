@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import Pin from '../../../assets/images/map-pin.svg';
+
 import {
   Container,
-  Map,
   UBSName,
   Menu,
   PeriodosCard,
@@ -14,13 +16,7 @@ import {
 } from './styles';
 import { Icon } from 'react-native-elements';
 import Header from '../../components/Header';
-
-import {
-  buttonOpacity,
-  colors,
-  fonts,
-  fontSizeNoUnits,
-} from '../../defaultStyles';
+import { buttonOpacity, colors, fonts, fontSizeNoUnits } from '../../defaultStyles';
 
 const periods = [
   { name: 'Pré-Natal', id: 1 },
@@ -32,14 +28,15 @@ export default (props) => {
   const routeParams = props.route.params;
   const headerName = `${routeParams.stateName} - ${routeParams.cityName} - ${routeParams.ubsName}`;
 
-  const handlePeriodChoice = (item) => {
-    props.navigation.navigate('UBSServices', {
+  const handleNavigate = (item, page) => {
+    props.navigation.navigate(page, {
+      coordinate: routeParams?.coordinate,
       ubsID: routeParams?.ubsID,
       stateName: routeParams?.stateName,
       cityName: routeParams?.cityName,
       ubsName: routeParams?.ubsName,
-      periodName: item.name,
-      periodID: item.id,
+      periodName: item ? item.name : null,
+      periodID: item ? item.id : null,
     });
   };
 
@@ -55,28 +52,23 @@ export default (props) => {
     },
   };
 
-  const [transition, setTransition] = useState({ n: false, type: '' });
-
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener('focus', () => {
-      setTransition({ n: true, type: 'from' });
-    });
-    return () => unsubscribe();
-  }, []);
-
-  function handleNavigateTo(page) {
-    setTransition({ n: true, type: 'to' });
-    setTimeout(() => {
-      props.navigation.navigate(page);
-    }, 400);
-  }
-
   return (
     <>
       <Container>
         <Header text={headerName} onPress={() => props.navigation.goBack()} />
 
-        <Map />
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            ...routeParams.coordinate,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          }}
+        >
+          <Marker coordinate={routeParams.coordinate} provider={PROVIDER_GOOGLE}>
+            <Pin width={31} height={48} />
+          </Marker>
+        </MapView>
 
         <Menu>
           <UBSName numberOfLines={2}>{routeParams.ubsName}</UBSName>
@@ -95,14 +87,14 @@ export default (props) => {
                 return (
                   <Option
                     key={item.id}
-                    onPress={() => handlePeriodChoice(item)}
+                    onPress={() => handleNavigate(item, 'UBSScorecards')}
                     activeOpacity={buttonOpacity}
                   >
                     <OptionText>{item.name}</OptionText>
                     <Icon
-                      name='chevron-forward-outline'
-                      type='ionicon'
-                      color='rgba(127, 127, 127, 0.4)'
+                      name="chevron-forward-outline"
+                      type="ionicon"
+                      color="rgba(127, 127, 127, 0.4)"
                       style={{ marginLeft: 5 }}
                     />
                   </Option>
@@ -116,17 +108,11 @@ export default (props) => {
             <View style={styles.line} />
           </Space>
 
-          <PeriodosCard
-            onPress={() => {
-              handleNavigateTo('UBSServices');
-            }}
-          >
+          <PeriodosCard onPress={() => handleNavigate(null, 'UBSServices')}>
             <Text style={styles.cardTitle} numberOfLines={1}>
               Serviços
             </Text>
-            <Text style={styles.cardText}>
-              Veja a lista de serviços disponíveis
-            </Text>
+            <Text style={styles.cardText}>Veja a lista de serviços disponíveis</Text>
           </PeriodosCard>
         </Menu>
       </Container>
@@ -163,5 +149,10 @@ const styles = StyleSheet.create({
     marginLeft: 22,
     color: colors.text,
     fontFamily: fonts.spartanL,
+  },
+  map: {
+    marginTop: 20,
+    height: Dimensions.get('window').height * 0.3,
+    width: Dimensions.get('window').width,
   },
 });
