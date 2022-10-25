@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDoc, getDocs, query, where, doc } from 'firebase/firestore';
-import { FlatList, ActivityIndicator, Dimensions } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { FlatList, ActivityIndicator } from 'react-native';
 
-import { EmptyListMessage } from '../../components/common';
+import { EmptyListMessage, Map } from '../../components/common';
 import Header from '../../components/Header';
 import Scorecards from '../../components/Scorecards';
 import { db } from '../../services/firebase.config';
 import { Container, Period, TextView, UBSName } from './styles';
 import { colors } from '../../defaultStyles';
-import Pin from '../../../assets/images/map-pin.svg';
 
 const cards = ({ item }) => {
   return <Scorecards item={item} />;
@@ -70,22 +68,7 @@ export default (props) => {
   return (
     <Container>
       <Header text={headerName} onPress={() => props.navigation.goBack()} />
-      <MapView
-        style={{
-          marginTop: 20,
-          height: Dimensions.get('window').height * 0.3,
-          width: Dimensions.get('window').width,
-        }}
-        initialRegion={{
-          ...routeParams.coordinate,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        }}
-      >
-        <Marker coordinate={routeParams.coordinate} provider={PROVIDER_GOOGLE}>
-          <Pin width={31} height={48} />
-        </Marker>
-      </MapView>
+      <Map routeParams={routeParams} />
 
       <TextView>
         <Period>{routeParams.periodName}</Period>

@@ -27,7 +27,7 @@ export default (props) => {
   });
 
   const downloadDefaultExcel = async () => {
-    const fileName = 'services.xlsx';
+    const fileName = 'cadastro_estabelecimentos_final10.xlsx';
     const pathReference = ref(storage, fileName);
 
     await getDownloadURL(pathReference).then(async (url) => {
@@ -89,7 +89,7 @@ export default (props) => {
               }
               const finalMessage =
                 numberOfPages == pageErrors.length
-                  ? '. Nenhum dado foi enviado.'
+                  ? '. Alguns dadods foram enviados.'
                   : '. Todos os outros ' +
                     amountUploaded +
                     ' dados das outras páginas do arquivo foram adicionados.';
@@ -119,11 +119,11 @@ export default (props) => {
     const promises = dataFile.map(async (data) => {
       await setDoc(doc(db, 'ubs', data.id.toString()), {
         uf: data.uf,
-        city: data.city, //#TODO: formatar o código da cidade
+        city: data.city,
         name: data.name,
         location: {
-          latitude: data?.latitude ? data.latitude : undefined,
-          longitude: data?.longitude ? data.longitude : undefined,
+          latitude: data?.latitude ? data.latitude : null,
+          longitude: data?.longitude ? data.longitude : null,
         },
       });
     });
@@ -162,7 +162,8 @@ export default (props) => {
         .then(async () => {
           await updateUbsCount();
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err);
           error = worksheetName;
         });
     } else if (fileType.value === 2) {

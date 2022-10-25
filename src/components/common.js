@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import Pin from '../../assets/images/map-pin.svg';
 import {
   TextInput,
   TouchableOpacity,
@@ -8,7 +10,6 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
-  FlatList,
   ScrollView,
 } from 'react-native';
 
@@ -466,7 +467,7 @@ export const EmptyListMessage = (props) => {
       </View>
       <Title>NADA POR AQUI!</Title>
       {props.alterText ? (
-        <SimpleText>Nenhum item nesta lista.</SimpleText>
+        <SimpleText>Nenhum item foi encontrado para esta escolha.</SimpleText>
       ) : (
         <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
       )}
@@ -609,5 +610,46 @@ export const SortButton = (props) => {
         style={{ marginTop: 25, marginLeft: 25 }}
       />
     </TouchableOpacity>
+  );
+};
+
+const mapStyle = {
+  marginTop: 20,
+  height: Dimensions.get('window').height * 0.3,
+  width: Dimensions.get('window').width,
+};
+
+export const Map = (props) => {
+  const routeParams = props.routeParams;
+
+  const region = () => {
+    const coordinates = routeParams.coordinate;
+    if (coordinates.latitude == null || coordinates.longitude == null) {
+      return {
+        latitude: -8.8937513,
+        longitude: -48.8113048,
+        latitudeDelta: 20,
+        longitudeDelta: 20,
+      };
+    } else {
+      return {
+        ...coordinates,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      };
+    }
+  };
+
+  return (
+    <MapView style={mapStyle} initialRegion={region()}>
+      {region().latitudeDelta != 20 ? (
+        <Marker
+          coordinate={{ latitude: region().latitude, longitude: region().longitude }}
+          provider={PROVIDER_GOOGLE}
+        >
+          <Pin width={31} height={48} />
+        </Marker>
+      ) : null}
+    </MapView>
   );
 };

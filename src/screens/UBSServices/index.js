@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
 
-import { Card, EmptyListMessage } from '../../components/common';
-import { FlatList, ActivityIndicator, Dimensions } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Card, EmptyListMessage, Map } from '../../components/common';
+import { FlatList, ActivityIndicator } from 'react-native';
 
 import Header from '../../components/Header';
 import { Container, Period, TextView, UBSName } from './styles';
-import Pin from '../../../assets/images/map-pin.svg';
 import { colors } from '../../defaultStyles';
 
 export default (props) => {
@@ -49,22 +47,8 @@ export default (props) => {
   return (
     <Container>
       <Header text={headerName} onPress={() => props.navigation.goBack()} />
-      <MapView
-        style={{
-          marginTop: 20,
-          height: Dimensions.get('window').height * 0.3,
-          width: Dimensions.get('window').width,
-        }}
-        initialRegion={{
-          ...routeParams.coordinate,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        }}
-      >
-        <Marker coordinate={routeParams.coordinate} provider={PROVIDER_GOOGLE}>
-          <Pin width={31} height={48} />
-        </Marker>
-      </MapView>
+
+      <Map routeParams={routeParams} />
 
       <TextView>
         <Period>Serviços</Period>

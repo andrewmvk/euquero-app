@@ -1,8 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import Pin from '../../../assets/images/map-pin.svg';
 
 import {
   Container,
@@ -17,6 +15,7 @@ import {
 import { Icon } from 'react-native-elements';
 import Header from '../../components/Header';
 import { buttonOpacity, colors, fonts, fontSizeNoUnits } from '../../defaultStyles';
+import { Map } from '../../components/common';
 
 const periods = [
   { name: 'Pré-Natal', id: 1 },
@@ -57,18 +56,7 @@ export default (props) => {
       <Container>
         <Header text={headerName} onPress={() => props.navigation.goBack()} />
 
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            ...routeParams.coordinate,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }}
-        >
-          <Marker coordinate={routeParams.coordinate} provider={PROVIDER_GOOGLE}>
-            <Pin width={31} height={48} />
-          </Marker>
-        </MapView>
+        <Map routeParams={routeParams} />
 
         <Menu>
           <UBSName numberOfLines={2}>{routeParams.ubsName}</UBSName>
@@ -149,10 +137,5 @@ const styles = StyleSheet.create({
     marginLeft: 22,
     color: colors.text,
     fontFamily: fonts.spartanL,
-  },
-  map: {
-    marginTop: 20,
-    height: Dimensions.get('window').height * 0.3,
-    width: Dimensions.get('window').width,
   },
 });
