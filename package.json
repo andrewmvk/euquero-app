@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/spartan": "^0.2.2",
+    "@react-native-community/netinfo": "^9.3.5",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/stack": "^6.2.1",

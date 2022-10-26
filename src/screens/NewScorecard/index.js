@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { Alert, View } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 
@@ -7,7 +7,7 @@ import { DropdownSelection, RegisterButton } from '../../components/common';
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { Container, Input, InputArea, InputBox, Title } from './styles';
-import { db } from '../../services/firebase.config';
+import { auth, db } from '../../services/firebase.config';
 import { colors } from '../../defaultStyles';
 
 export default (props) => {
@@ -32,7 +32,8 @@ export default (props) => {
   };
 
   const addNewScorecard = async () => {
-    if (periods.value != -1) {
+    const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+    if (periods.value != -1 && currentUserSnap.exists) {
       setIsLoading(true);
       try {
         const scorecardsQuery = query(

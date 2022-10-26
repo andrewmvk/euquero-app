@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import NetInfo from '@react-native-community/netinfo';
 import Pin from '../../assets/images/map-pin.svg';
+import NoConnection from '../../assets/images/no-connection.svg';
 import {
   TextInput,
   TouchableOpacity,
@@ -11,6 +13,7 @@ import {
   Dimensions,
   ActivityIndicator,
   ScrollView,
+  FlatList,
 } from 'react-native';
 
 import { Icon } from 'react-native-elements';
@@ -280,7 +283,11 @@ export const cardShadow = {
 
 export const Card = (props) => {
   const color = props.color ? props.color : colors.gray;
-  const textWidth = props.ubsCount ? screenWidth * 0.6 : screenWidth * 0.75;
+  const textWidth = props.ubsCount
+    ? screenWidth * 0.6
+    : props.textWidth
+    ? screenWidth * props.textWidth
+    : screenWidth * 0.75;
 
   return (
     <Shadow {...cardShadow}>
@@ -339,47 +346,56 @@ const cardA = StyleSheet.create({
 });
 
 export const InDevelopmentCard = (props) => {
+  const [isConnected, setIsConnected] = useState(false);
+
   const color = props.color ? props.color : colors.gray;
   const height = () => {
     const a = props.data.length * 31;
     return a > 160 ? 160 : a;
   };
 
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => setIsConnected(state.isConnected));
+    unsubscribe();
+  }, []);
+
   return (
-    <>
-      <View>
-        <Shadow {...cardShadow}>
-          <View style={[cardA.containerA, { borderLeftColor: color }]}>
-            <Text style={cardA.titleCardA} numberOfLines={1}>
-              Em desenvolvimento...
-            </Text>
-            <Text style={cardA.descriptionCardA}>Estados a serem cadastrados:</Text>
+    <View>
+      {isConnected ? (
+        <>
+          <Shadow {...cardShadow}>
+            <View style={[cardA.containerA, { borderLeftColor: color }]}>
+              <Text style={cardA.titleCardA} numberOfLines={1}>
+                Em desenvolvimento...
+              </Text>
+              <Text style={cardA.descriptionCardA}>Estados a serem cadastrados:</Text>
+            </View>
+          </Shadow>
+          <View
+            style={{
+              borderBottomLeftRadius: 5,
+              borderBottomRightRadius: 5,
+              backgroundColor: 'white',
+              width: '95%',
+              height: height(),
+              alignSelf: 'center',
+              marginBottom: 30,
+            }}
+          >
+            <ScrollView nestedScrollEnabled style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+              {props.data.map((item) => {
+                return (
+                  <Text key={item.id} style={{ color: '#7f7f7f', marginBottom: 5 }}>
+                    {item.name}
+                  </Text>
+                );
+              })}
+              <View style={{ height: 15 }} />
+            </ScrollView>
           </View>
-        </Shadow>
-        <View
-          style={{
-            borderBottomLeftRadius: 5,
-            borderBottomRightRadius: 5,
-            backgroundColor: 'white',
-            width: '95%',
-            height: height(),
-            alignSelf: 'center',
-            marginBottom: 30,
-          }}
-        >
-          <ScrollView nestedScrollEnabled style={{ paddingHorizontal: 20, paddingTop: 10 }}>
-            {props.data.map((item) => {
-              return (
-                <Text key={item.id} style={{ color: '#7f7f7f', marginBottom: 5 }}>
-                  {item.name}
-                </Text>
-              );
-            })}
-            <View style={{ height: 15 }} />
-          </ScrollView>
-        </View>
-      </View>
-    </>
+        </>
+      ) : null}
+    </View>
   );
 };
 
@@ -438,7 +454,7 @@ const NoResults = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  margin-top: 100px;
+  margin-top: 50px;
 `;
 
 const Title = styled.Text`
@@ -457,19 +473,38 @@ const SimpleText = styled.Text`
 `;
 
 export const EmptyListMessage = (props) => {
+  const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      setIsConnected(state.isConnected);
+    });
+    unsubscribe();
+  }, []);
+
   return (
     <NoResults style={{ ...props?.containerStyle }}>
-      <View>
-        <Image
-          source={require('../../assets/images/noResultsImg.png')}
-          style={{ resizeMode: 'contain', height: 200 }}
-        />
-      </View>
-      <Title>NADA POR AQUI!</Title>
-      {props.alterText ? (
-        <SimpleText>Nenhum item foi encontrado para esta escolha.</SimpleText>
+      {isConnected ? (
+        <>
+          <View>
+            <Image
+              source={require('../../assets/images/noResultsImg.png')}
+              style={{ resizeMode: 'contain', height: 200 }}
+            />
+          </View>
+          <Title>NADA POR AQUI!</Title>
+          {props.alterText ? (
+            <SimpleText>Nenhum item foi encontrado para esta escolha.</SimpleText>
+          ) : (
+            <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
+          )}
+        </>
       ) : (
-        <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
+        <>
+          <NoConnection height={200} width={200} />
+          <Title>SEM CONEXÃO</Title>
+          <SimpleText>Conecte-se à internet para visualizar os itens.</SimpleText>
+        </>
       )}
     </NoResults>
   );
@@ -651,5 +686,45 @@ export const Map = (props) => {
         </Marker>
       ) : null}
     </MapView>
+  );
+};
+
+export const List = (props) => {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const card = ({ item }) => {
+    return (
+      <Card
+        value={item.id}
+        key={item.id}
+        color={item.ubsAmount != 0 ? colors.orange : colors.gray}
+        onPress={() => props.handleCardPress(item)}
+        text={item.name}
+        ubsCount={item.ubsAmount ? `${item.ubsAmount}` : null}
+      />
+    );
+  };
+
+  return (
+    <FlatList
+      style={{
+        width: '100%',
+        marginTop: 25,
+        paddingTop: 5,
+      }}
+      contentContainerStyle={{ alignItems: 'center' }}
+      data={props.data}
+      renderItem={props.card ? props.card : card}
+      onRefresh={() => {
+        setRefreshing(true);
+        props?.onRefresh().then(() => setRefreshing(false));
+      }}
+      refreshing={refreshing}
+      keyExtractor={(item) => item.id}
+      ListEmptyComponent={EmptyListMessage}
+      ListFooterComponent={
+        props.notRegistredData ? <InDevelopmentCard data={props.notRegistredData} /> : null
+      }
+    />
   );
 };

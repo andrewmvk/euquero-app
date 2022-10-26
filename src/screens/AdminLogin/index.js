@@ -157,7 +157,7 @@ export default (props) => {
             {isLoading ? (
               <ActivityIndicator size="large" color={colors.orange} />
             ) : (
-              <SmallButton onPress={() => handleNavigateTo({ isAdmin: true })} text="Acessar" />
+              <SmallButton onPress={signIn} text="Acessar" />
             )}
           </View>
         </View>

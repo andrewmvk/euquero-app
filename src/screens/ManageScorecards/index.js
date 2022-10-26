@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { AddButton, EmptyListMessage } from '../../components/common';
-import { buttonOpacity, colors } from '../../defaultStyles';
+import { colors } from '../../defaultStyles';
 import { Container, SearchArea, SearchInput, SearchInputText } from './styles';
 import EditableCard from '../../components/EditableCard';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../services/firebase.config';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { auth, db } from '../../services/firebase.config';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -37,8 +37,11 @@ export default (props) => {
   };
 
   useEffect(() => {
-    const unsubscribe = props.navigation.addListener('focus', () => {
-      fetchData().then(() => setIsLoading(false));
+    const unsubscribe = props.navigation.addListener('focus', async () => {
+      const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+      if (currentUserSnap.exists) {
+        fetchData().then(() => setIsLoading(false));
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -78,18 +81,6 @@ export default (props) => {
     setScoreCards(newData);
   };
 
-  const cards = ({ item }) => {
-    return (
-      <EditableCard
-        value={item.id}
-        key={item.id}
-        text={item.name}
-        description={item.description}
-        deletedItem={() => deleteItem(item)}
-      />
-    );
-  };
-
   return (
     <>
       <DashedCircle />
@@ -127,17 +118,21 @@ export default (props) => {
             style={{ marginTop: 32, marginBottom: 25, width: '100%', zIndex: 0 }}
             contentContainerStyle={{ alignItems: 'center' }}
           >
-            {scorecards.map((item) => {
-              return (
-                <EditableCard
-                  value={item.id}
-                  key={item.id}
-                  text={item.name}
-                  description={item.description}
-                  deletedItem={() => deleteItem(item)}
-                />
-              );
-            })}
+            {scorecards.length > 0 ? (
+              scorecards.map((item) => {
+                return (
+                  <EditableCard
+                    value={item.id}
+                    key={item.id}
+                    text={item.name}
+                    description={item.description}
+                    deletedItem={() => deleteItem(item)}
+                  />
+                );
+              })
+            ) : (
+              <EmptyListMessage alterText />
+            )}
           </ScrollView>
         )}
       </Container>
