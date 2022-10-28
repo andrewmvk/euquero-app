@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Switch } from 'react-native';
+import { ActivityIndicator, Switch } from 'react-native';
 import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 
@@ -7,7 +7,7 @@ import { Container, SwitchView } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 import { colors, buttonOpacity } from '../../defaultStyles';
-import { AddButton, Card } from '../../components/common';
+import { AddButton, Card, List } from '../../components/common';
 import Modal from '../../components/Modal';
 
 export default (props) => {
@@ -27,34 +27,34 @@ export default (props) => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      let list = [];
-      try {
-        const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
-        if (currentUserSnap.data().isAdmin) {
-          const querySnapshot = await getDocs(collection(db, 'users'));
+  const fetchData = async () => {
+    let list = [];
+    try {
+      const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+      if (currentUserSnap.data().isAdmin) {
+        const querySnapshot = await getDocs(collection(db, 'users'));
 
-          querySnapshot.forEach((doc) => {
-            if (doc.data().email != auth.currentUser.email) {
-              list.push({ id: doc.id, ...doc.data() });
-            }
-          });
+        querySnapshot.forEach((doc) => {
+          if (doc.data().email != auth.currentUser.email) {
+            list.push({ id: doc.id, ...doc.data() });
+          }
+        });
 
-          list.sort((a, b) => {
-            return a.disabled === b.disabled ? 0 : a.disabled ? 1 : -1;
-          });
-          setAccounts(list);
-        } else {
-          console.log('This account does not have a admin permission to access other accounts');
-        }
-      } catch (err) {
-        console.log('Something went wront while trying to access database accounts');
-        console.log(err);
+        list.sort((a, b) => {
+          return a.disabled === b.disabled ? 0 : a.disabled ? 1 : -1;
+        });
+        setAccounts(list);
+      } else {
+        console.log('This account does not have a admin permission to access other accounts');
       }
-    };
+    } catch (err) {
+      console.log('Something went wront while trying to access database accounts');
+      console.log(err);
+    }
+  };
 
+  useEffect(() => {
+    setIsLoading(true);
     fetchData().then(() => setIsLoading(false));
   }, []);
 
@@ -132,13 +132,14 @@ export default (props) => {
     setModalVisibility(!modalVisibility);
   }
 
-  const stateCard = ({ item }) => {
+  const card = ({ item }) => {
     return (
       <Card
         value={item.id}
         key={item.id}
         text={item.email}
         color={item.disabled ? colors.gray : colors.orange}
+        textWidth={0.65}
       >
         <SwitchView onPress={() => enableDisableAccountModal(item)} activeOpacity={buttonOpacity}>
           <Switch
@@ -160,13 +161,7 @@ export default (props) => {
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
         ) : (
-          <FlatList
-            style={{ marginTop: 45, marginBottom: 25, width: '100%' }}
-            contentContainerStyle={{ alignItems: 'center' }}
-            data={accounts}
-            renderItem={stateCard}
-            keyExtractor={(item) => item.id}
-          />
+          <List data={accounts} onRefresh={fetchData} card={card} />
         )}
       </Container>
       <AddButton onPress={() => props.navigation.navigate('RegisterAccounts')} />

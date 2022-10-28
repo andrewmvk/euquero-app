@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { authSecondary, db } from '../../services/firebase.config';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { Alert } from 'react-native';
+import { auth, authSecondary, db } from '../../services/firebase.config';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 import DashedCircle from '../../components/DashedCircle';
@@ -16,31 +17,37 @@ export default (props) => {
 
   const handleSignUp = async () => {
     setIsLoading(true);
-    if (password != confirmPassword) {
-      return console.log('Password and confirm password do not match');
-    } else {
-      try {
-        const res = await createUserWithEmailAndPassword(authSecondary, email, password);
+    const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+    if (currentUserSnap.exists && currentUserSnap.data().isAdmin) {
+      if (password != confirmPassword) {
+        Alert.alert('Erro de criação de usuário', 'Senha e confirmar senha devem ser iguais!');
+      } else {
+        try {
+          const res = await createUserWithEmailAndPassword(authSecondary, email, password);
 
-        await setDoc(doc(db, 'users', res.user.uid), {
-          email: email,
-          createdAt: serverTimestamp(),
-          isAdmin: false,
-          disabled: false,
-        }).then(() => {
-          setEmail('');
-          setPassword('');
-          setConfirmPassword('');
+          await setDoc(doc(db, 'users', res.user.uid), {
+            email: email,
+            createdAt: serverTimestamp(),
+            isAdmin: false,
+            disabled: false,
+          }).then(() => {
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
 
-          const newUser = { id: res.user.uid, email: email };
-          props.navigation.navigate('ManageAccounts', { newUser });
-        });
-      } catch (err) {
-        console.log(
-          'Error while trying to create new user, already exists or e-mail/password are invalid!',
-        );
-        console.log(err);
+            const newUser = { id: res.user.uid, email: email };
+            props.navigation.navigate('ManageAccounts', { newUser });
+          });
+        } catch (err) {
+          Alert.alert(
+            'Erro de criação de usuário',
+            'Usuário já existe ou e-mail/senha são inválidos!',
+          );
+          console.log(err);
+        }
       }
+    } else {
+      Alert.alert('Conta não criada', 'Parece que você está tentando algo ao qual não tem acesso');
     }
   };
 

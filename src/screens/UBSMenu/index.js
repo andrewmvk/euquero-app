@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
+
 import {
   Container,
-  Map,
   UBSName,
   Menu,
   PeriodosCard,
@@ -14,13 +14,8 @@ import {
 } from './styles';
 import { Icon } from 'react-native-elements';
 import Header from '../../components/Header';
-
-import {
-  buttonOpacity,
-  colors,
-  fonts,
-  fontSizeNoUnits,
-} from '../../defaultStyles';
+import { buttonOpacity, colors, fonts, fontSizeNoUnits } from '../../defaultStyles';
+import { Map } from '../../components/common';
 
 const periods = [
   { name: 'Pré-Natal', id: 1 },
@@ -32,14 +27,15 @@ export default (props) => {
   const routeParams = props.route.params;
   const headerName = `${routeParams.stateName} - ${routeParams.cityName} - ${routeParams.ubsName}`;
 
-  const handlePeriodChoice = (item) => {
-    props.navigation.navigate('UBSServices', {
+  const handleNavigate = (item, page) => {
+    props.navigation.navigate(page, {
+      coordinate: routeParams?.coordinate,
       ubsID: routeParams?.ubsID,
       stateName: routeParams?.stateName,
       cityName: routeParams?.cityName,
       ubsName: routeParams?.ubsName,
-      periodName: item.name,
-      periodID: item.id,
+      periodName: item ? item.name : null,
+      periodID: item ? item.id : null,
     });
   };
 
@@ -55,28 +51,12 @@ export default (props) => {
     },
   };
 
-  const [transition, setTransition] = useState({ n: false, type: '' });
-
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener('focus', () => {
-      setTransition({ n: true, type: 'from' });
-    });
-    return () => unsubscribe();
-  }, []);
-
-  function handleNavigateTo(page) {
-    setTransition({ n: true, type: 'to' });
-    setTimeout(() => {
-      props.navigation.navigate(page);
-    }, 400);
-  }
-
   return (
     <>
       <Container>
         <Header text={headerName} onPress={() => props.navigation.goBack()} />
 
-        <Map />
+        <Map routeParams={routeParams} />
 
         <Menu>
           <UBSName numberOfLines={2}>{routeParams.ubsName}</UBSName>
@@ -95,14 +75,14 @@ export default (props) => {
                 return (
                   <Option
                     key={item.id}
-                    onPress={() => handlePeriodChoice(item)}
+                    onPress={() => handleNavigate(item, 'UBSScorecards')}
                     activeOpacity={buttonOpacity}
                   >
                     <OptionText>{item.name}</OptionText>
                     <Icon
-                      name='chevron-forward-outline'
-                      type='ionicon'
-                      color='rgba(127, 127, 127, 0.4)'
+                      name="chevron-forward-outline"
+                      type="ionicon"
+                      color="rgba(127, 127, 127, 0.4)"
                       style={{ marginLeft: 5 }}
                     />
                   </Option>
@@ -116,17 +96,11 @@ export default (props) => {
             <View style={styles.line} />
           </Space>
 
-          <PeriodosCard
-            onPress={() => {
-              handleNavigateTo('UBSServices');
-            }}
-          >
+          <PeriodosCard onPress={() => handleNavigate(null, 'UBSServices')}>
             <Text style={styles.cardTitle} numberOfLines={1}>
               Serviços
             </Text>
-            <Text style={styles.cardText}>
-              Veja a lista de serviços disponíveis
-            </Text>
+            <Text style={styles.cardText}>Veja a lista de serviços disponíveis</Text>
           </PeriodosCard>
         </Menu>
       </Container>

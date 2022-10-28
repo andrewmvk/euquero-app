@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../../services/firebase.config';
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { auth, db } from '../../services/firebase.config';
 
 import { Container, TrashIcon, SearchInput, SearchInputText, SearchArea } from './styles';
 import Header from '../../components/Header';
 import Modal from '../../components/Modal';
 import DashedCircle from '../../components/DashedCircle';
-import { AddButton, Card, DropdownSelection, EmptyListMessage } from '../../components/common';
+import { AddButton, Card, DropdownSelection, List } from '../../components/common';
 import { buttonOpacity, colors } from '../../defaultStyles';
 import axios from 'axios';
 import { Shadow } from 'react-native-shadow-2';
@@ -41,39 +41,45 @@ export default (props) => {
     disabled: true,
   });
 
+  const [currentUser, setCurrentUser] = useState(false);
+
   //One time useEffect to load brazilian States
   useEffect(() => {
     const fetchStateData = async () => {
       setIsLoading(true);
       try {
-        const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountStates'));
+        const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        setCurrentUser(currentUserSnap.exists);
+        if (currentUser) {
+          const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountStates'));
 
-        const response = await axios.get(
-          'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
-        );
+          const response = await axios.get(
+            'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
+          );
 
-        let statesArray = [];
-        for (i = 0; i < response.data.length; i++) {
-          let stateObject = {
-            id: response.data[i].id,
-            name: response.data[i].nome,
-            ubsAmount: 0,
-          };
-          const index = ubsAmountSnap.docs.findIndex((state) => {
-            return +state.id === response.data[i].id;
-          });
-          if (index !== -1) {
-            stateObject.ubsAmount = ubsAmountSnap.docs[index].data().amount;
+          let statesArray = [];
+          for (i = 0; i < response.data.length; i++) {
+            let stateObject = {
+              id: response.data[i].id,
+              name: response.data[i].nome,
+              ubsAmount: 0,
+            };
+            const index = ubsAmountSnap.docs.findIndex((state) => {
+              return +state.id === response.data[i].id;
+            });
+            if (index !== -1) {
+              stateObject.ubsAmount = ubsAmountSnap.docs[index].data().amount;
+            }
+
+            statesArray.push(stateObject);
           }
 
-          statesArray.push(stateObject);
+          statesArray.sort((a, b) =>
+            a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
+          );
+
+          setDropdownState({ ...dropdownState, items: statesArray, disabled: false });
         }
-
-        statesArray.sort((a, b) =>
-          a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
-        );
-
-        setDropdownState({ ...dropdownState, items: statesArray, disabled: false });
       } catch (err) {
         console.log('Something went wrong while trying to fetch data from database or State API.');
         console.log(err);
@@ -85,7 +91,7 @@ export default (props) => {
 
   //City useEffect, load every time a new State is selected
   useEffect(() => {
-    if (dropdownState.value != -1) {
+    if (dropdownState.value != -1 && currentUser) {
       setIsLoading(true);
       setDropdownCity({ items: [], selected: 'Cidade', value: -1, disabled: true });
       const fetchCityData = async () => {
@@ -136,28 +142,30 @@ export default (props) => {
   }, [dropdownState.selected]);
 
   //UBS useEffect, load every time a new city is selected
+  const fetchData = async () => {
+    let list = [];
+    try {
+      if (currentUser) {
+        const cityID = dropdownCity.value;
+        const ubsQuery = query(collection(db, 'ubs'), where('city', '==', cityID));
+        const ubsSnapshot = await getDocs(ubsQuery);
+
+        for (i = 0; i < ubsSnapshot.docs.length; i++) {
+          list.push({ id: ubsSnapshot.docs[i].id, ...ubsSnapshot.docs[i].data() });
+        }
+
+        setUbs(list);
+        setUbsBackup(list);
+      }
+    } catch (err) {
+      console.log('Something went wrong while trying to fetch UBS data');
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     if (dropdownCity.value != -1) {
-      const fetchData = async () => {
-        setIsLoading(true);
-        let list = [];
-        try {
-          const cityID = dropdownCity.value;
-          const ubsQuery = query(collection(db, 'ubs'), where('city', '==', cityID));
-          const ubsSnapshot = await getDocs(ubsQuery);
-
-          for (i = 0; i < ubsSnapshot.docs.length; i++) {
-            list.push({ id: ubsSnapshot.docs[i].id, ...ubsSnapshot.docs[i].data() });
-          }
-
-          setUbs(list);
-          setUbsBackup(list);
-        } catch (err) {
-          console.log('Something went wrong while trying to fetch UBS data');
-          console.log(err);
-        }
-      };
-
+      setIsLoading(true);
       fetchData().then(() => setIsLoading(false));
     } else {
       setUbs([]);
@@ -216,9 +224,9 @@ export default (props) => {
     }
   };
 
-  const cards = ({ item }) => {
+  const card = ({ item }) => {
     return (
-      <Card value={item.id} key={item.id} text={item.name} color={colors.orange}>
+      <Card value={item.id} key={item.id} text={item.name} color={colors.orange} textWidth={0.65}>
         <TrashIcon activeOpacity={buttonOpacity} onPress={() => deleteUbsModal(item)}>
           <Icon name="trash-can-outline" size={35} type="material-community" color={colors.gray} />
         </TrashIcon>
@@ -284,14 +292,7 @@ export default (props) => {
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
         ) : (
-          <FlatList
-            style={{ marginTop: 32, marginBottom: 25, width: '100%', zIndex: 0 }}
-            contentContainerStyle={{ alignItems: 'center' }}
-            data={ubs}
-            renderItem={cards}
-            keyExtractor={(item) => item.id}
-            ListEmptyComponent={<EmptyListMessage containerStyle={{ marginTop: '0%' }} />}
-          />
+          <List data={ubs} onRefresh={fetchData} card={card} />
         )}
       </Container>
       <AddButton onPress={() => props.navigation.navigate('UploadUBSTable')} />

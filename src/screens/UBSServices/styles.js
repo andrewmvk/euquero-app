@@ -6,13 +6,6 @@ export const Container = styled.View`
   align-items: center;
 `;
 
-export const Map = styled.View`
-  width: 100%;
-  height: 30%;
-  margin-top: 20px;
-  background-color: ${colors.text};
-`;
-
 export const TextView = styled.View`
   width: 80%;
   margin-top: 20px;

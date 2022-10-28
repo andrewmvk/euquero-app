@@ -1,62 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { FlatList, ActivityIndicator } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
 
-import { colors } from '../../defaultStyles';
 import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
-import { Card, EmptyListMessage, InDevelopmentCard, SortButton } from '../../components/common';
+import { List, SortButton } from '../../components/common';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 
 export default (props) => {
   const [cities, setCities] = useState([]);
+  const [noUbsCities, setNoUbsCities] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(
-          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`,
-        );
+  async function fetchData() {
+    try {
+      const response = await axios.get(
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`,
+      );
 
-        const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountCities'));
+      const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountCities'));
 
-        let citiesArray = [];
-        for (i = 0; i < response.data.length; i++) {
-          const cityIDSlice = response.data[i].id.toString().slice(0, -1);
-          const cityID = +cityIDSlice;
+      let citiesArray = [];
+      for (i = 0; i < response.data.length; i++) {
+        const cityIDSlice = response.data[i].id.toString().slice(0, -1);
+        const cityID = +cityIDSlice;
 
-          let cityObject = {
-            id: cityID,
-            name: response.data[i].nome,
-            ubsAmount: 0,
-          };
-          const index = ubsAmountSnap.docs.findIndex((city) => {
-            return +city.id === cityID;
-          });
-          if (index !== -1) {
-            cityObject.ubsAmount = ubsAmountSnap.docs[index].data().amount;
-          }
-          citiesArray.push(cityObject);
+        let cityObject = {
+          id: cityID,
+          name: response.data[i].nome,
+          ubsAmount: 0,
+        };
+        const index = ubsAmountSnap.docs.findIndex((city) => {
+          return +city.id === cityID;
+        });
+        if (index !== -1) {
+          cityObject.ubsAmount = ubsAmountSnap.docs[index].data().amount;
         }
-
-        citiesArray.sort((a, b) =>
-          a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
-        );
-
-        setCities(citiesArray);
-
-        setOriginalData(citiesArray);
-      } catch (err) {
-        console.log('Something went wrong while trying to fetch data from database or Cities API.');
-        console.log(err);
+        citiesArray.push(cityObject);
       }
-    }
 
+      const noUbsCitiesArray = citiesArray.filter((item) => item.ubsAmount === 0);
+      citiesArray = citiesArray.filter((item) => item.ubsAmount != 0);
+
+      citiesArray.sort((a, b) =>
+        a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
+      );
+
+      setCities(citiesArray);
+      setNoUbsCities(noUbsCitiesArray);
+      setOriginalData(citiesArray);
+    } catch (err) {
+      console.log('Something went wrong while trying to fetch data from database or Cities API.');
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    setIsLoading(true);
     fetchData().then(() => setIsLoading(false));
   }, []);
 
@@ -67,20 +71,6 @@ export default (props) => {
       stateName: props.route.params.stateName,
       cityName: item.name,
     });
-  };
-
-  //render card from flatlist
-  const cityCard = ({ item }) => {
-    return (
-      <Card
-        value={item.id}
-        key={item.id}
-        color={item.ubsAmount == 0 ? colors.gray : colors.orange}
-        onPress={() => handleCardPress(item)}
-        text={item.name}
-        ubsCount={`${item.ubsAmount}`}
-      />
-    );
   };
 
   const search = (t) => {
@@ -124,18 +114,11 @@ export default (props) => {
         {isLoading ? (
           <ActivityIndicator size="large" color="#FF6B0F" style={{ marginTop: 50 }} />
         ) : (
-          <FlatList
-            style={{
-              width: '100%',
-              marginTop: 25,
-              paddingTop: 5,
-            }}
-            contentContainerStyle={{ alignItems: 'center' }}
+          <List
             data={cities}
-            renderItem={cityCard}
-            keyExtractor={(item) => item.id}
-            ListEmptyComponent={EmptyListMessage}
-            ListFooterComponent={InDevelopmentCard}
+            notRegistredData={noUbsCities}
+            onRefresh={fetchData}
+            handleCardPress={handleCardPress}
           />
         )}
       </Container>

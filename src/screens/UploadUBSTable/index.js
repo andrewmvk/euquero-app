@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View, Linking, Alert, ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { db, storage } from '../../services/firebase.config';
+import { auth, db, storage } from '../../services/firebase.config';
 import { getDownloadURL, ref } from 'firebase/storage';
 import * as DocumentPicker from 'expo-document-picker';
 import * as XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 
 import { colors, fonts } from '../../defaultStyles';
 import { DropdownSelection, RegisterButton } from '../../components/common';
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { SimpleText, Title, Container, ButtonView, TouchableText } from './styles';
+import { useEffect } from 'react';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState(false);
   const [fileType, setFileType] = useState({
     items: [
       { name: 'UBS', id: 1 },
@@ -27,7 +29,7 @@ export default (props) => {
   });
 
   const downloadDefaultExcel = async () => {
-    const fileName = 'services.xlsx';
+    const fileName = 'cadastro_estabelecimentos_final10.xlsx';
     const pathReference = ref(storage, fileName);
 
     await getDownloadURL(pathReference).then(async (url) => {
@@ -89,7 +91,7 @@ export default (props) => {
               }
               const finalMessage =
                 numberOfPages == pageErrors.length
-                  ? '. Nenhum dado foi enviado.'
+                  ? '. Apenas alguns dados foram enviados.'
                   : '. Todos os outros ' +
                     amountUploaded +
                     ' dados das outras páginas do arquivo foram adicionados.';
@@ -119,11 +121,11 @@ export default (props) => {
     const promises = dataFile.map(async (data) => {
       await setDoc(doc(db, 'ubs', data.id.toString()), {
         uf: data.uf,
-        city: data.city, //#TODO: formatar o código da cidade
+        city: data.city,
         name: data.name,
         location: {
-          latitude: data?.latitude ? data.latitude : undefined,
-          longitude: data?.longitude ? data.longitude : undefined,
+          latitude: data?.latitude ? data.latitude : null,
+          longitude: data?.longitude ? data.longitude : null,
         },
       });
     });
@@ -162,7 +164,8 @@ export default (props) => {
         .then(async () => {
           await updateUbsCount();
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err);
           error = worksheetName;
         });
     } else if (fileType.value === 2) {
@@ -245,6 +248,11 @@ export default (props) => {
     }
   };
 
+  useEffect(async () => {
+    const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+    setUser(currentUserSnap.exists);
+  }, []);
+
   return (
     <>
       <DashedCircle />
@@ -253,69 +261,72 @@ export default (props) => {
         onPress={() => props.navigation.goBack()}
         pointerEvents={isLoading ? 'none' : 'auto'}
       />
-      <Container>
-        <View style={{ marginTop: '10%' }}>
-          <Icon
-            name="file-excel-outline"
-            type="material-community"
-            size={110}
-            color={colors.orange}
-          />
-        </View>
-
-        <Title>Adicionar novos dados</Title>
-
-        <SimpleText>
-          <Text>
-            Abaixo escolha o tipo de arquivo que deseja inserir, faça upload do arquivo .xlsx com a{' '}
-          </Text>
-          <Text style={{ fontFamily: fonts.spartanBold }}>formatação padrão.</Text>
-        </SimpleText>
-
-        {isLoading ? (
-          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
-        ) : (
-          <ButtonView>
-            <DropdownSelection
-              data={fileType}
-              onSelect={setFileType}
-              disabled={false}
-              dropdownContainerStyle={{ width: '95%' }}
-              selectContainerStyle={{ borderLeftColor: colors.orange, borderLeftWidth: 7 }}
-              rounded
-              placeholder={fileType.value == -1 ? true : false}
+      {user ? (
+        <Container>
+          <View style={{ marginTop: '10%' }}>
+            <Icon
+              name="file-excel-outline"
+              type="material-community"
+              size={110}
+              color={colors.orange}
             />
-            <RegisterButton
-              text="CADASTRAR"
-              pointerEvents={isLoading ? 'none' : 'auto'}
-              containerStyle={{
-                marginTop: 150,
-                backgroundColor: fileType.value == -1 ? colors.gray : colors.orange,
-              }}
-              isLoading={isLoading}
-              onPress={() => handleDocument().then(() => setIsLoading(false))}
-            />
-          </ButtonView>
-        )}
+          </View>
 
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            width: '100%',
-            alignItems: 'center',
-          }}
-        >
+          <Title>Adicionar novos dados</Title>
+
           <SimpleText>
-            <Text>Modelo com a </Text>
-            <Text style={{ fontFamily: fonts.spartanBold }}>formatação padrão</Text>
+            <Text>
+              Abaixo escolha o tipo de arquivo que deseja inserir, faça upload do arquivo .xlsx com
+              a{' '}
+            </Text>
+            <Text style={{ fontFamily: fonts.spartanBold }}>formatação padrão.</Text>
           </SimpleText>
 
-          <TouchableOpacity style={{ marginBottom: 40 }} onPress={downloadDefaultExcel}>
-            <TouchableText>Baixe aqui</TouchableText>
-          </TouchableOpacity>
-        </View>
-      </Container>
+          {isLoading ? (
+            <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+          ) : (
+            <ButtonView>
+              <DropdownSelection
+                data={fileType}
+                onSelect={setFileType}
+                disabled={false}
+                dropdownContainerStyle={{ width: '95%' }}
+                selectContainerStyle={{ borderLeftColor: colors.orange, borderLeftWidth: 7 }}
+                rounded
+                placeholder={fileType.value == -1 ? true : false}
+              />
+              <RegisterButton
+                text="CADASTRAR"
+                pointerEvents={isLoading ? 'none' : 'auto'}
+                containerStyle={{
+                  marginTop: 150,
+                  backgroundColor: fileType.value == -1 ? colors.gray : colors.orange,
+                }}
+                isLoading={isLoading}
+                onPress={() => handleDocument().then(() => setIsLoading(false))}
+              />
+            </ButtonView>
+          )}
+
+          <View
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              width: '100%',
+              alignItems: 'center',
+            }}
+          >
+            <SimpleText>
+              <Text>Modelo com a </Text>
+              <Text style={{ fontFamily: fonts.spartanBold }}>formatação padrão</Text>
+            </SimpleText>
+
+            <TouchableOpacity style={{ marginBottom: 40 }} onPress={downloadDefaultExcel}>
+              <TouchableText>Baixe aqui</TouchableText>
+            </TouchableOpacity>
+          </View>
+        </Container>
+      ) : null}
     </>
   );
 };
