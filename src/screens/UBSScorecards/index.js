@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDoc, getDocs, query, where, doc } from 'firebase/firestore';
+import {
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  doc
+} from 'firebase/firestore';
 import { FlatList, ActivityIndicator } from 'react-native';
 
 import { EmptyListMessage, Map } from '../../components/common';
@@ -13,7 +20,7 @@ const cards = ({ item }) => {
   return <Scorecards item={item} />;
 };
 
-export default (props) => {
+export default props => {
   const [scorecards, setScorecards] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -24,19 +31,23 @@ export default (props) => {
       setIsLoading(true);
       const ubsScorecardQuery = query(
         collection(db, 'ubsScorecards'),
-        where('ubsid', '==', +routeParams.ubsID),
+        where('ubsid', '==', +routeParams.ubsID)
       );
 
       const ubsScorecardSnap = await getDocs(ubsScorecardQuery);
       let scorecardsArray = [];
 
-      const promises = ubsScorecardSnap.docs.map(async (item) => {
+      const promises = ubsScorecardSnap.docs.map(async item => {
         if (item?.data()) {
           if (
             item.data().scorecard > 100 * routeParams.periodID &&
             item.data().scorecard < 100 * routeParams.periodID + 100
           ) {
-            const docRef = doc(db, 'scorecards', item.data().scorecard.toString());
+            const docRef = doc(
+              db,
+              'scorecards',
+              item.data().scorecard.toString()
+            );
             const scorecardData = await getDoc(docRef);
 
             if (scorecardData?.data()) {
@@ -44,7 +55,7 @@ export default (props) => {
                 name: scorecardData.data().name,
                 description: scorecardData.data().description,
                 score: item.data().score,
-                id: item.data().scorecard,
+                id: item.data().scorecard
               };
 
               scorecardsArray.push(scorecard);
@@ -76,14 +87,18 @@ export default (props) => {
       </TextView>
 
       {isLoading ? (
-        <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+        <ActivityIndicator
+          size="large"
+          color={colors.orange}
+          style={{ marginTop: 50 }}
+        />
       ) : (
         <FlatList
           style={{ paddingBottom: 25, width: '100%', zIndex: 0 }}
           contentContainerStyle={{ alignItems: 'center' }}
           data={scorecards}
           renderItem={cards}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           ListEmptyComponent={
             <EmptyListMessage
               containerStyle={{ marginTop: '0%', width: '80%', height: '65%' }}

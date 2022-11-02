@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Switch } from 'react-native';
-import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc
+} from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 
 import { Container, SwitchView } from './styles';
@@ -10,7 +16,7 @@ import { colors, buttonOpacity } from '../../defaultStyles';
 import { AddButton, Card, List } from '../../components/common';
 import Modal from '../../components/Modal';
 
-export default (props) => {
+export default props => {
   const [accounts, setAccounts] = useState([]);
   const [modalData, setModalData] = useState({
     title: '',
@@ -19,8 +25,8 @@ export default (props) => {
     iconType: '',
     advice: {
       title: 'A conta não será excluída...',
-      text: 'Toda conta que estiver desativada não será excluída completamente. O usuário, ao tentar acessá-la, receberá um aviso de que a conta está desativada e que, caso persista em acessá-la (3 vezes), esta será excluída por completo.',
-    },
+      text: 'Toda conta que estiver desativada não será excluída completamente. O usuário, ao tentar acessá-la, receberá um aviso de que a conta está desativada e que, caso persista em acessá-la (3 vezes), esta será excluída por completo.'
+    }
   });
   const [modalVisibility, setModalVisibility] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -30,11 +36,13 @@ export default (props) => {
   const fetchData = async () => {
     let list = [];
     try {
-      const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+      const currentUserSnap = await getDoc(
+        doc(db, 'users', auth.currentUser.uid)
+      );
       if (currentUserSnap.data().isAdmin) {
         const querySnapshot = await getDocs(collection(db, 'users'));
 
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach(doc => {
           if (doc.data().email != auth.currentUser.email) {
             list.push({ id: doc.id, ...doc.data() });
           }
@@ -45,10 +53,14 @@ export default (props) => {
         });
         setAccounts(list);
       } else {
-        console.log('This account does not have a admin permission to access other accounts');
+        console.log(
+          'This account does not have a admin permission to access other accounts'
+        );
       }
     } catch (err) {
-      console.log('Something went wront while trying to access database accounts');
+      console.log(
+        'Something went wront while trying to access database accounts'
+      );
       console.log(err);
     }
   };
@@ -64,7 +76,13 @@ export default (props) => {
       const title = 'Conta cadastrada com sucesso';
       const text = props.route.params.newUser.email;
       const icon = { name: 'check', type: 'material-community' };
-      setModalData({ title, text, iconName: icon.name, iconType: icon.type, advice: null });
+      setModalData({
+        title,
+        text,
+        iconName: icon.name,
+        iconType: icon.type,
+        advice: null
+      });
       setSelectedUser(null);
       toggleModal();
 
@@ -77,9 +95,11 @@ export default (props) => {
     try {
       await updateDoc(doc(db, 'users', selectedUser.id), {
         disabled: !selectedUser.disabled,
-        maximumAcessAttempts: !selectedUser.disabled ? 3 : null,
+        maximumAcessAttempts: !selectedUser.disabled ? 3 : null
       }).then(() => {
-        const filteredData = accounts.filter((item) => item.id !== selectedUser.id);
+        const filteredData = accounts.filter(
+          item => item.id !== selectedUser.id
+        );
         selectedUser.disabled = !selectedUser.disabled;
         if (selectedUser.disabled) {
           setAccounts([...filteredData, selectedUser]);
@@ -89,7 +109,9 @@ export default (props) => {
         setSelectedUser(null);
       });
     } catch (err) {
-      console.log('Erro while trying to disable/enable account in the database');
+      console.log(
+        'Erro while trying to disable/enable account in the database'
+      );
       console.log(err);
     }
   };
@@ -105,7 +127,7 @@ export default (props) => {
       title += 'DESATIVAR esta conta ?';
       iconData = {
         name: 'close-circle-outline',
-        type: 'material-community',
+        type: 'material-community'
       };
     }
 
@@ -116,8 +138,8 @@ export default (props) => {
       iconType: iconData.type,
       advice: {
         title: 'A conta não será excluída...',
-        text: 'Toda conta que estiver desativada não será excluída completamente. O usuário, ao tentar acessá-la, receberá um aviso de que a conta está desativada e que, caso persista em acessá-la (3 vezes), esta será excluída por completo.',
-      },
+        text: 'Toda conta que estiver desativada não será excluída completamente. O usuário, ao tentar acessá-la, receberá um aviso de que a conta está desativada e que, caso persista em acessá-la (3 vezes), esta será excluída por completo.'
+      }
     });
     toggleModal();
     setSelectedUser(account);
@@ -141,10 +163,13 @@ export default (props) => {
         color={item.disabled ? colors.gray : colors.orange}
         textWidth={0.65}
       >
-        <SwitchView onPress={() => enableDisableAccountModal(item)} activeOpacity={buttonOpacity}>
+        <SwitchView
+          onPress={() => enableDisableAccountModal(item)}
+          activeOpacity={buttonOpacity}
+        >
           <Switch
             trackColor={{ false: colors.gray, true: colors.orange }}
-            thumbColor={item.disabled ? colors.gray : colors.orange}
+            thumbColor={'#F8F8F8'}
             value={!item.disabled}
             disabled={true}
           />
@@ -157,14 +182,23 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
+        <Header
+          text={'Administrativo - Contas'}
+          onPress={() => props.navigation.goBack()}
+        />
         {isLoading ? (
-          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+          <ActivityIndicator
+            size="large"
+            color={colors.orange}
+            style={{ marginTop: 50 }}
+          />
         ) : (
           <List data={accounts} onRefresh={fetchData} card={card} />
         )}
       </Container>
-      <AddButton onPress={() => props.navigation.navigate('RegisterAccounts')} />
+      <AddButton
+        onPress={() => props.navigation.navigate('RegisterAccounts')}
+      />
       <Modal
         isVisible={modalVisibility}
         onPressYes={selectedUser ? onPressYes : null}
