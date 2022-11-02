@@ -39,7 +39,7 @@ export default (props) => {
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', async () => {
       const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
-      if (currentUserSnap.exists) {
+      if (currentUserSnap.exists()) {
         fetchData().then(() => setIsLoading(false));
       }
     });

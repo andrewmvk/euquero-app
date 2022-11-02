@@ -4,7 +4,7 @@ import { auth, db } from '../../services/firebase.config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 
-import { Container, LogoView, InputArea, Subtitle, Background, extraStyles } from './styles';
+import { Container, LogoView, InputArea, Subtitle, extraStyles } from './styles';
 import Header from '../../components/Header';
 
 import Wave from '../../components/Waves/Wave';
@@ -126,16 +126,17 @@ export default (props) => {
   };
 
   return (
-    <Background>
-      <Header onPress={() => props.navigation.goBack()} absolute={true} color={'white'} />
-      <View style={{ ...extraStyles.keyboardAvoidView }} pointerEvents="none">
-        <Wave top={true} transition={animationType} />
-        <Wave transition={animationType} />
-
-        <DashedWave />
-        <DashedWave bottom={true} />
-      </View>
+    <>
+      <Header onPress={() => props.navigation.goBack()} color={'white'} position="absolute" />
       <Container>
+        <View style={{ ...extraStyles.keyboardAvoidView }} pointerEvents="none">
+          <Wave top={true} transition={animationType} />
+          <Wave transition={animationType} />
+
+          <DashedWave />
+          <DashedWave bottom={true} />
+        </View>
+
         <View style={{ ...extraStyles.containerView }}>
           <LogoView>
             <Image
@@ -169,6 +170,6 @@ export default (props) => {
         data={{ title: modalData.text, text: modalData.email }}
         containerStyle={{ justifyContent: 'center' }}
       />
-    </Background>
+    </>
   );
 };

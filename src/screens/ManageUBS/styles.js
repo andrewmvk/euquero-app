@@ -32,7 +32,7 @@ export const CardText = styled.Text`
 export const TrashIcon = styled.TouchableOpacity`
   justify-content: center;
   height: 90%;
-  margin-right: 15;
+  margin-right: 15px;
 `;
 
 export const SearchInput = styled.View`

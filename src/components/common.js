@@ -13,20 +13,14 @@ import {
   Dimensions,
   ActivityIndicator,
   ScrollView,
-  FlatList
+  FlatList,
 } from 'react-native';
 
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
 import styled from 'styled-components/native';
 
-import {
-  fonts,
-  fontSize,
-  fontSizeNoUnits,
-  colors,
-  buttonOpacity
-} from '../defaultStyles';
+import { fonts, fontSize, fontSizeNoUnits, colors, buttonOpacity } from '../defaultStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -51,14 +45,14 @@ const Line = styled.View`
   background-color: ${colors.orange};
 `;
 
-export const BigTitle = props => {
+export const BigTitle = (props) => {
   return (
     <BigTitleView>
       <View
         style={{
           justifyContent: 'space-around',
           width: '100%',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
         <BigTitleText>{props.children}</BigTitleText>
@@ -81,14 +75,14 @@ const MediumTitleText = styled.Text`
   color: ${colors.text};
 `;
 
-export const MediumTitle = props => {
+export const MediumTitle = (props) => {
   return (
     <MediumTitleView>
       <View
         style={{
           justifyContent: 'space-around',
           width: '100%',
-          alignItems: 'flex-start'
+          alignItems: 'flex-start',
         }}
       >
         <MediumTitleText>{props.text}</MediumTitleText>
@@ -104,7 +98,7 @@ const customButtonShadow = {
     distance: 10,
     offset: [0, 4],
     radius: 20,
-    containerViewStyle: { paddingBottom: 2 }
+    containerViewStyle: { paddingBottom: 2 },
   },
   large: {
     distance: 0,
@@ -112,7 +106,7 @@ const customButtonShadow = {
     distance: 10,
     offset: [0, 4],
     radius: 25,
-    containerViewStyle: { paddingBottom: 2 }
+    containerViewStyle: { paddingBottom: 2 },
   },
   rounded: {
     distance: 0,
@@ -126,9 +120,9 @@ const customButtonShadow = {
       justifyContent: 'flex-end',
       position: 'absolute',
       bottom: 0,
-      right: 0
-    }
-  }
+      right: 0,
+    },
+  },
 };
 
 const buttonStyles = StyleSheet.create({
@@ -138,7 +132,7 @@ const buttonStyles = StyleSheet.create({
     backgroundColor: colors.orange,
     borderRadius: 20,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   large: {
     width: 250,
@@ -146,7 +140,7 @@ const buttonStyles = StyleSheet.create({
     backgroundColor: colors.orange,
     borderRadius: 25,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   register: {
     width: '90%',
@@ -154,8 +148,8 @@ const buttonStyles = StyleSheet.create({
     backgroundColor: colors.orange,
     borderRadius: 5,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
 
 const SmallButtonText = styled.Text`
@@ -214,9 +208,7 @@ export function RegisterButton(props) {
       {props.isLoading ? (
         <ActivityIndicator size="large" color="#fff" />
       ) : (
-        <RegisterButtonText>
-          {props.text ? props.text : 'TEXT'}
-        </RegisterButtonText>
+        <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
       )}
     </TouchableOpacity>
   );
@@ -236,12 +228,7 @@ export function AddButton(props) {
   return (
     <Shadow {...customButtonShadow.rounded}>
       <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
-        <Icon
-          name="plus"
-          size={35}
-          type="material-community"
-          color={colors.orange}
-        />
+        <Icon name="plus" size={35} type="material-community" color={colors.orange} />
       </RoundedButton>
     </Shadow>
   );
@@ -256,7 +243,7 @@ const cardStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 5,
-    borderLeftWidth: 7
+    borderLeftWidth: 7,
   },
   cardText: {
     textAlign: 'left',
@@ -265,7 +252,7 @@ const cardStyles = StyleSheet.create({
     justifyContent: 'center',
     fontSize: fontSizeNoUnits.cardText,
     marginLeft: 22,
-    color: colors.text
+    color: colors.text,
   },
   avaibleUBSText: {
     fontFamily: fonts.spartanR,
@@ -276,8 +263,8 @@ const cardStyles = StyleSheet.create({
     fontSize: fontSizeNoUnits.subtitle,
     bottom: 10,
     right: 22,
-    color: colors.text
-  }
+    color: colors.text,
+  },
 });
 
 export const cardShadow = {
@@ -290,11 +277,11 @@ export const cardShadow = {
     marginVertical: 7,
     height: 71,
     width: screenWidth * 0.85,
-    zIndex: 3
-  }
+    zIndex: 3,
+  },
 };
 
-export const Card = props => {
+export const Card = (props) => {
   const color = props.color ? props.color : colors.gray;
   const textWidth = props.ubsCount
     ? screenWidth * 0.6
@@ -337,7 +324,7 @@ const cardA = StyleSheet.create({
     alignItems: 'flex-start',
     borderRadius: 5,
     borderLeftWidth: 7,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   titleCardA: {
     fontFamily: fonts.spartanR,
@@ -346,7 +333,7 @@ const cardA = StyleSheet.create({
     fontSize: 18,
     marginLeft: 22,
     marginTop: -5,
-    color: colors.text
+    color: colors.text,
   },
   descriptionCardA: {
     fontFamily: fonts.spartanR,
@@ -354,11 +341,11 @@ const cardA = StyleSheet.create({
     justifyContent: 'center',
     fontSize: 12,
     marginLeft: 22,
-    color: colors.text
-  }
+    color: colors.text,
+  },
 });
 
-export const InDevelopmentCard = props => {
+export const InDevelopmentCard = (props) => {
   const [isConnected, setIsConnected] = useState(false);
 
   const color = props.color ? props.color : colors.gray;
@@ -368,9 +355,7 @@ export const InDevelopmentCard = props => {
   };
 
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state =>
-      setIsConnected(state.isConnected)
-    );
+    const unsubscribe = NetInfo.addEventListener((state) => setIsConnected(state.isConnected));
     unsubscribe();
   }, []);
 
@@ -383,9 +368,7 @@ export const InDevelopmentCard = props => {
               <Text style={cardA.titleCardA} numberOfLines={1}>
                 Em desenvolvimento...
               </Text>
-              <Text style={cardA.descriptionCardA}>
-                Estados a serem cadastrados:
-              </Text>
+              <Text style={cardA.descriptionCardA}>Estados a serem cadastrados:</Text>
             </View>
           </Shadow>
           <View
@@ -396,19 +379,13 @@ export const InDevelopmentCard = props => {
               width: '95%',
               height: height(),
               alignSelf: 'center',
-              marginBottom: 30
+              marginBottom: 30,
             }}
           >
-            <ScrollView
-              nestedScrollEnabled
-              style={{ paddingHorizontal: 20, paddingTop: 10 }}
-            >
-              {props.data.map(item => {
+            <ScrollView nestedScrollEnabled style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+              {props.data.map((item) => {
                 return (
-                  <Text
-                    key={item.id}
-                    style={{ color: '#7f7f7f', marginBottom: 5 }}
-                  >
+                  <Text key={item.id} style={{ color: '#7f7f7f', marginBottom: 5 }}>
                     {item.name}
                   </Text>
                 );
@@ -429,15 +406,15 @@ const inputBoxStyles = StyleSheet.create({
     height: 50,
     width: '100%',
     backgroundColor: '#fff',
-    borderRadius: 5
+    borderRadius: 5,
   },
   searchInputText: {
     flex: 1,
     fontSize: fontSizeNoUnits.textInput,
     fontFamily: fonts.spartanR,
     color: colors.text,
-    paddingRight: 15
-  }
+    paddingRight: 15,
+  },
 });
 
 const inputBoxShadow = {
@@ -445,21 +422,19 @@ const inputBoxShadow = {
   startColor: 'rgba(0,0,0,0.025)',
   finalColor: 'rgba(0,0,0,0.0)',
   radius: 5,
-  containerViewStyle: { marginTop: 25, height: 50, width: '100%' }
+  containerViewStyle: { marginTop: 25, height: 50, width: '100%' },
 };
 
-export const InputBox = props => {
+export const InputBox = (props) => {
   return (
     <Shadow {...inputBoxShadow}>
       <View style={inputBoxStyles.searchInput}>
         <Icon
-          name={
-            props.type === 'password' ? 'lock-closed-outline' : 'person-outline'
-          }
+          name={props.type === 'password' ? 'lock-closed-outline' : 'person-outline'}
           type="ionicon"
           color={colors.gray}
           style={{
-            paddingHorizontal: 15
+            paddingHorizontal: 15,
           }}
         />
         <TextInput
@@ -497,11 +472,11 @@ const SimpleText = styled.Text`
   margin: 16px 30px 16px 30px;
 `;
 
-export const EmptyListMessage = props => {
+export const EmptyListMessage = (props) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
       setIsConnected(state.isConnected);
     });
     unsubscribe();
@@ -519,22 +494,16 @@ export const EmptyListMessage = props => {
           </View>
           <Title>NADA POR AQUI!</Title>
           {props.alterText ? (
-            <SimpleText>
-              Nenhum item foi encontrado para esta escolha.
-            </SimpleText>
+            <SimpleText>Nenhum item foi encontrado para esta escolha.</SimpleText>
           ) : (
-            <SimpleText>
-              Não encontramos nenhum item correspondente à sua pesquisa.
-            </SimpleText>
+            <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
           )}
         </>
       ) : (
         <>
           <NoConnection height={200} width={200} />
           <Title>SEM CONEXÃO</Title>
-          <SimpleText>
-            Conecte-se à internet para visualizar os itens.
-          </SimpleText>
+          <SimpleText>Conecte-se à internet para visualizar os itens.</SimpleText>
         </>
       )}
     </NoResults>
@@ -576,12 +545,13 @@ const selectBoxShadow = {
   startColor: 'rgba(0,0,0,0.035)',
   finalColor: 'rgba(0,0,0,0.0)',
   distance: 10,
-  radius: 5
+  radius: 5,
 };
 
-export const DropdownSelection = props => {
+export const DropdownSelection = (props) => {
   const [opened, setOpened] = useState(false);
   const dropDownHeight = props.data.items.length > 3 ? 160 : 135;
+  const itemHeight = (dropDownHeight - 10) / props.data.items.length;
 
   const roundedView = props?.rounded
     ? { borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }
@@ -589,10 +559,7 @@ export const DropdownSelection = props => {
 
   return (
     <View style={[{ alignItems: 'center' }, props?.containerStyle]}>
-      <Shadow
-        {...selectBoxShadow}
-        containerViewStyle={{ height: 55, width: '100%' }}
-      >
+      <Shadow {...selectBoxShadow} containerViewStyle={{ height: 55, width: '100%' }}>
         <SelectView
           style={[roundedView, props?.selectContainerStyle, { zIndex: 2 }]}
           activeOpacity={buttonOpacity}
@@ -602,8 +569,7 @@ export const DropdownSelection = props => {
           <DropdownText
             numberOfLines={1}
             style={{
-              color:
-                props.disabled || props.placeholder ? colors.gray : colors.text
+              color: props.disabled || props.placeholder ? colors.gray : colors.text,
             }}
           >
             {props.data.selected}
@@ -618,30 +584,34 @@ export const DropdownSelection = props => {
       {opened ? (
         <DropdownView
           style={[
-            { height: dropDownHeight, justifyContent: 'center', zIndex: 1 },
-            props?.dropdownContainerStyle
+            {
+              height: dropDownHeight,
+              justifyContent: 'center',
+              zIndex: 1,
+            },
+            props?.dropdownContainerStyle,
           ]}
         >
           <ScrollView
             contentContainerStyle={{ justifyContent: 'center' }}
-            style={{ paddingTop: 10 }}
+            style={{ height: '90%', paddingVertical: props?.padding }}
           >
-            {props.data.items.map(item => {
+            {props.data.items.map((item) => {
               return (
                 <TouchableOpacity
                   key={item.id}
                   activeOpacity={buttonOpacity}
                   style={{
-                    height: (dropDownHeight - 10) / props.data.items.length,
+                    height: itemHeight >= 40 ? itemHeight : 40,
                     justifyContent: 'center',
                     paddingRight: 18,
-                    paddingLeft: 18
+                    paddingLeft: 18,
                   }}
                   onPress={() => {
                     props.onSelect({
                       ...props.data,
                       selected: item.name,
-                      value: item.id
+                      value: item.id,
                     });
                     setOpened(!opened);
                   }}
@@ -659,7 +629,7 @@ export const DropdownSelection = props => {
   );
 };
 
-export const SortButton = props => {
+export const SortButton = (props) => {
   const [sorted, setSorted] = useState(true);
 
   const handleSortClick = () => {
@@ -691,10 +661,10 @@ export const SortButton = props => {
 const mapStyle = {
   marginTop: 20,
   height: Dimensions.get('window').height * 0.3,
-  width: Dimensions.get('window').width
+  width: Dimensions.get('window').width,
 };
 
-export const Map = props => {
+export const Map = (props) => {
   const routeParams = props.routeParams;
 
   const region = () => {
@@ -704,13 +674,13 @@ export const Map = props => {
         latitude: -8.8937513,
         longitude: -48.8113048,
         latitudeDelta: 20,
-        longitudeDelta: 20
+        longitudeDelta: 20,
       };
     } else {
       return {
         ...coordinates,
         latitudeDelta: 0.01,
-        longitudeDelta: 0.01
+        longitudeDelta: 0.01,
       };
     }
   };
@@ -721,7 +691,7 @@ export const Map = props => {
         <Marker
           coordinate={{
             latitude: region().latitude,
-            longitude: region().longitude
+            longitude: region().longitude,
           }}
           provider={PROVIDER_GOOGLE}
         >
@@ -732,7 +702,7 @@ export const Map = props => {
   );
 };
 
-export const List = props => {
+export const List = (props) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const card = ({ item }) => {
@@ -753,7 +723,7 @@ export const List = props => {
       style={{
         width: '100%',
         marginTop: 25,
-        paddingTop: 5
+        paddingTop: 5,
       }}
       contentContainerStyle={{ alignItems: 'center' }}
       data={props.data}
@@ -763,12 +733,10 @@ export const List = props => {
         props?.onRefresh().then(() => setRefreshing(false));
       }}
       refreshing={refreshing}
-      keyExtractor={item => item.id}
+      keyExtractor={(item) => item.id}
       ListEmptyComponent={EmptyListMessage}
       ListFooterComponent={
-        props.notRegistredData ? (
-          <InDevelopmentCard data={props.notRegistredData} />
-        ) : null
+        props.notRegistredData ? <InDevelopmentCard data={props.notRegistredData} /> : null
       }
     />
   );
