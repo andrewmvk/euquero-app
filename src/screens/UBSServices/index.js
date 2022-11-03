@@ -8,8 +8,9 @@ import { FlatList, ActivityIndicator } from 'react-native';
 import Header from '../../components/Header';
 import { Container, Period, TextView, UBSName } from './styles';
 import { colors } from '../../defaultStyles';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
-export default (props) => {
+export default props => {
   const [isLoading, setIsLoading] = useState(false);
   const [services, setServices] = useState([]);
 
@@ -20,7 +21,7 @@ export default (props) => {
       setIsLoading(true);
       const ubsServicesQuery = query(
         collection(db, 'ubsServices'),
-        where('ubsid', '==', +routeParams.ubsID),
+        where('ubsid', '==', +routeParams.ubsID)
       );
 
       const ubsServicesSnap = await getDocs(ubsServicesQuery);
@@ -29,7 +30,7 @@ export default (props) => {
         const service = ubsServicesSnap.docs[i].data();
         let servicesObject = {
           name: service.name,
-          id: service.id,
+          id: service.id
         };
         servicesArray.push(servicesObject);
       }
@@ -46,7 +47,11 @@ export default (props) => {
 
   return (
     <Container>
-      <Header text={headerName} onPress={() => props.navigation.goBack()} />
+      <Header
+        text={headerName}
+        onPress={() => props.navigation.goBack()}
+        margin={getStatusBarHeight()}
+      />
 
       <Map routeParams={routeParams} />
 
@@ -56,14 +61,18 @@ export default (props) => {
       </TextView>
 
       {isLoading ? (
-        <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+        <ActivityIndicator
+          size="large"
+          color={colors.orange}
+          style={{ marginTop: 50 }}
+        />
       ) : (
         <FlatList
           style={{ paddingBottom: 25, width: '100%', zIndex: 0 }}
           contentContainerStyle={{ alignItems: 'center' }}
           data={services}
           renderItem={serviceCard}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           ListEmptyComponent={
             <EmptyListMessage
               containerStyle={{ marginTop: '0%', width: '80%', height: '65%' }}

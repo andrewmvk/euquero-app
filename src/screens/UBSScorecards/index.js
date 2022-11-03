@@ -8,7 +8,7 @@ import {
   doc
 } from 'firebase/firestore';
 import { FlatList, ActivityIndicator } from 'react-native';
-
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { EmptyListMessage, Map } from '../../components/common';
 import Header from '../../components/Header';
 import Scorecards from '../../components/Scorecards';
@@ -78,7 +78,11 @@ export default props => {
 
   return (
     <Container>
-      <Header text={headerName} onPress={() => props.navigation.goBack()} />
+      <Header
+        text={headerName}
+        onPress={() => props.navigation.goBack()}
+        margin={getStatusBarHeight()}
+      />
       <Map routeParams={routeParams} />
 
       <TextView>

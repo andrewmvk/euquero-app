@@ -10,7 +10,7 @@ import { List, SortButton } from '../../components/common';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 
-export default (props) => {
+export default props => {
   const [cities, setCities] = useState([]);
   const [noUbsCities, setNoUbsCities] = useState([]);
   const [originalData, setOriginalData] = useState([]);
@@ -19,7 +19,7 @@ export default (props) => {
   async function fetchData() {
     try {
       const response = await axios.get(
-        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`,
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${props.route.params.stateID}/municipios`
       );
 
       const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountCities'));
@@ -32,9 +32,9 @@ export default (props) => {
         let cityObject = {
           id: cityID,
           name: response.data[i].nome,
-          ubsAmount: 0,
+          ubsAmount: 0
         };
-        const index = ubsAmountSnap.docs.findIndex((city) => {
+        const index = ubsAmountSnap.docs.findIndex(city => {
           return +city.id === cityID;
         });
         if (index !== -1) {
@@ -43,18 +43,20 @@ export default (props) => {
         citiesArray.push(cityObject);
       }
 
-      const noUbsCitiesArray = citiesArray.filter((item) => item.ubsAmount === 0);
-      citiesArray = citiesArray.filter((item) => item.ubsAmount != 0);
+      const noUbsCitiesArray = citiesArray.filter(item => item.ubsAmount === 0);
+      citiesArray = citiesArray.filter(item => item.ubsAmount != 0);
 
       citiesArray.sort((a, b) =>
-        a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
+        a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0
       );
 
       setCities(citiesArray);
       setNoUbsCities(noUbsCitiesArray);
       setOriginalData(citiesArray);
     } catch (err) {
-      console.log('Something went wrong while trying to fetch data from database or Cities API.');
+      console.log(
+        'Something went wrong while trying to fetch data from database or Cities API.'
+      );
       console.log(err);
     }
   }
@@ -64,19 +66,19 @@ export default (props) => {
     fetchData().then(() => setIsLoading(false));
   }, []);
 
-  const handleCardPress = (item) => {
+  const handleCardPress = item => {
     props.navigation.navigate('UBSSelection', {
       cityID: item.id,
       stateID: props.route.params.stateID,
       stateName: props.route.params.stateName,
-      cityName: item.name,
+      cityName: item.name
     });
   };
 
-  const search = (t) => {
+  const search = t => {
     let arr = [...originalData];
     setCities(
-      arr.filter((d) =>
+      arr.filter(d =>
         d.name
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
@@ -85,9 +87,9 @@ export default (props) => {
             t
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase(),
-          ),
-      ),
+              .toLowerCase()
+          )
+      )
     );
   };
 
@@ -95,24 +97,40 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={props.route.params.stateName} onPress={() => props.navigation.goBack()} />
+        <Header
+          text={props.route.params.stateName}
+          onPress={() => props.navigation.goBack()}
+        />
         <SearchArea>
           <SearchInput>
-            <SearchInputText placeholder="Buscar cidade" onChangeText={(t) => search(t)} />
+            <SearchInputText
+              placeholder="Buscar cidade"
+              placeholderTextColor="#C4C4C4"
+              numberOfLines={1}
+              onChangeText={t => search(t)}
+            />
             <Icon
               name="search-outline"
               type="ionicon"
               color="#c4c4c4"
               style={{
                 paddingHorizontal: 15,
-                paddingVertical: 15,
+                paddingVertical: 15
               }}
             />
           </SearchInput>
-          <SortButton data={cities} setData={setCities} dataBackup={originalData} />
+          <SortButton
+            data={cities}
+            setData={setCities}
+            dataBackup={originalData}
+          />
         </SearchArea>
         {isLoading ? (
-          <ActivityIndicator size="large" color="#FF6B0F" style={{ marginTop: 50 }} />
+          <ActivityIndicator
+            size="large"
+            color="#FF6B0F"
+            style={{ marginTop: 50 }}
+          />
         ) : (
           <List
             data={cities}
