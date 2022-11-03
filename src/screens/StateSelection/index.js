@@ -98,6 +98,8 @@ export default props => {
           <SearchInput>
             <SearchInputText
               placeholder="Buscar estado"
+              placeholderTextColor="#C4C4C4"
+              numberOfLines={1}
               onChangeText={t => search(t)}
             />
             <Icon

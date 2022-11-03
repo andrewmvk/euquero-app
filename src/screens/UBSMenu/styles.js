@@ -73,4 +73,5 @@ export const Option = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
   margin-top: 5px;
+  align-items: center;
 `;
