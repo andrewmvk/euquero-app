@@ -49,8 +49,8 @@ export default (props) => {
       setIsLoading(true);
       try {
         const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
-        setCurrentUser(currentUserSnap.exists);
-        if (currentUser) {
+        setCurrentUser(currentUserSnap.exists());
+        if (currentUserSnap.exists()) {
           const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountStates'));
 
           const response = await axios.get(
@@ -64,6 +64,7 @@ export default (props) => {
               name: response.data[i].nome,
               ubsAmount: 0,
             };
+
             const index = ubsAmountSnap.docs.findIndex((state) => {
               return +state.id === response.data[i].id;
             });
@@ -73,6 +74,8 @@ export default (props) => {
 
             statesArray.push(stateObject);
           }
+
+          console.log(statesArray);
 
           statesArray.sort((a, b) =>
             a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,

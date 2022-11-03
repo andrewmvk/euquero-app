@@ -29,7 +29,7 @@ export default (props) => {
   });
 
   const downloadDefaultExcel = async () => {
-    const fileName = 'cadastro_estabelecimentos_final10.xlsx';
+    const fileName = 'padrao_tabelas_excel.pdf';
     const pathReference = ref(storage, fileName);
 
     await getDownloadURL(pathReference).then(async (url) => {
@@ -248,9 +248,12 @@ export default (props) => {
     }
   };
 
-  useEffect(async () => {
-    const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
-    setUser(currentUserSnap.exists);
+  useEffect(() => {
+    const currentUser = async () => {
+      const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+      setUser(currentUserSnap.exists());
+    };
+    currentUser();
   }, []);
 
   return (
@@ -291,6 +294,7 @@ export default (props) => {
                 onSelect={setFileType}
                 disabled={false}
                 dropdownContainerStyle={{ width: '95%' }}
+                padding={10}
                 selectContainerStyle={{ borderLeftColor: colors.orange, borderLeftWidth: 7 }}
                 rounded
                 placeholder={fileType.value == -1 ? true : false}

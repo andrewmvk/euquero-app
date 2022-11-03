@@ -2,16 +2,9 @@ import styled from 'styled-components/native';
 import { Dimensions } from 'react-native';
 import * as defaultS from '../../defaultStyles';
 
-export const Background = styled.View`
-  background: ${defaultS.colors.backgroundMain};
-  height: 100%;
-  width: 100%;
-  align-items: center;
-`;
-
 export const Container = styled.SafeAreaView`
-  height: 100%;
-  width: 100%;
+  flex: 1;
+  background: ${defaultS.colors.backgroundMain};
   align-items: center;
   justify-content: center;
 `;

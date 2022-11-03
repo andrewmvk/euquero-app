@@ -18,7 +18,7 @@ export default (props) => {
   const handleSignUp = async () => {
     setIsLoading(true);
     const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
-    if (currentUserSnap.exists && currentUserSnap.data().isAdmin) {
+    if (currentUserSnap.exists() && currentUserSnap.data().isAdmin) {
       if (password != confirmPassword) {
         Alert.alert('Erro de criação de usuário', 'Senha e confirmar senha devem ser iguais!');
       } else {
