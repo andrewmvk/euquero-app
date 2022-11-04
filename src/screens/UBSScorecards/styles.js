@@ -15,9 +15,11 @@ export const Map = styled.View`
 
 export const TextView = styled.View`
   width: 80%;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
   align-items: flex-start;
+  justify-content: space-between;
+  height: 7.5%;
 `;
 
 export const Period = styled.Text`

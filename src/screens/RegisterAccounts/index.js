@@ -6,10 +6,17 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
-import { BigTitle, InputBox, RegisterButton } from '../../components/common';
-import { ButtonView, Container, InputArea } from './styles';
+import { BigTitle, RegisterButton } from '../../components/common';
+import {
+  ButtonView,
+  Container,
+  InputArea,
+  SearchInput,
+  SearchInputText
+} from './styles';
+import { Icon } from 'react-native-elements';
 
-export default (props) => {
+export default props => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,19 +24,28 @@ export default (props) => {
 
   const handleSignUp = async () => {
     setIsLoading(true);
-    const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+    const currentUserSnap = await getDoc(
+      doc(db, 'users', auth.currentUser.uid)
+    );
     if (currentUserSnap.exists() && currentUserSnap.data().isAdmin) {
       if (password != confirmPassword) {
-        Alert.alert('Erro de criação de usuário', 'Senha e confirmar senha devem ser iguais!');
+        Alert.alert(
+          'Erro de criação de usuário',
+          'Senha e confirmar senha devem ser iguais!'
+        );
       } else {
         try {
-          const res = await createUserWithEmailAndPassword(authSecondary, email, password);
+          const res = await createUserWithEmailAndPassword(
+            authSecondary,
+            email,
+            password
+          );
 
           await setDoc(doc(db, 'users', res.user.uid), {
             email: email,
             createdAt: serverTimestamp(),
             isAdmin: false,
-            disabled: false,
+            disabled: false
           }).then(() => {
             setEmail('');
             setPassword('');
@@ -41,13 +57,16 @@ export default (props) => {
         } catch (err) {
           Alert.alert(
             'Erro de criação de usuário',
-            'Usuário já existe ou e-mail/senha são inválidos!',
+            'Usuário já existe ou e-mail/senha são inválidos!'
           );
           console.log(err);
         }
       }
     } else {
-      Alert.alert('Conta não criada', 'Parece que você está tentando algo ao qual não tem acesso');
+      Alert.alert(
+        'Conta não criada',
+        'Parece que você está tentando algo ao qual não tem acesso'
+      );
     }
   };
 
@@ -55,22 +74,65 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
+        <Header
+          text={'Administrativo - Contas'}
+          onPress={() => props.navigation.goBack()}
+        />
         <BigTitle>CADASTRAR CONTA</BigTitle>
         <InputArea>
-          <InputBox type="email" placeholder="E-mail" value={email} onChangeText={setEmail} />
-          <InputBox
-            type="password"
-            placeholder="Senha"
-            value={password}
-            onChangeText={setPassword}
-          />
-          <InputBox
-            type="password"
-            placeholder="Confirmar Senha"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
+          <SearchInput>
+            <Icon
+              name="person-outline"
+              type="ionicon"
+              color="#c4c4c4"
+              style={{
+                paddingRight: 12,
+                paddingVertical: 15
+              }}
+            />
+            <SearchInputText
+              placeholder="E-mail"
+              numberOfLines={1}
+              placeholderTextColor="#C4C4C4"
+              onChangeText={setEmail}
+            />
+          </SearchInput>
+          <SearchInput>
+            <Icon
+              name="lock-closed-outline"
+              type="ionicon"
+              color="#c4c4c4"
+              style={{
+                paddingRight: 12,
+                paddingVertical: 15
+              }}
+            />
+            <SearchInputText
+              placeholder="Senha"
+              secureTextEntry
+              numberOfLines={1}
+              placeholderTextColor="#C4C4C4"
+              onChangeText={setPassword}
+            />
+          </SearchInput>
+          <SearchInput>
+            <Icon
+              name="lock-closed-outline"
+              type="ionicon"
+              color="#c4c4c4"
+              style={{
+                paddingRight: 12,
+                paddingVertical: 15
+              }}
+            />
+            <SearchInputText
+              placeholder="Confirmar Senha"
+              secureTextEntry
+              numberOfLines={1}
+              placeholderTextColor="#C4C4C4"
+              onChangeText={setConfirmPassword}
+            />
+          </SearchInput>
         </InputArea>
       </Container>
       <ButtonView pointerEvents={'box-none'}>
