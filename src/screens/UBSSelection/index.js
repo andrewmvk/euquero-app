@@ -10,7 +10,7 @@ import { List, SortButton } from '../../components/common';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 
-export default (props) => {
+export default props => {
   const [isLoading, setIsLoading] = useState(true);
   const [ubs, setUbs] = useState('');
   const [ubsBackup, setUbsBackup] = useState(ubs);
@@ -19,13 +19,16 @@ export default (props) => {
     let list = [];
     try {
       const cityID = props.route.params.cityID;
-      const ubsQuery = query(collection(db, 'ubs'), where('city', '==', cityID));
+      const ubsQuery = query(
+        collection(db, 'ubs'),
+        where('city', '==', cityID)
+      );
       const ubsSnapshot = await getDocs(ubsQuery);
 
       for (i = 0; i < ubsSnapshot.docs.length; i++) {
         list.push({
           id: ubsSnapshot.docs[i].id,
-          ...ubsSnapshot.docs[i].data(),
+          ...ubsSnapshot.docs[i].data()
         });
       }
 
@@ -42,10 +45,10 @@ export default (props) => {
     fetchData().then(() => setIsLoading(false));
   }, []);
 
-  const search = (t) => {
+  const search = t => {
     let arr = [...ubsBackup];
     setUbs(
-      arr.filter((d) =>
+      arr.filter(d =>
         d.name
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
@@ -54,19 +57,19 @@ export default (props) => {
             t
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase(),
-          ),
-      ),
+              .toLowerCase()
+          )
+      )
     );
   };
 
-  const handleCardPress = (item) => {
+  const handleCardPress = item => {
     props.navigation.navigate('UBSMenu', {
       ubsID: item.id,
       coordinate: item.location,
       stateName: props.route.params.stateName,
       cityName: props.route.params.cityName,
-      ubsName: item.name,
+      ubsName: item.name
     });
   };
 
