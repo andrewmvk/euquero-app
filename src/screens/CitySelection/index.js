@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
@@ -94,34 +94,41 @@ export default (props) => {
   return (
     <>
       <DashedCircle />
-      <Container>
-        <Header text={props.route.params.stateName} onPress={() => props.navigation.goBack()} />
-        <SearchArea>
-          <SearchInput>
-            <SearchInputText placeholder="Buscar cidade" onChangeText={(t) => search(t)} />
-            <Icon
-              name="search-outline"
-              type="ionicon"
-              color="#c4c4c4"
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 15,
-              }}
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <Container>
+          <Header text={props.route.params.stateName} onPress={() => props.navigation.goBack()} />
+          <SearchArea>
+            <SearchInput>
+              <SearchInputText
+                placeholder="Buscar cidade"
+                placeholderTextColor="#C4C4C4"
+                numberOfLines={1}
+                onChangeText={(t) => search(t)}
+              />
+              <Icon
+                name="search-outline"
+                type="ionicon"
+                color="#c4c4c4"
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 15,
+                }}
+              />
+            </SearchInput>
+            <SortButton data={cities} setData={setCities} dataBackup={originalData} />
+          </SearchArea>
+          {isLoading ? (
+            <ActivityIndicator size="large" color="#FF6B0F" style={{ marginTop: 50 }} />
+          ) : (
+            <List
+              data={cities}
+              notRegistredData={noUbsCities}
+              onRefresh={fetchData}
+              handleCardPress={handleCardPress}
             />
-          </SearchInput>
-          <SortButton data={cities} setData={setCities} dataBackup={originalData} />
-        </SearchArea>
-        {isLoading ? (
-          <ActivityIndicator size="large" color="#FF6B0F" style={{ marginTop: 50 }} />
-        ) : (
-          <List
-            data={cities}
-            notRegistredData={noUbsCities}
-            onRefresh={fetchData}
-            handleCardPress={handleCardPress}
-          />
-        )}
-      </Container>
+          )}
+        </Container>
+      </TouchableWithoutFeedback>
     </>
   );
 };

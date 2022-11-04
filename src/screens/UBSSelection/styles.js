@@ -15,6 +15,7 @@ export const SearchInput = styled.View`
   justify-content: center;
   margin-top: 25px;
   flex-direction: row;
+  align-items: center;
 `;
 
 export const SearchInputText = styled.TextInput`

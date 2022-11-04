@@ -263,7 +263,8 @@ export default (props) => {
             <SearchInput pointerEvents={dropdownCity.value == -1 ? 'none' : 'auto'}>
               <SearchInputText
                 placeholder="Buscar UBS"
-                placeholderTextColor={dropdownCity.value == -1 ? colors.gray : '#C7C7CD'}
+                numberOfLines={1}
+                placeholderTextColor="#C4C4C4"
                 onChangeText={(t) => search(t)}
               />
               <Icon

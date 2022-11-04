@@ -97,7 +97,12 @@ export default (props) => {
             }}
           >
             <SearchInput>
-              <SearchInputText placeholder="Buscar Indicador" onChangeText={(t) => search(t)} />
+              <SearchInputText
+                placeholder="Buscar Indicador"
+                onChangeText={(t) => search(t)}
+                placeholderTextColor="#C4C4C4"
+                numberOfLines={1}
+              />
               <Icon
                 name="search-outline"
                 type="ionicon"

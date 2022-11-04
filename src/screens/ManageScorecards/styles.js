@@ -20,6 +20,7 @@ export const SearchInput = styled.View`
   padding-left: 18px;
   justify-content: center;
   flex-direction: row;
+  align-items: center;
 `;
 
 export const SearchInputText = styled.TextInput`
