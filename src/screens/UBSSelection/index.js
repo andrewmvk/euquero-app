@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
 
@@ -76,45 +76,39 @@ export default props => {
   return (
     <>
       <DashedCircle />
-      <Container>
-        <Header
-          text={`${props.route.params.stateName} - ${props.route.params.cityName}`}
-          onPress={() => props.navigation.goBack()}
-        />
-        <SearchArea>
-          <SearchInput>
-            <SearchInputText
-              placeholder="Buscar UBS"
-              placeholderTextColor="#C4C4C4"
-              numberOfLines={1}
-              onChangeText={t => search(t)}
-            />
-            <Icon
-              name="search-outline"
-              type="ionicon"
-              color="#c4c4c4"
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 15
-              }}
-            />
-          </SearchInput>
-          <SortButton data={ubs} setData={setUbs} dataBackup={ubsBackup} />
-        </SearchArea>
-        {isLoading ? (
-          <ActivityIndicator
-            size="large"
-            color={colors.orange}
-            style={{ marginTop: 50 }}
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <Container>
+          <Header
+            text={`${props.route.params.stateName} - ${props.route.params.cityName}`}
+            onPress={() => props.navigation.goBack()}
           />
-        ) : (
-          <List
-            data={ubs}
-            onRefresh={fetchData}
-            handleCardPress={handleCardPress}
-          />
-        )}
-      </Container>
+          <SearchArea>
+            <SearchInput>
+              <SearchInputText
+                placeholder="Buscar UBS"
+                placeholderTextColor="#C4C4C4"
+                numberOfLines={1}
+                onChangeText={(t) => search(t)}
+              />
+              <Icon
+                name="search-outline"
+                type="ionicon"
+                color="#c4c4c4"
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 15,
+                }}
+              />
+            </SearchInput>
+            <SortButton data={ubs} setData={setUbs} dataBackup={ubsBackup} />
+          </SearchArea>
+          {isLoading ? (
+            <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+          ) : (
+            <List data={ubs} onRefresh={fetchData} handleCardPress={handleCardPress} />
+          )}
+        </Container>
+      </TouchableWithoutFeedback>
     </>
   );
 };

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Keyboard, Alert, Image, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Keyboard,
+  Alert,
+  Image,
+  ActivityIndicator,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { auth, db } from '../../services/firebase.config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
@@ -128,41 +135,43 @@ export default (props) => {
   return (
     <>
       <Header onPress={() => props.navigation.goBack()} color={'white'} position="absolute" />
-      <Container>
-        <View style={{ ...extraStyles.keyboardAvoidView }} pointerEvents="none">
-          <Wave top={true} transition={animationType} />
-          <Wave transition={animationType} />
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <Container>
+          <View style={{ ...extraStyles.keyboardAvoidView }} pointerEvents="none">
+            <Wave top={true} transition={animationType} />
+            <Wave transition={animationType} />
 
-          <DashedWave />
-          <DashedWave bottom={true} />
-        </View>
-
-        <View style={{ ...extraStyles.containerView }}>
-          <LogoView>
-            <Image
-              source={require('../../../assets/images/euquero-logo.png')}
-              style={{ resizeMode: 'contain', height: '60%' }}
-            />
-            <Subtitle>Acesso Administrativo</Subtitle>
-          </LogoView>
-          <InputArea>
-            <InputBox type="email" placeholder="E-mail" value={email} onChangeText={setEmail} />
-            <InputBox
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChangeText={setPassword}
-            />
-          </InputArea>
-          <View style={{ height: '15%', alignItems: 'center' }}>
-            {isLoading ? (
-              <ActivityIndicator size="large" color={colors.orange} />
-            ) : (
-              <SmallButton onPress={signIn} text="Acessar" />
-            )}
+            <DashedWave />
+            <DashedWave bottom={true} />
           </View>
-        </View>
-      </Container>
+
+          <View style={{ ...extraStyles.containerView }}>
+            <LogoView>
+              <Image
+                source={require('../../../assets/images/euquero-logo.png')}
+                style={{ resizeMode: 'contain', height: '60%' }}
+              />
+              <Subtitle>Acesso Administrativo</Subtitle>
+            </LogoView>
+            <InputArea>
+              <InputBox type="email" placeholder="E-mail" value={email} onChangeText={setEmail} />
+              <InputBox
+                type="password"
+                placeholder="Senha"
+                value={password}
+                onChangeText={setPassword}
+              />
+            </InputArea>
+            <View style={{ height: '15%', alignItems: 'center' }}>
+              {isLoading ? (
+                <ActivityIndicator size="large" color={colors.orange} />
+              ) : (
+                <SmallButton onPress={signIn} text="Acessar" />
+              )}
+            </View>
+          </View>
+        </Container>
+      </TouchableWithoutFeedback>
       <Modal
         isVisible={modalVisibility}
         onBackPress={toggleModal}

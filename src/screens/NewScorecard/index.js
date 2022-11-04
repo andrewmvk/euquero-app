@@ -108,9 +108,11 @@ export default (props) => {
                 alignItems: 'center',
               }}
             >
-              <InputBox>
+              <InputBox style={{ alignItems: 'center' }}>
                 <Input
                   placeholder="Nome"
+                  placeholderTextColor="#C4C4C4"
+                  numberOfLines={1}
                   value={data.name}
                   onChangeText={(t) => setData({ ...data, name: t })}
                 />
@@ -136,6 +138,7 @@ export default (props) => {
                 <Input
                   enablesReturnKeyAutomatically
                   placeholder="Descrição"
+                  placeholderTextColor="#C4C4C4"
                   value={data.description}
                   multiline
                   onChangeText={(t) => setData({ ...data, description: t })}
