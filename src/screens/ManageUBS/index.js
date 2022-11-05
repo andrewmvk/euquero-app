@@ -1,25 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where
+} from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 
-import { Container, TrashIcon, SearchInput, SearchInputText, SearchArea } from './styles';
+import {
+  Container,
+  TrashIcon,
+  SearchInput,
+  SearchInputText,
+  SearchArea
+} from './styles';
 import Header from '../../components/Header';
 import Modal from '../../components/Modal';
 import DashedCircle from '../../components/DashedCircle';
-import { AddButton, Card, DropdownSelection, List } from '../../components/common';
+import {
+  AddButton,
+  Card,
+  DropdownSelection,
+  List
+} from '../../components/common';
 import { buttonOpacity, colors } from '../../defaultStyles';
 import axios from 'axios';
 import { Shadow } from 'react-native-shadow-2';
 
-export default (props) => {
+export default props => {
   const [modalVisibility, setModalVisibility] = useState(false);
   const [modalData, setModalData] = useState({
     title: '',
     text: '',
     iconName: '',
-    iconType: '',
+    iconType: ''
   });
   const [selectedUbs, setSelectedUbs] = useState(null);
 
@@ -31,14 +49,14 @@ export default (props) => {
     items: [],
     selected: 'Estado',
     value: -1,
-    disabled: true,
+    disabled: true
   });
 
   const [dropdownCity, setDropdownCity] = useState({
     items: [],
     selected: 'Cidade',
     value: -1,
-    disabled: true,
+    disabled: true
   });
 
   const [currentUser, setCurrentUser] = useState(false);
@@ -48,13 +66,17 @@ export default (props) => {
     const fetchStateData = async () => {
       setIsLoading(true);
       try {
-        const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        const currentUserSnap = await getDoc(
+          doc(db, 'users', auth.currentUser.uid)
+        );
         setCurrentUser(currentUserSnap.exists());
         if (currentUserSnap.exists()) {
-          const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountStates'));
+          const ubsAmountSnap = await getDocs(
+            collection(db, 'ubsAmountStates')
+          );
 
           const response = await axios.get(
-            'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
+            'https://servicodados.ibge.gov.br/api/v1/localidades/estados/'
           );
 
           let statesArray = [];
@@ -62,10 +84,10 @@ export default (props) => {
             let stateObject = {
               id: response.data[i].id,
               name: response.data[i].nome,
-              ubsAmount: 0,
+              ubsAmount: 0
             };
 
-            const index = ubsAmountSnap.docs.findIndex((state) => {
+            const index = ubsAmountSnap.docs.findIndex(state => {
               return +state.id === response.data[i].id;
             });
             if (index !== -1) {
@@ -78,13 +100,19 @@ export default (props) => {
           console.log(statesArray);
 
           statesArray.sort((a, b) =>
-            a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
+            a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0
           );
 
-          setDropdownState({ ...dropdownState, items: statesArray, disabled: false });
+          setDropdownState({
+            ...dropdownState,
+            items: statesArray,
+            disabled: false
+          });
         }
       } catch (err) {
-        console.log('Something went wrong while trying to fetch data from database or State API.');
+        console.log(
+          'Something went wrong while trying to fetch data from database or State API.'
+        );
         console.log(err);
       }
     };
@@ -96,14 +124,21 @@ export default (props) => {
   useEffect(() => {
     if (dropdownState.value != -1 && currentUser) {
       setIsLoading(true);
-      setDropdownCity({ items: [], selected: 'Cidade', value: -1, disabled: true });
+      setDropdownCity({
+        items: [],
+        selected: 'Cidade',
+        value: -1,
+        disabled: true
+      });
       const fetchCityData = async () => {
         try {
           const response = await axios.get(
-            `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${dropdownState.value}/municipios`,
+            `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${dropdownState.value}/municipios`
           );
 
-          const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountCities'));
+          const ubsAmountSnap = await getDocs(
+            collection(db, 'ubsAmountCities')
+          );
 
           let citiesArray = [];
           for (i = 0; i < response.data.length; i++) {
@@ -113,9 +148,9 @@ export default (props) => {
             let cityObject = {
               id: cityID,
               name: response.data[i].nome,
-              ubsAmount: 0,
+              ubsAmount: 0
             };
-            const index = ubsAmountSnap.docs.findIndex((city) => {
+            const index = ubsAmountSnap.docs.findIndex(city => {
               return +city.id === cityID;
             });
             if (index !== -1) {
@@ -125,17 +160,19 @@ export default (props) => {
           }
 
           citiesArray.sort((a, b) =>
-            a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
+            a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0
           );
 
           setDropdownCity({
             items: citiesArray,
             selected: 'Cidade',
             value: -1,
-            disabled: false,
+            disabled: false
           });
         } catch (err) {
-          console.log('Something went wrong while trying to fetch data from Cities API.');
+          console.log(
+            'Something went wrong while trying to fetch data from Cities API.'
+          );
           console.log(err);
         }
       };
@@ -150,11 +187,17 @@ export default (props) => {
     try {
       if (currentUser) {
         const cityID = dropdownCity.value;
-        const ubsQuery = query(collection(db, 'ubs'), where('city', '==', cityID));
+        const ubsQuery = query(
+          collection(db, 'ubs'),
+          where('city', '==', cityID)
+        );
         const ubsSnapshot = await getDocs(ubsQuery);
 
         for (i = 0; i < ubsSnapshot.docs.length; i++) {
-          list.push({ id: ubsSnapshot.docs[i].id, ...ubsSnapshot.docs[i].data() });
+          list.push({
+            id: ubsSnapshot.docs[i].id,
+            ...ubsSnapshot.docs[i].data()
+          });
         }
 
         setUbs(list);
@@ -177,7 +220,7 @@ export default (props) => {
   }, [dropdownCity.selected]);
 
   const deleteUbs = () => {
-    const filteredData = ubs.filter((ubs) => ubs.id !== selectedUbs.id);
+    const filteredData = ubs.filter(ubs => ubs.id !== selectedUbs.id);
     setUbs(filteredData);
     setSelectedUbs(null);
   };
@@ -191,7 +234,7 @@ export default (props) => {
       title,
       text,
       iconName: iconData.name,
-      iconType: iconData.type,
+      iconType: iconData.type
     });
     toggleModal();
   }
@@ -205,12 +248,12 @@ export default (props) => {
     setModalVisibility(!modalVisibility);
   }
 
-  const search = (t) => {
+  const search = t => {
     if (ubsBackup.length > 0) {
       setIsLoading(true);
       let arr = [...ubsBackup];
       setUbs(
-        arr.filter((d) =>
+        arr.filter(d =>
           d.name
             .normalize('NFD')
             .replace(/[\u0300-\u036f]/g, '')
@@ -219,9 +262,9 @@ export default (props) => {
               t
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase(),
-            ),
-        ),
+                .toLowerCase()
+            )
+        )
       );
       setIsLoading(false);
     }
@@ -229,9 +272,23 @@ export default (props) => {
 
   const card = ({ item }) => {
     return (
-      <Card value={item.id} key={item.id} text={item.name} color={colors.orange} textWidth={0.65}>
-        <TrashIcon activeOpacity={buttonOpacity} onPress={() => deleteUbsModal(item)}>
-          <Icon name="trash-can-outline" size={35} type="material-community" color={colors.gray} />
+      <Card
+        value={item.id}
+        key={item.id}
+        text={item.name}
+        color={colors.orange}
+        textWidth={0.65}
+      >
+        <TrashIcon
+          activeOpacity={buttonOpacity}
+          onPress={() => deleteUbsModal(item)}
+        >
+          <Icon
+            name="trash-can-outline"
+            size={35}
+            type="material-community"
+            color={colors.gray}
+          />
         </TrashIcon>
       </Card>
     );
@@ -242,14 +299,17 @@ export default (props) => {
     startColor: 'rgba(0,0,0,0.035)',
     finalColor: 'rgba(0,0,0,0.0)',
     distance: 10,
-    radius: 5,
+    radius: 5
   };
 
   return (
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo - UBS'} onPress={() => props.navigation.goBack()} />
+        <Header
+          text={'Administrativo - UBS'}
+          onPress={() => props.navigation.goBack()}
+        />
         <SearchArea>
           <Shadow
             {...searchBoxShadow}
@@ -257,15 +317,17 @@ export default (props) => {
               height: 55,
               marginTop: 45,
               width: '100%',
-              alignItems: 'center',
+              alignItems: 'center'
             }}
           >
-            <SearchInput pointerEvents={dropdownCity.value == -1 ? 'none' : 'auto'}>
+            <SearchInput
+              pointerEvents={dropdownCity.value == -1 ? 'none' : 'auto'}
+            >
               <SearchInputText
                 placeholder="Buscar UBS"
                 numberOfLines={1}
                 placeholderTextColor="#C4C4C4"
-                onChangeText={(t) => search(t)}
+                onChangeText={t => search(t)}
               />
               <Icon
                 name="search-outline"
@@ -273,7 +335,7 @@ export default (props) => {
                 color="#c4c4c4"
                 style={{
                   paddingHorizontal: 15,
-                  paddingVertical: 15,
+                  paddingVertical: 15
                 }}
               />
             </SearchInput>
@@ -281,12 +343,16 @@ export default (props) => {
         </SearchArea>
         <SearchArea style={{ justifyContent: 'space-between', marginTop: 20 }}>
           <DropdownSelection
+            dropdownContainerStyle={{ paddingTop: 12 }}
+            style={{ zIndex: 2 }}
             data={dropdownState}
             onSelect={setDropdownState}
             containerStyle={{ width: '45%' }}
             disabled={dropdownState.disabled}
           />
           <DropdownSelection
+            dropdownContainerStyle={{ paddingTop: 12 }}
+            style={{ zIndex: 2 }}
             data={dropdownCity}
             onSelect={setDropdownCity}
             containerStyle={{ width: '45%' }}
@@ -294,7 +360,11 @@ export default (props) => {
           />
         </SearchArea>
         {isLoading ? (
-          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+          <ActivityIndicator
+            size="large"
+            color={colors.orange}
+            style={{ marginTop: 50 }}
+          />
         ) : (
           <List data={ubs} onRefresh={fetchData} card={card} />
         )}

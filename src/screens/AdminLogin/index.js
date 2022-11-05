@@ -6,12 +6,21 @@ import {
   Image,
   ActivityIndicator,
   TouchableWithoutFeedback,
+  TextInput
 } from 'react-native';
 import { auth, db } from '../../services/firebase.config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 
-import { Container, LogoView, InputArea, Subtitle, extraStyles } from './styles';
+import {
+  Container,
+  LogoView,
+  InputArea,
+  Subtitle,
+  extraStyles,
+  SearchInput,
+  SearchInputText
+} from './styles';
 import Header from '../../components/Header';
 
 import Wave from '../../components/Waves/Wave';
@@ -19,8 +28,10 @@ import DashedWave from '../../components/Waves/DashedWave';
 import Modal from '../../components/Modal';
 import { SmallButton, InputBox } from '../../components/common';
 import { colors } from '../../defaultStyles';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { Icon } from 'react-native-elements';
 
-export default (props) => {
+export default props => {
   const [modalData, setModalData] = useState({ email: '', text: '' });
   const [modalVisibility, setModalVisibility] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +41,7 @@ export default (props) => {
 
   const [animationType, setAnimationType] = useState({
     n: false,
-    type: 'nothing',
+    type: 'nothing'
   });
 
   useEffect(() => {
@@ -52,11 +63,11 @@ export default (props) => {
     return unsubscribeFocus;
   }, [props.route.params]);
 
-  const getUser = async (u) => {
+  const getUser = async u => {
     let userData = {};
     try {
       const docRef = doc(db, 'users', u.uid);
-      await getDoc(docRef).then(async (docSnap) => {
+      await getDoc(docRef).then(async docSnap => {
         userData = docSnap.data();
         if (userData == undefined && !userData.disabled) {
           handleNavigateTo({ isAdmin: false });
@@ -71,13 +82,13 @@ export default (props) => {
                 text:
                   'Esta conta está desativada e deve ser excluída caso seja acessada mais ' +
                   userData.maximumAcessAttempts +
-                  ' vez(es).',
+                  ' vez(es).'
               });
               toggleModal();
             }, 500);
 
             await updateDoc(doc(db, 'users', u.uid), {
-              maximumAcessAttempts: userData.maximumAcessAttempts - 1,
+              maximumAcessAttempts: userData.maximumAcessAttempts - 1
             });
           } else {
             setTimeout(() => {
@@ -111,15 +122,15 @@ export default (props) => {
   const signIn = () => {
     setIsLoading(true);
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
+      .then(userCredentials => {
         const user = userCredentials.user;
         getUser(user);
       })
       .catch(() =>
         Alert.alert(
           'Erro de autenticação',
-          'Ops! Email e/ou senha inválido(s), utilize apenas dados de contas já criadas.',
-        ),
+          'Ops! Email e/ou senha inválido(s), utilize apenas dados de contas já criadas.'
+        )
       )
       .finally(() => {
         setIsLoading(false);
@@ -127,17 +138,25 @@ export default (props) => {
     if (email == '' || password == '') {
       Alert.alert(
         'Erro de autenticação',
-        'Ops! Algum campo não foi preenchido corretamente, verifique novamente.',
+        'Ops! Algum campo não foi preenchido corretamente, verifique novamente.'
       );
     }
   };
 
   return (
     <>
-      <Header onPress={() => props.navigation.goBack()} color={'white'} position="absolute" />
+      <Header
+        onPress={() => props.navigation.goBack()}
+        color={'white'}
+        position="absolute"
+        margin={getStatusBarHeight()}
+      />
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <Container>
-          <View style={{ ...extraStyles.keyboardAvoidView }} pointerEvents="none">
+          <View
+            style={{ ...extraStyles.keyboardAvoidView }}
+            pointerEvents="none"
+          >
             <Wave top={true} transition={animationType} />
             <Wave transition={animationType} />
 
@@ -154,13 +173,41 @@ export default (props) => {
               <Subtitle>Acesso Administrativo</Subtitle>
             </LogoView>
             <InputArea>
-              <InputBox type="email" placeholder="E-mail" value={email} onChangeText={setEmail} />
-              <InputBox
-                type="password"
-                placeholder="Senha"
-                value={password}
-                onChangeText={setPassword}
-              />
+              <SearchInput>
+                <Icon
+                  name="person-outline"
+                  type="ionicon"
+                  color="#c4c4c4"
+                  style={{
+                    paddingRight: 12,
+                    paddingVertical: 15
+                  }}
+                />
+                <SearchInputText
+                  placeholder="E-mail"
+                  numberOfLines={1}
+                  placeholderTextColor="#C4C4C4"
+                  onChangeText={setEmail}
+                />
+              </SearchInput>
+              <SearchInput>
+                <Icon
+                  name="lock-closed-outline"
+                  type="ionicon"
+                  color="#c4c4c4"
+                  style={{
+                    paddingRight: 12,
+                    paddingVertical: 15
+                  }}
+                />
+                <SearchInputText
+                  placeholder="Senha"
+                  secureTextEntry
+                  numberOfLines={1}
+                  placeholderTextColor="#C4C4C4"
+                  onChangeText={setPassword}
+                />
+              </SearchInput>
             </InputArea>
             <View style={{ height: '15%', alignItems: 'center' }}>
               {isLoading ? (

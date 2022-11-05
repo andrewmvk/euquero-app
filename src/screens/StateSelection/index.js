@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { ActivityIndicator, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import {
+  ActivityIndicator,
+  Keyboard,
+  TouchableWithoutFeedback
+} from 'react-native';
 import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
@@ -11,7 +15,7 @@ import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 import { SortButton, List } from '../../components/common';
 
-export default (props) => {
+export default props => {
   const [brazilianStates, setBrazilianStates] = useState([]);
   const [noUbsStates, setNoUbsStates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,7 +24,7 @@ export default (props) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
+        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/'
       );
 
       const ubsAmountSnap = await getDocs(collection(db, 'ubsAmountStates'));
@@ -30,9 +34,9 @@ export default (props) => {
         let stateObject = {
           id: response.data[i].id,
           name: response.data[i].nome,
-          ubsAmount: 0,
+          ubsAmount: 0
         };
-        const index = ubsAmountSnap.docs.findIndex((state) => {
+        const index = ubsAmountSnap.docs.findIndex(state => {
           return +state.id === response.data[i].id;
         });
         if (index !== -1) {
@@ -41,18 +45,20 @@ export default (props) => {
         statesArray.push(stateObject);
       }
 
-      const noUbsStatesArray = statesArray.filter((item) => item.ubsAmount === 0);
-      statesArray = statesArray.filter((item) => item.ubsAmount != 0);
+      const noUbsStatesArray = statesArray.filter(item => item.ubsAmount === 0);
+      statesArray = statesArray.filter(item => item.ubsAmount != 0);
 
       statesArray.sort((a, b) =>
-        a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0,
+        a.ubsAmount > b.ubsAmount ? -1 : b.ubsAmount > a.ubsAmount ? 1 : 0
       );
 
       setNoUbsStates(noUbsStatesArray);
       setBrazilianStates(statesArray);
       setOriginalData(statesArray);
     } catch (err) {
-      console.log('Something went wrong while trying to fetch data from database or State API.');
+      console.log(
+        'Something went wrong while trying to fetch data from database or State API.'
+      );
       console.log(err);
     }
   };
@@ -62,17 +68,17 @@ export default (props) => {
     fetchData().then(() => setIsLoading(false));
   }, []);
 
-  const handleCardPress = (item) => {
+  const handleCardPress = item => {
     props.navigation.navigate('CitySelection', {
       stateID: item.id,
-      stateName: item.name,
+      stateName: item.name
     });
   };
 
-  const search = (t) => {
+  const search = t => {
     let arr = [...originalData];
     setBrazilianStates(
-      arr.filter((d) =>
+      arr.filter(d =>
         d.name
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
@@ -81,9 +87,9 @@ export default (props) => {
             t
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase(),
-          ),
-      ),
+              .toLowerCase()
+          )
+      )
     );
   };
 
@@ -99,7 +105,7 @@ export default (props) => {
                 placeholder="Buscar estado"
                 placeholderTextColor="#C4C4C4"
                 numberOfLines={1}
-                onChangeText={(t) => search(t)}
+                onChangeText={t => search(t)}
               />
               <Icon
                 name="search-outline"
@@ -107,7 +113,7 @@ export default (props) => {
                 color="#c4c4c4"
                 style={{
                   paddingHorizontal: 15,
-                  paddingVertical: 15,
+                  paddingVertical: 15
                 }}
               />
             </SearchInput>
@@ -118,7 +124,11 @@ export default (props) => {
             />
           </SearchArea>
           {isLoading ? (
-            <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+            <ActivityIndicator
+              size="large"
+              color={colors.orange}
+              style={{ marginTop: 50 }}
+            />
           ) : (
             <List
               data={brazilianStates}
