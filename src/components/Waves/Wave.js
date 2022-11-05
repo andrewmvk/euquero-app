@@ -93,7 +93,7 @@ export default (props) => {
     let animationDirection = initialHeight;
     let isSpring = false;
 
-    if (props.top === undefined && !(nType === 'away')) {
+    if (props.top === undefined && !nType.toString().includes('away')) {
       //Bottom Wave animation values
       if (nType === 'to') {
         animationDirection = initialHeight * factor;
@@ -101,7 +101,7 @@ export default (props) => {
       } else if (nType === 'from') {
         animationDirection = initialHeight;
       }
-    } else if (!(nType === 'away')) {
+    } else if (!nType.toString().includes('away')) {
       //Top Wave animation values
       if (nType === 'to') {
         animationDirection = initialHeight / factor;
@@ -111,7 +111,7 @@ export default (props) => {
       }
     } else {
       //Both Waves animation values when the InputText is selected
-      if (awayWave) {
+      if (awayWave && nType.toString().includes('away-in')) {
         animationDirection = initialHeight;
       } else {
         animationDirection = initialHeight / awayFactor;

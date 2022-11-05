@@ -6,7 +6,7 @@ import {
   Image,
   ActivityIndicator,
   TouchableWithoutFeedback,
-  TextInput
+  TextInput,
 } from 'react-native';
 import { auth, db } from '../../services/firebase.config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -19,7 +19,7 @@ import {
   Subtitle,
   extraStyles,
   SearchInput,
-  SearchInputText
+  SearchInputText,
 } from './styles';
 import Header from '../../components/Header';
 
@@ -31,7 +31,7 @@ import { colors } from '../../defaultStyles';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { Icon } from 'react-native-elements';
 
-export default props => {
+export default (props) => {
   const [modalData, setModalData] = useState({ email: '', text: '' });
   const [modalVisibility, setModalVisibility] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,16 +41,16 @@ export default props => {
 
   const [animationType, setAnimationType] = useState({
     n: false,
-    type: 'nothing'
+    type: 'nothing',
   });
 
   useEffect(() => {
     const unsubscribeFocus = props.navigation.addListener('focus', () => {
       Keyboard.addListener('keyboardDidShow', () => {
-        setAnimationType({ n: true, type: 'away' });
+        setAnimationType({ n: true, type: 'away-out' });
       });
       Keyboard.addListener('keyboardDidHide', () => {
-        setAnimationType({ n: true, type: 'away' });
+        setAnimationType({ n: true, type: 'away-in' });
       });
       setAnimationType({ n: true, type: 'from' });
 
@@ -63,11 +63,11 @@ export default props => {
     return unsubscribeFocus;
   }, [props.route.params]);
 
-  const getUser = async u => {
+  const getUser = async (u) => {
     let userData = {};
     try {
       const docRef = doc(db, 'users', u.uid);
-      await getDoc(docRef).then(async docSnap => {
+      await getDoc(docRef).then(async (docSnap) => {
         userData = docSnap.data();
         if (userData == undefined && !userData.disabled) {
           handleNavigateTo({ isAdmin: false });
@@ -82,13 +82,13 @@ export default props => {
                 text:
                   'Esta conta está desativada e deve ser excluída caso seja acessada mais ' +
                   userData.maximumAcessAttempts +
-                  ' vez(es).'
+                  ' vez(es).',
               });
               toggleModal();
             }, 500);
 
             await updateDoc(doc(db, 'users', u.uid), {
-              maximumAcessAttempts: userData.maximumAcessAttempts - 1
+              maximumAcessAttempts: userData.maximumAcessAttempts - 1,
             });
           } else {
             setTimeout(() => {
@@ -122,15 +122,15 @@ export default props => {
   const signIn = () => {
     setIsLoading(true);
     signInWithEmailAndPassword(auth, email, password)
-      .then(userCredentials => {
+      .then((userCredentials) => {
         const user = userCredentials.user;
         getUser(user);
       })
       .catch(() =>
         Alert.alert(
           'Erro de autenticação',
-          'Ops! Email e/ou senha inválido(s), utilize apenas dados de contas já criadas.'
-        )
+          'Ops! Email e/ou senha inválido(s), utilize apenas dados de contas já criadas.',
+        ),
       )
       .finally(() => {
         setIsLoading(false);
@@ -138,7 +138,7 @@ export default props => {
     if (email == '' || password == '') {
       Alert.alert(
         'Erro de autenticação',
-        'Ops! Algum campo não foi preenchido corretamente, verifique novamente.'
+        'Ops! Algum campo não foi preenchido corretamente, verifique novamente.',
       );
     }
   };
@@ -153,10 +153,7 @@ export default props => {
       />
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <Container>
-          <View
-            style={{ ...extraStyles.keyboardAvoidView }}
-            pointerEvents="none"
-          >
+          <View style={{ ...extraStyles.keyboardAvoidView }} pointerEvents="none">
             <Wave top={true} transition={animationType} />
             <Wave transition={animationType} />
 
@@ -180,7 +177,7 @@ export default props => {
                   color="#c4c4c4"
                   style={{
                     paddingRight: 12,
-                    paddingVertical: 15
+                    paddingVertical: 15,
                   }}
                 />
                 <SearchInputText
@@ -197,7 +194,7 @@ export default props => {
                   color="#c4c4c4"
                   style={{
                     paddingRight: 12,
-                    paddingVertical: 15
+                    paddingVertical: 15,
                   }}
                 />
                 <SearchInputText

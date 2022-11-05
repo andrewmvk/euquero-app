@@ -5,13 +5,13 @@ import * as defaultS from '../../defaultStyles';
 const deviceHeight = Dimensions.get('screen').height * 0.92 + 'px';
 
 export const Container = styled.SafeAreaView`
-  flex: 1;
+  height: ${Dimensions.get('screen').height}px;
   align-items: center;
 `;
 
 export const InputArea = styled.View`
   justify-content: space-around;
-  height: 35%;
+  height: 30%;
   width: 75%;
 `;
 

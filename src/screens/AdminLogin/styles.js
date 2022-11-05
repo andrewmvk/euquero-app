@@ -55,13 +55,13 @@ export const extraStyles = {
   containerView: {
     alignItems: 'center',
     height: Dimensions.get('window').height * 0.6,
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
   },
   keyboardAvoidView: {
     width: '100%',
-    height: Dimensions.get('window').height,
+    height: Dimensions.get('screen').height,
     position: 'absolute',
     justifyContent: 'center',
-    zIndex: 2
-  }
+    zIndex: 2,
+  },
 };
