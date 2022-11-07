@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  Linking,
-  Alert,
-  ActivityIndicator
-} from 'react-native';
+import { Text, TouchableOpacity, View, Linking, Alert, ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { auth, db, storage } from '../../services/firebase.config';
 import { getDownloadURL, ref } from 'firebase/storage';
@@ -19,34 +12,28 @@ import { colors, fonts } from '../../defaultStyles';
 import { DropdownSelection, RegisterButton } from '../../components/common';
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
-import {
-  SimpleText,
-  Title,
-  Container,
-  ButtonView,
-  TouchableText
-} from './styles';
+import { SimpleText, Title, Container, ButtonView, TouchableText } from './styles';
 import { useEffect } from 'react';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 
-export default props => {
+export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(false);
   const [fileType, setFileType] = useState({
     items: [
       { name: 'UBS', id: 1 },
       { name: 'Serviços', id: 2 },
-      { name: 'Indicadores', id: 3 }
+      { name: 'Indicadores', id: 3 },
     ],
     selected: 'Escolha o tipo de arquivo',
-    value: -1
+    value: -1,
   });
 
   const downloadDefaultExcel = async () => {
     const fileName = 'padrao_tabelas_excel.pdf';
     const pathReference = ref(storage, fileName);
 
-    await getDownloadURL(pathReference).then(async url => {
+    await getDownloadURL(pathReference).then(async (url) => {
       Linking.openURL(url);
     });
   };
@@ -55,7 +42,7 @@ export default props => {
     setIsLoading(true);
     try {
       const fileDoc = await DocumentPicker.getDocumentAsync({
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
 
       if (fileDoc.type === 'cancel') {
@@ -71,10 +58,10 @@ export default props => {
       let amountUploaded = 0;
 
       await FileSystem.readAsStringAsync(`${fileDoc.uri}`, {
-        encoding: FileSystem.EncodingType.Base64
+        encoding: FileSystem.EncodingType.Base64,
       })
-        .then(async b64 => XLSX.read(b64, { type: 'base64' }))
-        .then(async workbook => {
+        .then(async (b64) => XLSX.read(b64, { type: 'base64' }))
+        .then(async (workbook) => {
           for (i = 0; i < workbook.SheetNames.length; i++) {
             numberOfPages = workbook.SheetNames.length;
             const worksheetName = workbook.SheetNames[i];
@@ -93,7 +80,7 @@ export default props => {
           if (fileType != -1) {
             let alertDescription = {
               title: 'Upload completo!',
-              text: 'Todos os dados foram carregados e enviados com sucesso.'
+              text: 'Todos os dados foram carregados e enviados com sucesso.',
             };
             if (pageErrors.length != 0) {
               let errorMessage = '';
@@ -116,7 +103,7 @@ export default props => {
                   pageErrors.length +
                   ' erro(s) encontrado(s) na(s) página(s) do arquivo: ' +
                   `"${errorMessage}"` +
-                  finalMessage
+                  finalMessage,
               };
             }
             Alert.alert(alertDescription.title, alertDescription.text);
@@ -126,56 +113,46 @@ export default props => {
       console.log(err);
       Alert.alert(
         'Erro ao carregar arquivo!',
-        'Por favor verifique a formatação do arquivo o mesmo deve seguir o modelo e ter extensão .xlsx'
+        'Por favor verifique a formatação do arquivo o mesmo deve seguir o modelo e ter extensão .xlsx',
       );
     }
   };
 
-  const uploadUbs = async dataFile => {
-    const promises = dataFile.map(async data => {
+  const uploadUbs = async (dataFile) => {
+    const promises = dataFile.map(async (data) => {
       await setDoc(doc(db, 'ubs', data.id.toString()), {
         uf: data.uf,
         city: data.city,
         name: data.name,
         location: {
           latitude: data?.latitude ? data.latitude : null,
-          longitude: data?.longitude ? data.longitude : null
-        }
+          longitude: data?.longitude ? data.longitude : null,
+        },
       });
     });
 
     await Promise.all(promises);
   };
 
-  const uploadScorecards = async dataFile => {
-    const promises = dataFile.map(async data => {
-      await setDoc(
-        doc(
-          db,
-          'ubsScorecards',
-          data.scorecard.toString() + data.ubsid.toString()
-        ),
-        {
-          ubsid: data.ubsid,
-          scorecard: data.scorecard,
-          score: data.score
-        }
-      );
+  const uploadScorecards = async (dataFile) => {
+    const promises = dataFile.map(async (data) => {
+      await setDoc(doc(db, 'ubsScorecards', data.scorecard.toString() + data.ubsid.toString()), {
+        ubsid: data.ubsid,
+        scorecard: data.scorecard,
+        score: data.score,
+      });
     });
 
     await Promise.all(promises);
   };
 
-  const uploadServices = async dataFile => {
-    const promises = dataFile.map(async data => {
-      await setDoc(
-        doc(db, 'ubsServices', data.id.toString() + data.ubsid.toString()),
-        {
-          ubsid: data.ubsid,
-          name: data.name,
-          id: data.id
-        }
-      );
+  const uploadServices = async (dataFile) => {
+    const promises = dataFile.map(async (data) => {
+      await setDoc(doc(db, 'ubsServices', data.id.toString() + data.ubsid.toString()), {
+        ubsid: data.ubsid,
+        name: data.name,
+        id: data.id,
+      });
     });
 
     await Promise.all(promises);
@@ -188,7 +165,7 @@ export default props => {
         .then(async () => {
           await updateUbsCount();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           error = worksheetName;
         });
@@ -203,7 +180,7 @@ export default props => {
     } else {
       Alert.alert(
         'Selecione um tipo de arquivo',
-        'Para adicionar os dados escolhidos é necessário selecionar qual tipo de arquivo você está enviando.'
+        'Para adicionar os dados escolhidos é necessário selecionar qual tipo de arquivo você está enviando.',
       );
     }
 
@@ -217,16 +194,16 @@ export default props => {
     //The array that will contain the amount of UBS in a State and the amount of UBS in its cities
     let ubsAmountStates = [];
     let ubsAmountCities = [];
-    querySnapshot.forEach(doc => {
+    querySnapshot.forEach((doc) => {
       //Search for the State in the array
-      const stateIndex = ubsAmountStates.findIndex(state => {
+      const stateIndex = ubsAmountStates.findIndex((state) => {
         return state?.id == doc.data().uf;
       });
       if (stateIndex !== -1) {
         //State exists: icrement State amount UBS
         ubsAmountStates[stateIndex].amount += 1;
         //Search for the City in the array
-        const cityIndex = ubsAmountCities.findIndex(city => {
+        const cityIndex = ubsAmountCities.findIndex((city) => {
           return city?.id == doc.data().city;
         });
         if (cityIndex !== -1) {
@@ -236,32 +213,32 @@ export default props => {
           //City doesnt exists: create and push the new City
           ubsAmountCities.push({
             id: doc.data().city,
-            amount: 1
+            amount: 1,
           });
         }
       } else {
         //State doesnt exists: create and push the new State and the new City
         ubsAmountStates.push({
           id: doc.data().uf,
-          amount: 1
+          amount: 1,
         });
         ubsAmountCities.push({
           id: doc.data().city,
-          amount: 1
+          amount: 1,
         });
       }
     });
 
     //Push to the database
     try {
-      const promisesStates = ubsAmountStates.map(async state => {
+      const promisesStates = ubsAmountStates.map(async (state) => {
         await setDoc(doc(db, 'ubsAmountStates', state.id.toString()), {
-          amount: state.amount
+          amount: state.amount,
         });
       });
-      const promisesCities = ubsAmountCities.map(async city => {
+      const promisesCities = ubsAmountCities.map(async (city) => {
         await setDoc(doc(db, 'ubsAmountCities', city.id.toString()), {
-          amount: city.amount
+          amount: city.amount,
         });
       });
       //Handle all the promises
@@ -274,9 +251,7 @@ export default props => {
 
   useEffect(() => {
     const currentUser = async () => {
-      const currentUserSnap = await getDoc(
-        doc(db, 'users', auth.currentUser.uid)
-      );
+      const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
       setUser(currentUserSnap.exists());
     };
     currentUser();
@@ -293,7 +268,7 @@ export default props => {
       />
       {user ? (
         <Container>
-          <View style={{ marginTop: '10%' }}>
+          <View style={{ marginTop: '5%' }}>
             <Icon
               name="file-excel-outline"
               type="material-community"
@@ -306,20 +281,14 @@ export default props => {
 
           <SimpleText>
             <Text>
-              Abaixo escolha o tipo de arquivo que deseja inserir, faça upload
-              do arquivo .xlsx com a{' '}
+              Abaixo escolha o tipo de arquivo que deseja inserir, faça upload do arquivo .xlsx com
+              a{' '}
             </Text>
-            <Text style={{ fontFamily: fonts.spartanBold }}>
-              formatação padrão.
-            </Text>
+            <Text style={{ fontFamily: fonts.spartanBold }}>formatação padrão.</Text>
           </SimpleText>
 
           {isLoading ? (
-            <ActivityIndicator
-              size="large"
-              color={colors.orange}
-              style={{ marginTop: 50 }}
-            />
+            <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
           ) : (
             <ButtonView>
               <DropdownSelection
@@ -330,7 +299,7 @@ export default props => {
                 padding={10}
                 selectContainerStyle={{
                   borderLeftColor: colors.orange,
-                  borderLeftWidth: 7
+                  borderLeftWidth: 7,
                 }}
                 rounded
                 placeholder={fileType.value == -1 ? true : false}
@@ -339,9 +308,8 @@ export default props => {
                 text="CADASTRAR"
                 pointerEvents={isLoading ? 'none' : 'auto'}
                 containerStyle={{
-                  marginTop: 150,
-                  backgroundColor:
-                    fileType.value == -1 ? colors.gray : colors.orange
+                  marginTop: 145,
+                  backgroundColor: fileType.value == -1 ? colors.gray : colors.orange,
                 }}
                 isLoading={isLoading}
                 onPress={() => handleDocument().then(() => setIsLoading(false))}
@@ -354,20 +322,15 @@ export default props => {
               position: 'absolute',
               bottom: 0,
               width: '100%',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
             <SimpleText>
               <Text>Modelo com a </Text>
-              <Text style={{ fontFamily: fonts.spartanBold }}>
-                formatação padrão
-              </Text>
+              <Text style={{ fontFamily: fonts.spartanBold }}>formatação padrão</Text>
             </SimpleText>
 
-            <TouchableOpacity
-              style={{ marginBottom: 40 }}
-              onPress={downloadDefaultExcel}
-            >
+            <TouchableOpacity style={{ marginBottom: 40 }} onPress={downloadDefaultExcel}>
               <TouchableText>Baixe aqui</TouchableText>
             </TouchableOpacity>
           </View>
