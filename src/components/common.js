@@ -360,9 +360,9 @@ export const InDevelopmentCard = (props) => {
   }, []);
 
   return (
-    <View>
+    <>
       {isConnected ? (
-        <>
+        <View style={{ zIndex: 3 }}>
           <Shadow {...cardShadow}>
             <View style={[cardA.containerA, { borderLeftColor: color }]}>
               <Text style={cardA.titleCardA} numberOfLines={1}>
@@ -376,16 +376,20 @@ export const InDevelopmentCard = (props) => {
               borderBottomLeftRadius: 5,
               borderBottomRightRadius: 5,
               backgroundColor: 'white',
-              width: '95%',
+              width: screenWidth * 0.85 * 0.95,
               height: height(),
               alignSelf: 'center',
               marginBottom: 30,
             }}
           >
-            <ScrollView nestedScrollEnabled style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+            <ScrollView
+              keyboardDismissMode={props.keyboardDismiss ? 'on-drag' : 'none'}
+              nestedScrollEnabled
+              style={{ paddingHorizontal: 20, paddingTop: 10, zIndex: 3 }}
+            >
               {props.data.map((item) => {
                 return (
-                  <Text key={item.id} style={{ color: '#7f7f7f', marginBottom: 5 }}>
+                  <Text key={item.id} style={{ color: colors.text, marginBottom: 5 }}>
                     {item.name}
                   </Text>
                 );
@@ -393,9 +397,9 @@ export const InDevelopmentCard = (props) => {
               <View style={{ height: 15 }} />
             </ScrollView>
           </View>
-        </>
+        </View>
       ) : null}
-    </View>
+    </>
   );
 };
 
@@ -670,14 +674,19 @@ export const List = (props) => {
         paddingTop: 5,
         zIndex: -1,
       }}
+      progressViewOffset={-50}
       contentContainerStyle={{ alignItems: 'center' }}
       data={props.data}
       renderItem={props.card ? props.card : card}
-      onRefresh={() => {
-        setRefreshing(true);
-        props?.onRefresh().then(() => setRefreshing(false));
-      }}
-      refreshing={refreshing}
+      onRefresh={
+        props.refreshing
+          ? () => {
+              setRefreshing(true);
+              props?.onRefresh().then(() => setRefreshing(false));
+            }
+          : null
+      }
+      refreshing={props.onRefresh ? refreshing : null}
       keyExtractor={(item) => item.id}
       ListEmptyComponent={EmptyListMessage}
       ListFooterComponent={

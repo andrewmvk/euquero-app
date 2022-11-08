@@ -16,6 +16,7 @@ import { Icon } from 'react-native-elements';
 import Header from '../../components/Header';
 import { buttonOpacity, colors, fonts, fontSizeNoUnits } from '../../defaultStyles';
 import { Map } from '../../components/common';
+import { ScrollView } from 'react-native';
 
 const periods = [
   { name: 'Pré-Natal', id: 1 },
@@ -59,49 +60,51 @@ export default (props) => {
         <Map routeParams={routeParams} />
 
         <Menu>
-          <UBSName numberOfLines={2}>{routeParams.ubsName}</UBSName>
-          <View>
-            <Shadow {...cardShadow}>
-              <PeriodosCard>
-                <Text style={styles.cardTitle}>Períodos</Text>
-                <Text style={styles.cardText} numberOfLines={1}>
-                  Selecione um dos períodos abaixo
-                </Text>
-              </PeriodosCard>
-            </Shadow>
+          <ScrollView>
+            <UBSName numberOfLines={2}>{routeParams.ubsName}</UBSName>
+            <View>
+              <Shadow {...cardShadow}>
+                <PeriodosCard>
+                  <Text style={styles.cardTitle}>Períodos</Text>
+                  <Text style={styles.cardText} numberOfLines={1}>
+                    Selecione um dos períodos abaixo
+                  </Text>
+                </PeriodosCard>
+              </Shadow>
 
-            <Periodos>
-              {periods.map((item) => {
-                return (
-                  <Option
-                    key={item.id}
-                    onPress={() => handleNavigate(item, 'UBSScorecards')}
-                    activeOpacity={buttonOpacity}
-                  >
-                    <OptionText>{item.name}</OptionText>
-                    <Icon
-                      name="chevron-forward-outline"
-                      type="ionicon"
-                      color="rgba(127, 127, 127, 0.4)"
-                      style={{ marginLeft: 5 }}
-                    />
-                  </Option>
-                );
-              })}
-            </Periodos>
-          </View>
-          <Space>
-            <View style={styles.line} />
-            <Text style={styles.spaceText}>ou</Text>
-            <View style={styles.line} />
-          </Space>
+              <Periodos>
+                {periods.map((item) => {
+                  return (
+                    <Option
+                      key={item.id}
+                      onPress={() => handleNavigate(item, 'UBSScorecards')}
+                      activeOpacity={buttonOpacity}
+                    >
+                      <OptionText>{item.name}</OptionText>
+                      <Icon
+                        name="chevron-forward-outline"
+                        type="ionicon"
+                        color="rgba(127, 127, 127, 0.4)"
+                        style={{ marginLeft: 5 }}
+                      />
+                    </Option>
+                  );
+                })}
+              </Periodos>
+            </View>
+            <Space>
+              <View style={styles.line} />
+              <Text style={styles.spaceText}>ou</Text>
+              <View style={styles.line} />
+            </Space>
 
-          <PeriodosCard onPress={() => handleNavigate(null, 'UBSServices')}>
-            <Text style={styles.cardTitle} numberOfLines={1}>
-              Serviços
-            </Text>
-            <Text style={styles.cardText}>Veja a lista de serviços disponíveis</Text>
-          </PeriodosCard>
+            <PeriodosCard onPress={() => handleNavigate(null, 'UBSServices')}>
+              <Text style={styles.cardTitle} numberOfLines={1}>
+                Serviços
+              </Text>
+              <Text style={styles.cardText}>Veja a lista de serviços disponíveis</Text>
+            </PeriodosCard>
+          </ScrollView>
         </Menu>
       </Container>
     </>
