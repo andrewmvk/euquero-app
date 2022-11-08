@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "euquero-android",
-    "slug": "euquero-android",
-    "version": "1.0.0",
+    "name": "Eu Quero",
+    "slug": "euqueroapp",
+    "version": "1.0.0Beta",
     "icon": "./assets/images/icon.png",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -20,8 +20,16 @@
     ],
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": ["js", "svg"]
+      "sourceExts": [
+        "js",
+        "svg"
+      ]
     },
-    "description": ""
+    "description": "",
+    "extra": {
+      "eas": {
+        "projectId": "9f094ec9-834c-4c1f-9c9a-8b0e521a2c7f"
+      }
+    }
   }
 }
