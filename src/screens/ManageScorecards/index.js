@@ -15,33 +15,32 @@ import { auth, db } from '../../services/firebase.config';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [scorecards, setScoreCards] = useState([]);
-  const [scorecardsBackup, setScoreCardsBackup] = useState([]);
+  const [criteria, setCriteria] = useState([]);
+  const [criteriaBackup, setCriteriaBackup] = useState([]);
 
   const fetchData = async () => {
     setIsLoading(true);
-    const querySnapshot = await getDocs(collection(db, 'scorecards'));
+    const querySnapshot = await getDocs(collection(db, 'diretriz'));
 
-    let scorecardsArray = [];
+    let criteriaArray = [];
     querySnapshot.forEach((doc) => {
-      const scorecard = {
+      const criteria = {
         name: doc.data().name,
-        description: doc.data().description,
-        id: doc.data().id,
+        id: doc.id,
       };
-      scorecardsArray.push(scorecard);
+      criteriaArray.push(criteria);
     });
 
-    setScoreCards(scorecardsArray);
-    setScoreCardsBackup(scorecardsArray);
+    setCriteria(criteriaArray);
+    setCriteriaBackup(criteriaArray);
   };
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', async () => {
-      const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
-      if (currentUserSnap.exists()) {
-        fetchData().then(() => setIsLoading(false));
-      }
+      //const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+      //if (currentUserSnap.exists()) {
+      fetchData().then(() => setIsLoading(false));
+      //}
     });
     return () => unsubscribe();
   }, []);
@@ -55,10 +54,10 @@ export default (props) => {
   };
 
   const search = (t) => {
-    if (scorecardsBackup.length > 0) {
+    if (criteriaBackup.length > 0) {
       setIsLoading(true);
-      let arr = [...scorecardsBackup];
-      setScoreCards(
+      let arr = [...criteriaBackup];
+      setCriteria(
         arr.filter((d) =>
           d.name
             .normalize('NFD')
@@ -77,8 +76,8 @@ export default (props) => {
   };
 
   const deleteItem = (item) => {
-    const newData = scorecards.filter((cards) => cards.id != item.id);
-    setScoreCards(newData);
+    const newData = criteria.filter((cards) => cards.id != item.id);
+    setCriteria(newData);
   };
 
   return (
@@ -123,14 +122,13 @@ export default (props) => {
             style={{ marginTop: 32, marginBottom: 25, width: '100%', zIndex: 0 }}
             contentContainerStyle={{ alignItems: 'center' }}
           >
-            {scorecards.length > 0 ? (
-              scorecards.map((item) => {
+            {criteria.length > 0 ? (
+              criteria.map((item) => {
                 return (
                   <EditableCard
-                    value={item.id}
+                    itemId={item.id}
                     key={item.id}
                     text={item.name}
-                    description={item.description}
                     deletedItem={() => deleteItem(item)}
                   />
                 );
