@@ -10,13 +10,18 @@ import { db } from '../../services/firebase.config';
 import { TouchableCard, TouchableIcon, TouchableInnerCard } from './styles';
 import { Alert } from 'react-native';
 import { ScrollView } from 'react-native';
+import { AddButton } from '../common';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 export default (props) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isCreating, setIsCreating] = useState(props.creating);
   const [isLoading, setIsLoading] = useState(false);
-  const [itemName, setItemName] = useState(props.text);
+  const [itemData, setItemData] = useState({
+    id: props.itemId,
+    text: props.text,
+    isEditing: false,
+  });
   const [innerScorecards, setInnerScorecards] = useState([]);
 
   const screenWidth = Dimensions.get('window').width;
@@ -36,15 +41,17 @@ export default (props) => {
         borderBottomRightRadius: 5,
       },
     };
-  }, [isEditing]);
+  }, [itemData.isEditing]);
 
   const increaseDecreaseHeight = async () => {
-    setIsEditing(!isEditing);
-    if (innerScorecards.length == 0 && !isEditing) {
+    setItemData({ ...itemData, isEditing: !itemData.isEditing });
+    let scorecardsArrayLength = 0;
+
+    if (innerScorecards.length == 0 && !itemData.isEditing) {
       setIsLoading(true);
       const criteriaScorecards = query(
         collection(db, 'scorecards'),
-        where('criteriaId', '==', +props.itemId),
+        where('criteriaId', '==', +itemData.id),
       );
 
       const scorecardsSnapshot = await getDocs(criteriaScorecards);
@@ -58,63 +65,146 @@ export default (props) => {
         };
         innerScorecardsArray.push(scorecardObject);
       });
+      scorecardsArrayLength = innerScorecardsArray.length;
 
       setInnerScorecards(innerScorecardsArray);
     }
-    animatedHeight.value = withSpring(!isEditing ? 150 : 10);
+    animatedHeight.value = withSpring(
+      !itemData.isEditing ? (scorecardsArrayLength == 0 ? 110 : 150) : 10,
+    );
   };
 
   const save = async () => {
-    setIsLoading(true);
-    await setDoc(doc(db, 'diretriz', props.itemId.toString()), {
-      name: itemName,
-      id: props.itemId,
-    })
-      .catch((err) => console.log(err))
-      .then(() => setIsLoading(false));
-  };
-
-  const deleteOrCancel = () => {
-    if (isEditing) {
-      increaseDecreaseHeight();
+    if (props.checkId(+itemData.id) && !(itemData.text.trim().length == 0)) {
+      await setDoc(doc(db, 'diretriz', itemData.id.toString()), {
+        name: itemData.text,
+        id: +itemData.id,
+      })
+        .catch((err) => console.log(err))
+        .then(() => {
+          setIsCreating(false);
+          setIsLoading(false);
+        });
+    } else if (itemData.text.trim().length == 0) {
+      Alert.alert(
+        'Dados preenchidos incorretos!',
+        'A diretriz deve ter um nome para que esta seja salva',
+      );
+      setIsCreating(true);
+      setIsLoading(false);
     } else {
-      setIsLoading(true);
-      deleteScorecard().then(() => setIsLoading(false));
+      setIsCreating(true);
+      setIsLoading(false);
     }
   };
 
-  const deleteExample = (id) => {
-    setInnerScorecards(innerScorecards.filter((e) => e.id !== id));
+  const update = async () => {
+    setIsLoading(true);
+    if (!(itemData.text.trim().length == 0)) {
+      await setDoc(doc(db, 'diretriz', itemData.id.toString()), {
+        name: itemData.text,
+        id: +itemData.id,
+      })
+        .catch((err) => console.log(err))
+        .then(() => setIsLoading(false));
+    } else {
+      Alert.alert(
+        'Dados preenchidos incorretos!',
+        'A diretriz deve ter um nome para que esta seja atualizada',
+      );
+      setItemData({ ...itemData, isEditing: true });
+      setIsLoading(false);
+    }
   };
 
   const deleteScorecard = async (id) => {
-    const scorecardsQuery = query(
-      collection(db, 'ubsScorecards'),
-      where('scorecard', '==', props.itemId),
-    );
-    const scorecardsSnapshot = await getDocs(scorecardsQuery);
+    setIsLoading(true);
+    try {
+      const ubsScorecardsQuery = query(
+        collection(db, 'ubsScorecards'),
+        where('scorecard', '==', +id),
+      );
 
-    const promises = scorecardsSnapshot.docs.map(async (data) => {
-      await deleteDoc(doc(db, 'ubsScorecards', data.id));
-    });
+      const ubsScorecardsSnapshot = await getDocs(ubsScorecardsQuery);
 
-    await Promise.all(promises);
-
-    await deleteDoc(doc(db, 'scorecards', props.itemId.toString()))
-      .catch((err) => {
-        console.log(err);
-      })
-      .then(() => props.deletedItem())
-      .finally(() => {
-        Alert.alert(
-          'Indicador excluído!',
-          'O indicador ' +
-            `"${itemName}"` +
-            ' e sua(s) ' +
-            scorecardsSnapshot.docs.length +
-            ' referência(s) foram excluídos.',
-        );
+      const promises = ubsScorecardsSnapshot.docs.map(async (data) => {
+        await deleteDoc(doc(db, 'ubsScorecards', id.toString()));
       });
+
+      await Promise.all(promises)
+        .then(async () => {
+          await deleteDoc(doc(db, 'scorecards', id.toString()));
+        })
+        .then(() => {
+          setInnerScorecards(innerScorecards.filter((e) => +e.id !== +id));
+        });
+    } catch (err) {
+      console.log('Error while trying to delete the scorecard and its childrens');
+      console.log(err);
+    }
+  };
+
+  const handleDeleteScorecard = (data) => {
+    Alert.alert(
+      'Removendo indicador...',
+      'Deseja realmente remover o indicador (' + data.id + ") - '" + data.name + "' ?",
+      [
+        { text: 'NÃO', style: 'cancel' },
+        { text: 'SIM', onPress: () => remove() },
+      ],
+    );
+
+    const remove = () => {
+      animatedHeight.value = withSpring(10);
+      deleteScorecard(data.id).then(() => {
+        setIsLoading(false);
+        Alert.alert(
+          'Operação realizada com sucesso!',
+          'O indicador (' + data.id + ") - '" + data.name + "' foi removido!",
+        );
+        animatedHeight.value = withSpring(innerScorecards.length == 0 ? 110 : 150);
+      });
+    };
+  };
+
+  const idInputHandler = (t) => {
+    if (isNaN(t)) {
+      setItemData({ id: '', text: itemData.text });
+    } else {
+      setItemData({ id: t, text: itemData.text });
+    }
+  };
+
+  const navigateToNewScorecard = () => {
+    const periodId = Math.floor(itemData.id / 10);
+
+    let periodName = 'Período';
+
+    switch (periodId) {
+      case 1:
+        periodName = 'Pré-natal';
+        break;
+      case 2:
+        periodName = 'Pós-natal';
+        break;
+      case 3:
+        periodName = 'Saúde da Criança';
+        break;
+      default:
+        break;
+    }
+
+    props.navigation.navigate('NewScorecard', {
+      criteria: {
+        id: itemData.id,
+        text: itemData.text,
+      },
+      period: {
+        id: periodId,
+        name: periodName,
+      },
+      scorecards: innerScorecards,
+    });
   };
 
   const cardShadow = {
@@ -145,48 +235,95 @@ export default (props) => {
               color={colors.orange}
               style={{ flex: 2.5, marginLeft: 15, paddingRight: 5 }}
             />
-          ) : isEditing ? (
+          ) : itemData.isEditing || isCreating ? (
             <>
-              <Text style={styles.number}>{props.itemId}</Text>
+              {isCreating ? (
+                <TextInput
+                  style={[styles.number, { textDecorationLine: 'underline' }]}
+                  value={itemData.id}
+                  numberOfLines={1}
+                  maxLength={2}
+                  keyboardType="numeric"
+                  placeholder="ID"
+                  onChangeText={(t) => idInputHandler(t)}
+                />
+              ) : (
+                <Text style={styles.number} numberOfLines={1}>
+                  {itemData.id}
+                </Text>
+              )}
               <TextInput
                 style={[styles.title, { textDecorationLine: 'underline' }]}
                 numberOfLines={1}
-                value={itemName}
+                value={itemData.text}
                 placeholder="Nome"
-                onChangeText={setItemName}
+                onChangeText={(t) => setItemData({ id: itemData.id, text: t })}
               />
             </>
           ) : (
             <>
-              <Text style={styles.number}>{props.itemId}</Text>
+              <Text style={styles.number} numberOfLines={1}>
+                {itemData.id}
+              </Text>
               <Text style={styles.title} numberOfLines={1}>
-                {itemName}
+                {itemData.text}
               </Text>
             </>
           )}
 
-          <TouchableIcon
-            activeOpacity={buttonOpacity}
-            onPress={() => {
-              increaseDecreaseHeight().then(() => {
-                setIsLoading(false);
-              });
-              if (isEditing) {
-                save();
-              }
+          <View
+            style={{
+              flex: 1,
+              height: '100%',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              marginLEft: 5,
+              marginRight: 10,
             }}
           >
-            <Icon
-              name={isEditing ? 'check' : 'pencil-outline'}
-              size={35}
-              type="material-community"
-              color={isEditing ? colors.orange : colors.text}
-            />
-          </TouchableIcon>
+            <TouchableIcon
+              activeOpacity={buttonOpacity}
+              onPress={() => {
+                setIsLoading(true);
+                props.deleteItem().then(() => setIsLoading(false));
+              }}
+            >
+              <Icon
+                name={'trash-can-outline'}
+                size={35}
+                type="material-community"
+                color={colors.text}
+              />
+            </TouchableIcon>
+
+            <TouchableIcon
+              activeOpacity={buttonOpacity}
+              onPress={() => {
+                if (!isCreating) {
+                  increaseDecreaseHeight().then(() => {
+                    setIsLoading(false);
+                  });
+                }
+                if (itemData.isEditing) {
+                  update();
+                } else if (isCreating) {
+                  save();
+                }
+              }}
+            >
+              <Icon
+                name={itemData.isEditing || isCreating ? 'check' : 'pencil-outline'}
+                size={35}
+                type="material-community"
+                color={itemData.isEditing || isCreating ? colors.orange : colors.text}
+              />
+            </TouchableIcon>
+          </View>
         </TouchableCard>
       </Shadow>
       <AnimatedView animatedProps={viewProps}>
-        {isEditing ? (
+        {itemData.isEditing && !isLoading ? (
           <ScrollView style={{ width: '100%' }} nestedScrollEnabled={true}>
             <View
               style={{
@@ -214,7 +351,7 @@ export default (props) => {
                       </Text>
                       <TouchableIcon
                         activeOpacity={buttonOpacity}
-                        onPress={() => deleteExample(data.id)}
+                        onPress={() => handleDeleteScorecard(data)}
                       >
                         <Icon
                           name={'trash-can-outline'}
@@ -227,6 +364,7 @@ export default (props) => {
                   </Shadow>
                 );
               })}
+              <AddButton tiny relative onPress={navigateToNewScorecard} />
             </View>
           </ScrollView>
         ) : null}

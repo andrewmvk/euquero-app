@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, ScrollView } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Shadow } from 'react-native-shadow-2';
 
@@ -10,7 +10,7 @@ import { AddButton, EmptyListMessage } from '../../components/common';
 import { colors } from '../../defaultStyles';
 import { Container, SearchArea, SearchInput, SearchInputText } from './styles';
 import EditableCard from '../../components/EditableCard';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 
 export default (props) => {
@@ -25,8 +25,10 @@ export default (props) => {
     let criteriaArray = [];
     querySnapshot.forEach((doc) => {
       const criteria = {
+        id: doc.data().id,
         name: doc.data().name,
-        id: doc.id,
+        editing: false,
+        creating: false,
       };
       criteriaArray.push(criteria);
     });
@@ -75,9 +77,67 @@ export default (props) => {
     }
   };
 
-  const deleteItem = (item) => {
-    const newData = criteria.filter((cards) => cards.id != item.id);
-    setCriteria(newData);
+  const deleteCriteria = async (id) => {
+    try {
+      const scorecardsQuery = query(collection(db, 'scorecards'), where('criteriaId', '==', +id));
+
+      const scorecardsSnapshot = await getDocs(scorecardsQuery);
+
+      const promises = scorecardsSnapshot.docs.map(async (data) => {
+        const ubsScorecardsQuery = query(
+          collection(db, 'ubsScorecards'),
+          where('scorecard', '==', +data.id),
+        );
+
+        const ubsScorecardsSnapshot = await getDocs(ubsScorecardsQuery);
+
+        const innerPromises = ubsScorecardsSnapshot.docs.map(async (data) => {
+          await deleteDoc(doc(db, 'ubsScorecards', data.id.toString()));
+        });
+
+        await Promise.all(innerPromises).then(async () => {
+          await deleteDoc(doc(db, 'scorecards', data.id.toString()));
+        });
+      });
+
+      await Promise.all(promises).then(async () => {
+        await deleteDoc(doc(db, 'diretriz', `${id}`));
+        setCriteria(criteria.filter((item) => `${item.id}` !== `${id}`));
+      });
+    } catch (err) {
+      console.log('An error occurred while trying to delete the criteria with id"' + id + '"');
+      setCriteria(criteria.filter((item) => `${item.id}` !== `${id}`));
+      console.log(err);
+    }
+  };
+
+  const checkId = (id) => {
+    if (isNaN(id) || +id < 11 || +id > 39) {
+      Alert.alert(
+        'Número de ID inválido!',
+        'O número de identificação (ID) da diretriz deve ser um número que obedeça os limites deste tipo de identificador (11-39)',
+      );
+      return false;
+    } else if (criteria.some((item) => +item.id === id)) {
+      Alert.alert(
+        'Número de ID já existe!',
+        'O número de identificação (' + id + ') não pode ser duplicado',
+      );
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleNewCriteria = () => {
+    if (criteria.some((item) => item.id === '')) {
+      Alert.alert(
+        'Não foi possível adicionar!',
+        'Para adicionar uma nova diretriz é necessário preencher todos os dados da diretriz adicionada anteriormente e salvá-los',
+      );
+    } else {
+      setCriteria([...criteria, { id: '', name: '', editing: false, creating: true }]);
+    }
   };
 
   return (
@@ -126,20 +186,24 @@ export default (props) => {
               criteria.map((item) => {
                 return (
                   <EditableCard
+                    checkId={checkId}
                     itemId={item.id}
                     key={item.id}
                     text={item.name}
-                    deletedItem={() => deleteItem(item)}
+                    editing={item.editing}
+                    creating={item.creating}
+                    navigation={props.navigation}
+                    deleteItem={() => deleteCriteria(item.id)}
                   />
                 );
               })
             ) : (
               <EmptyListMessage alterText />
             )}
+            <AddButton small relative onPress={handleNewCriteria} />
           </ScrollView>
         )}
       </Container>
-      <AddButton onPress={() => props.navigation.navigate('NewScorecard')} />
     </>
   );
 };
