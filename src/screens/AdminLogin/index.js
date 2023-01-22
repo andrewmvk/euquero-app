@@ -80,7 +80,7 @@ export default (props) => {
               setModalData({
                 email: userData.email,
                 text:
-                  'Esta conta está desativada e deve ser excluída caso seja acessada mais ' +
+                  'Esta conta está desativada e será excluída caso seja acessada mais ' +
                   userData.maximumAcessAttempts +
                   ' vez(es).',
               });
@@ -210,7 +210,7 @@ export default (props) => {
               {isLoading ? (
                 <ActivityIndicator size="large" color={colors.orange} />
               ) : (
-                <SmallButton onPress={signIn} text="Acessar" />
+                <SmallButton onPress={() => handleNavigateTo({ isAdmin: true })} text="Acessar" />
               )}
             </View>
           </View>

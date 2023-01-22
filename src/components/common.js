@@ -93,7 +93,6 @@ export const MediumTitle = (props) => {
 
 const customButtonShadow = {
   small: {
-    distance: 0,
     startColor: 'rgba(0,0,0,0.1)',
     distance: 10,
     offset: [0, 4],
@@ -101,7 +100,6 @@ const customButtonShadow = {
     containerViewStyle: { paddingBottom: 2 },
   },
   large: {
-    distance: 0,
     startColor: 'rgba(0,0,0,0.1)',
     distance: 10,
     offset: [0, 4],
@@ -109,19 +107,10 @@ const customButtonShadow = {
     containerViewStyle: { paddingBottom: 2 },
   },
   rounded: {
-    distance: 0,
-    startColor: 'rgba(0,0,0,0.05)',
+    startColor: 'rgba(0,0,0,0.035)',
     finalColor: 'rgba(0,0,0,0)',
     radius: 35,
     distance: 10,
-    containerViewStyle: {
-      margin: 20,
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      position: 'absolute',
-      bottom: 0,
-      right: 0,
-    },
   },
 };
 
@@ -204,6 +193,7 @@ export function RegisterButton(props) {
       activeOpacity={buttonOpacity}
       style={[buttonStyles.register, props.containerStyle]}
       onPress={props.onPress}
+      disabled={props?.disabled}
     >
       {props.isLoading ? (
         <ActivityIndicator size="large" color="#fff" />
@@ -225,10 +215,50 @@ const RoundedButton = styled.TouchableOpacity`
 `;
 
 export function AddButton(props) {
+  const containerStyle = {
+    containerViewStyle: {
+      margin: 20,
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      position: props.relative ? 'relative' : 'absolute',
+      bottom: 0,
+      right: 0,
+    },
+  };
+
+  const properties = props.small
+    ? {
+        style: {
+          width: 55,
+          height: 55,
+        },
+        iconSize: 25,
+      }
+    : props.tiny
+    ? {
+        style: {
+          width: 45,
+          height: 45,
+        },
+        iconSize: 17,
+      }
+    : {
+        style: {
+          width: 70,
+          height: 70,
+        },
+        iconSize: 35,
+      };
+
   return (
-    <Shadow {...customButtonShadow.rounded}>
-      <RoundedButton activeOpacity={buttonOpacity} onPress={props.onPress}>
-        <Icon name="plus" size={35} type="material-community" color={colors.orange} />
+    <Shadow {...customButtonShadow.rounded} {...containerStyle}>
+      <RoundedButton style={properties.style} activeOpacity={buttonOpacity} onPress={props.onPress}>
+        <Icon
+          name="plus"
+          size={properties.iconSize}
+          type="material-community"
+          color={colors.orange}
+        />
       </RoundedButton>
     </Shadow>
   );
@@ -475,21 +505,18 @@ const SelectView = styled.TouchableOpacity`
   flex-direction: row;
 `;
 
+const DropdownTextId = styled.Text`
+  flex: 0.15;
+  font-size: ${fontSize.cardText};
+  font-family: ${fonts.spartanR};
+  color: ${colors.orange};
+`;
+
 const DropdownText = styled.Text`
-  flex: 1;
+  flex: 0.85;
   font-size: ${fontSize.cardText};
   font-family: ${fonts.spartanR};
   color: ${colors.text};
-`;
-
-const DropdownView = styled.View`
-  height: 120px;
-  width: 100%;
-  top: 50px;
-  background-color: #fff;
-  position: absolute;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
 `;
 
 const selectBoxShadow = {
@@ -502,18 +529,23 @@ const selectBoxShadow = {
 
 export const DropdownSelection = (props) => {
   const [opened, setOpened] = useState(false);
-  const dropDownHeight = props.data.items.length > 3 ? 160 : 135;
+  const dropDownHeight = props.data.items.length > 3 ? 170 : 160;
+  const zIndexValue = props.zIndex ? props.zIndex : 4;
   const itemHeight = (dropDownHeight - 10) / props.data.items.length;
 
   return (
-    <View style={[{ alignItems: 'center' }, props?.containerStyle]}>
-      <Shadow {...selectBoxShadow} containerViewStyle={{ height: 55, width: '100%', zIndex: 4 }}>
+    <View style={[{ alignItems: 'center', zIndex: zIndexValue }, props?.containerStyle]}>
+      <Shadow
+        {...selectBoxShadow}
+        containerViewStyle={{ height: 55, width: '100%', zIndex: zIndexValue }}
+      >
         <SelectView
-          style={[props?.selectContainerStyle, { zIndex: 4 }]}
+          style={[props?.selectContainerStyle]}
           activeOpacity={buttonOpacity}
           disabled={props.disabled}
           onPress={() => setOpened(!opened)}
         >
+          <DropdownTextId>{props.data.value}</DropdownTextId>
           <DropdownText
             numberOfLines={1}
             style={{
@@ -530,19 +562,24 @@ export const DropdownSelection = (props) => {
         </SelectView>
       </Shadow>
       {opened ? (
-        <DropdownView
-          style={[
-            {
-              height: dropDownHeight,
-              justifyContent: 'center',
-              zIndex: 5,
-            },
-            props?.dropdownContainerStyle,
-          ]}
+        <ScrollView
+          style={{
+            width: '100%',
+            maxHeight: dropDownHeight,
+            marginTop: -5,
+            backgroundColor: '#fff',
+            borderBottomLeftRadius: 5,
+            borderBottomRightRadius: 5,
+            zIndex: zIndexValue - 1,
+          }}
+          nestedScrollEnabled
         >
-          <ScrollView
-            contentContainerStyle={{ justifyContent: 'center' }}
-            style={{ height: '90%', paddingVertical: props?.padding }}
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'space-between',
+              marginVertical: 8,
+            }}
           >
             {props.data.items.map((item) => {
               return (
@@ -550,8 +587,11 @@ export const DropdownSelection = (props) => {
                   key={item.id}
                   activeOpacity={buttonOpacity}
                   style={{
-                    height: itemHeight >= 40 ? itemHeight : 40,
-                    justifyContent: 'center',
+                    marginVertical: 4,
+                    height: 40,
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
                     paddingRight: 18,
                     paddingLeft: 18,
                   }}
@@ -564,14 +604,13 @@ export const DropdownSelection = (props) => {
                     setOpened(!opened);
                   }}
                 >
-                  <DropdownText numberOfLines={1} style={{ marginBottom: 10 }}>
-                    {item.name}
-                  </DropdownText>
+                  <DropdownTextId>{item.id}</DropdownTextId>
+                  <DropdownText numberOfLines={1}>{item.name}</DropdownText>
                 </TouchableOpacity>
               );
             })}
-          </ScrollView>
-        </DropdownView>
+          </View>
+        </ScrollView>
       ) : null}
     </View>
   );
