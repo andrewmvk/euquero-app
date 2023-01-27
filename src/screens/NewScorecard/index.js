@@ -53,12 +53,12 @@ export default (props) => {
     setModalNumbers(newArray);
   };
 
-  const fetchCriteriasData = async () => {
-    if (periods.value != 0) {
+  const fetchCriteriasData = async (periodId) => {
+    if (periodId != 0) {
       const criteriasQuery = query(
         collection(db, 'diretriz'),
-        where('id', '>=', periods.value * 10 + 1),
-        where('id', '<=', periods.value * 10 + 9),
+        where('id', '>=', periodId * 10 + 1),
+        where('id', '<=', periodId * 10 + 9),
       );
 
       const criteriasSnapshot = await getDocs(criteriasQuery);
@@ -78,14 +78,16 @@ export default (props) => {
         selected: criteriaArray[0].name,
         value: criteriaArray[0].id,
       });
+
+      return criteriaArray[periodId].id;
     }
   };
 
-  const fetchScorecardsData = async () => {
-    if (criterias.value != 0) {
+  const fetchScorecardsData = async (criteriaId) => {
+    if (criteriaId != 0) {
       const scorecardsQuery = query(
         collection(db, 'scorecards'),
-        where('criteriaId', '==', criterias.value),
+        where('criteriaId', '==', criteriaId),
       );
 
       const scorecardsSnapshot = await getDocs(scorecardsQuery);
@@ -99,40 +101,22 @@ export default (props) => {
         scorecardsArray.push(scorecard);
       });
 
-      modalNumberHandler(scorecardsArray, criterias.value);
+      modalNumberHandler(scorecardsArray, criteriaId);
     }
-  };
-
-  useEffect(() => {
-    setIsLoading({ loading: true, main: true });
-    fetchCriteriasData().then(() => {
-      fetchScorecardsData();
-    });
-  }, [periods.value, criterias.value]);
-
-  useEffect(() => {
-    if (data.id !== 'ID') {
-      setIsLoading({ loading: false, main: false });
-    }
-  }, [data.id]);
-
-  const searchBoxShadow = {
-    distance: 2,
-    startColor: 'rgba(0,0,0,0.035)',
-    finalColor: 'rgba(0,0,0,0.0)',
-    distance: 10,
-    radius: 5,
   };
 
   const addNewScorecard = async () => {
-    //const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
-    if (periods.value != 0 && criterias.value !== 'ID' && data.name.length > 0) {
+    let noErrors = false;
+    const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+    if (periods.value != 0 && data.name.length > 0 && currentUserSnap.exists()) {
       setIsLoading({ loading: true, main: false });
       try {
-        setDoc(doc(db, 'scorecards', data.id.toString()), {
+        await setDoc(doc(db, 'scorecards', data.id.toString()), {
           name: data.name,
           description: data.description,
           criteriaId: criterias.value,
+        }).then(() => {
+          noErrors = true;
         });
       } catch (err) {
         console.log(err);
@@ -142,33 +126,68 @@ export default (props) => {
         'Nome em branco!',
         'É necessário preencher o nome do indicador para poder adicioná-lo',
       );
-    } else {
+    } else if (periods.value == 0) {
       Alert.alert(
         'Dados incompletos!',
-        'Para adicionar um novo indicador é nessessário selecionar um período',
+        'Para adicionar um novo indicador é necessário selecionar um período',
       );
     }
+
+    return noErrors;
   };
 
-  const handleAddScorecard = () => {
-    addNewScorecard().then(() => {
-      setIsLoading({ loading: false, main: false });
-      const selectedCriteria = criterias.items.find((e) => e.id === criterias.value);
+  const handleSetCriteria = async (data) => {
+    setIsLoading({ loading: true, main: true });
+    setCriterias(data);
+    await fetchScorecardsData(+data.value);
+  };
 
-      props.navigation.goBack();
-      Alert.alert(
-        'Operação realizada com sucesso!',
-        'O indicador (' +
-          data.id +
-          ") - '" +
-          data.name +
-          "' foi adicionado com sucesso a diretriz (" +
-          selectedCriteria.id +
-          ") - '" +
-          selectedCriteria.name +
-          "'",
-      );
+  const handleSetPeriods = async (data) => {
+    setIsLoading({ loading: true, main: true });
+    setPeriods(data);
+    const selectedCriteria = await fetchCriteriasData(+data.value);
+    await fetchScorecardsData(+selectedCriteria);
+  };
+
+  const handleAddScorecard = async () => {
+    await addNewScorecard().then((noErrors) => {
+      setIsLoading({ loading: false, main: false });
+      if (noErrors) {
+        const selectedCriteria = criterias.items.find((e) => e.id === criterias.value);
+
+        props.navigation.goBack();
+        Alert.alert(
+          'Operação realizada com sucesso!',
+          'O indicador (' +
+            data.id +
+            ") - '" +
+            data.name +
+            "' foi adicionado com sucesso a diretriz (" +
+            selectedCriteria.id +
+            ") - '" +
+            selectedCriteria.name +
+            "'",
+        );
+      }
     });
+  };
+
+  const firstFetch = async () => {
+    const selectedCriteria = await fetchCriteriasData(+periods.value);
+    await fetchScorecardsData(+selectedCriteria);
+  };
+
+  useEffect(() => {
+    setIsLoading({ loading: true, main: true });
+    firstFetch().then(() => setIsLoading({ loading: false, main: false }));
+  }, []);
+
+  const searchBoxShadow = {
+    distance: 2,
+    startColor: 'rgba(0,0,0,0.035)',
+    finalColor: 'rgba(0,0,0,0.0)',
+    distance: 10,
+    radius: 5,
   };
 
   return (
@@ -242,7 +261,11 @@ export default (props) => {
                   <View style={{ width: '100%', height: 55, marginTop: 15 }}>
                     <DropdownSelection
                       data={periods}
-                      onSelect={setPeriods}
+                      onSelect={(data) =>
+                        handleSetPeriods(data).then(() =>
+                          setIsLoading({ loading: false, main: false }),
+                        )
+                      }
                       disabled={false}
                       zIndex={5}
                       containerStyle={{ width: '100%', position: 'absolute' }}
@@ -252,7 +275,11 @@ export default (props) => {
                   <View style={{ width: '100%', height: 55, marginTop: 15 }}>
                     <DropdownSelection
                       data={criterias}
-                      onSelect={setCriterias}
+                      onSelect={(data) =>
+                        handleSetCriteria(data).then(() =>
+                          setIsLoading({ loading: false, main: false }),
+                        )
+                      }
                       disabled={periods.value == 0 ? true : false}
                       zIndex={3}
                       containerStyle={{ width: '100%', position: 'absolute' }}

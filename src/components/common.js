@@ -132,7 +132,7 @@ const buttonStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   register: {
-    width: '90%',
+    width: screenWidth * 0.85,
     height: 60,
     backgroundColor: colors.orange,
     borderRadius: 5,
@@ -190,10 +190,11 @@ const RegisterButtonText = styled.Text`
 export function RegisterButton(props) {
   return (
     <TouchableOpacity
+      pointerEvents={props?.pointerEvents}
       activeOpacity={buttonOpacity}
       style={[buttonStyles.register, props.containerStyle]}
-      onPress={props.onPress}
-      disabled={props?.disabled}
+      onPress={props.isLoading ? null : props.onPress}
+      disabled={props?.disabled ? props.disabled : props.isLoading}
     >
       {props.isLoading ? (
         <ActivityIndicator size="large" color="#fff" />
@@ -217,7 +218,7 @@ const RoundedButton = styled.TouchableOpacity`
 export function AddButton(props) {
   const containerStyle = {
     containerViewStyle: {
-      margin: 20,
+      margin: props?.margin ? props.margin : 20,
       flexDirection: 'row',
       justifyContent: 'flex-end',
       position: props.relative ? 'relative' : 'absolute',

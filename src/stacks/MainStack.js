@@ -19,12 +19,14 @@ import NewScorecard from '../screens/NewScorecard';
 import UBSScorecards from '../screens/UBSScorecards';
 import UBSServices from '../screens/UBSServices';
 import NumberSelectionModal from '../components/NumberSelectionModal';
+import ManageGlossary from '../screens/ManageGlossary';
+import ManageServices from '../screens/ManageServices';
 
 const Stack = createStackNavigator();
 
 export default () => (
   <Stack.Navigator
-    initialRouteName="ManageScorecards"
+    initialRouteName="AdminLogin"
     screenOptions={{
       headerShown: false,
       cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,
@@ -45,6 +47,8 @@ export default () => (
     <Stack.Screen name="UBSMenu" component={UBSMenu} />
     <Stack.Screen name="ManageScorecards" component={ManageScorecards} />
     <Stack.Screen name="NewScorecard" component={NewScorecard} />
+    <Stack.Screen name="ManageGlossary" component={ManageGlossary} />
+    <Stack.Screen name="ManageServices" component={ManageServices} />
     <Stack.Screen name="UBSScorecards" component={UBSScorecards} />
     <Stack.Screen name="UBSServices" component={UBSServices} />
     <Stack.Screen name="NumberSelectionModal" component={NumberSelectionModal} />

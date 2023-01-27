@@ -13,6 +13,14 @@ import EditableCard from '../../components/EditableCard';
 import { collection, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 
+const searchBoxShadow = {
+  distance: 2,
+  startColor: 'rgba(0,0,0,0.035)',
+  finalColor: 'rgba(0,0,0,0.0)',
+  distance: 10,
+  radius: 5,
+};
+
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [criteria, setCriteria] = useState([]);
@@ -39,21 +47,13 @@ export default (props) => {
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', async () => {
-      //const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
-      //if (currentUserSnap.exists()) {
-      fetchData().then(() => setIsLoading(false));
-      //}
+      const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+      if (currentUserSnap.exists()) {
+        fetchData().then(() => setIsLoading(false));
+      }
     });
     return () => unsubscribe();
   }, []);
-
-  const searchBoxShadow = {
-    distance: 2,
-    startColor: 'rgba(0,0,0,0.035)',
-    finalColor: 'rgba(0,0,0,0.0)',
-    distance: 10,
-    radius: 5,
-  };
 
   const search = (t) => {
     if (criteriaBackup.length > 0) {
@@ -101,11 +101,21 @@ export default (props) => {
       });
 
       await Promise.all(promises).then(async () => {
-        await deleteDoc(doc(db, 'diretriz', `${id}`));
-        setCriteria(criteria.filter((item) => `${item.id}` !== `${id}`));
+        await deleteDoc(doc(db, 'diretriz', `${id}`)).then(() => {
+          const c = criteria.find((item) => `${item.id}` === `${id}`);
+          Alert.alert(
+            'Operação realizada com sucesso!',
+            'A diretriz (' + c.id + ") - '" + c.name + "' foi removida com sucesso",
+          );
+          setCriteria(criteria.filter((item) => `${item.id}` !== `${id}`));
+        });
       });
     } catch (err) {
-      console.log('An error occurred while trying to delete the criteria with id"' + id + '"');
+      console.log(
+        'An error occurred while trying to delete the criteria with id "' +
+          id +
+          '" (maybe it does not exist in the database)',
+      );
       setCriteria(criteria.filter((item) => `${item.id}` !== `${id}`));
       console.log(err);
     }
@@ -138,6 +148,12 @@ export default (props) => {
     } else {
       setCriteria([...criteria, { id: '', name: '', editing: false, creating: true }]);
     }
+  };
+
+  const saveNewCriteria = (data) => {
+    let criteriasArray = criteria.filter((item) => item.id !== '');
+    criteriasArray.push(data);
+    setCriteria(criteriasArray);
   };
 
   return (
@@ -186,6 +202,7 @@ export default (props) => {
               criteria.map((item) => {
                 return (
                   <EditableCard
+                    type={'diretriz'}
                     checkId={checkId}
                     itemId={item.id}
                     key={item.id}
@@ -193,6 +210,7 @@ export default (props) => {
                     editing={item.editing}
                     creating={item.creating}
                     navigation={props.navigation}
+                    saveNew={saveNewCriteria}
                     deleteItem={() => deleteCriteria(item.id)}
                   />
                 );
@@ -200,7 +218,7 @@ export default (props) => {
             ) : (
               <EmptyListMessage alterText />
             )}
-            <AddButton small relative onPress={handleNewCriteria} />
+            {criteria.length > 0 ? <AddButton small relative onPress={handleNewCriteria} /> : null}
           </ScrollView>
         )}
       </Container>

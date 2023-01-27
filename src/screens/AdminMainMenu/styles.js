@@ -1,5 +1,8 @@
+import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import * as defaultS from '../../defaultStyles';
+
+const screenWidth = Dimensions.get('window').width;
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -16,7 +19,7 @@ export const ManageText = styled.Text`
 export const ManageTouchableBox = styled.TouchableOpacity`
   background: #fff;
   border-radius: 5px;
-  width: 300px;
+  width: ${screenWidth * 0.85}px;
   height: 160px;
   justify-content: center;
   align-items: center;
