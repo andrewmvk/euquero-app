@@ -13,18 +13,25 @@ import { ScrollView } from 'react-native';
 import { AddButton } from '../common';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
+const cardShadow = {
+  startColor: 'rgba(0,0,0,0.035)',
+  finalColor: 'rgba(0,0,0,0.0)',
+  distance: 10,
+  radius: 5,
+};
 
 export default (props) => {
   const [isCreating, setIsCreating] = useState(props.creating);
   const [isLoading, setIsLoading] = useState(false);
   const [itemData, setItemData] = useState({
     id: props.itemId,
-    text: props.text,
+    name: props.text,
     isEditing: false,
   });
   const [innerScorecards, setInnerScorecards] = useState([]);
 
   const screenWidth = Dimensions.get('window').width;
+  const category = props?.type === 'services' ? 'O serviço' : 'A diretriz';
 
   const animatedHeight = useSharedValue(10);
 
@@ -45,9 +52,9 @@ export default (props) => {
 
   const increaseDecreaseHeight = async () => {
     setItemData({ ...itemData, isEditing: !itemData.isEditing });
-    let scorecardsArrayLength = 0;
 
-    if (innerScorecards.length == 0 && !itemData.isEditing) {
+    let scorecardsArrayLength = 0;
+    if (innerScorecards.length == 0 && !itemData.isEditing && props?.type !== 'services') {
       setIsLoading(true);
       const criteriaScorecards = query(
         collection(db, 'scorecards'),
@@ -59,6 +66,7 @@ export default (props) => {
       const innerScorecardsArray = [];
       scorecardsSnapshot.forEach((scorecard) => {
         const scorecardObject = {
+          criteriaId: +itemData.id,
           id: +scorecard.id,
           description: scorecard.data().description,
           name: scorecard.data().name,
@@ -75,20 +83,26 @@ export default (props) => {
   };
 
   const save = async () => {
-    if (props.checkId(+itemData.id) && !(itemData.text.trim().length == 0)) {
-      await setDoc(doc(db, 'diretriz', itemData.id.toString()), {
-        name: itemData.text,
+    if (props.checkId(+itemData.id) && !(itemData.name.trim().length == 0)) {
+      await setDoc(doc(db, props?.type, itemData.id.toString()), {
+        name: itemData.name,
         id: +itemData.id,
       })
         .catch((err) => console.log(err))
         .then(() => {
+          props.saveNew({
+            name: itemData.name,
+            id: +itemData.id,
+            creating: false,
+            editing: false,
+          });
           setIsCreating(false);
           setIsLoading(false);
         });
-    } else if (itemData.text.trim().length == 0) {
+    } else if (itemData.name.trim().length == 0) {
       Alert.alert(
         'Dados preenchidos incorretos!',
-        'A diretriz deve ter um nome para que esta seja salva',
+        category + ' deve ter um nome para que esta seja salva',
       );
       setIsCreating(true);
       setIsLoading(false);
@@ -100,9 +114,9 @@ export default (props) => {
 
   const update = async () => {
     setIsLoading(true);
-    if (!(itemData.text.trim().length == 0)) {
-      await setDoc(doc(db, 'diretriz', itemData.id.toString()), {
-        name: itemData.text,
+    if (!(itemData.name.trim().length == 0)) {
+      await setDoc(doc(db, props?.type, itemData.id.toString()), {
+        name: itemData.name,
         id: +itemData.id,
       })
         .catch((err) => console.log(err))
@@ -110,7 +124,7 @@ export default (props) => {
     } else {
       Alert.alert(
         'Dados preenchidos incorretos!',
-        'A diretriz deve ter um nome para que esta seja atualizada',
+        category + ' deve ter um nome para que esta seja atualizada',
       );
       setItemData({ ...itemData, isEditing: true });
       setIsLoading(false);
@@ -169,9 +183,9 @@ export default (props) => {
 
   const idInputHandler = (t) => {
     if (isNaN(t)) {
-      setItemData({ id: '', text: itemData.text });
+      setItemData({ ...itemData, id: '' });
     } else {
-      setItemData({ id: t, text: itemData.text });
+      setItemData({ ...itemData, id: t });
     }
   };
 
@@ -197,7 +211,7 @@ export default (props) => {
     props.navigation.navigate('NewScorecard', {
       criteria: {
         id: itemData.id,
-        text: itemData.text,
+        text: itemData.name,
       },
       period: {
         id: periodId,
@@ -207,11 +221,10 @@ export default (props) => {
     });
   };
 
-  const cardShadow = {
-    startColor: 'rgba(0,0,0,0.035)',
-    finalColor: 'rgba(0,0,0,0.0)',
-    distance: 10,
-    radius: 5,
+  const navigateToGlossary = (data) => {
+    props.navigation.navigate('ManageGlossary', {
+      data: { ...data, criteriaName: itemData.name },
+    });
   };
 
   return (
@@ -255,9 +268,9 @@ export default (props) => {
               <TextInput
                 style={[styles.title, { textDecorationLine: 'underline' }]}
                 numberOfLines={1}
-                value={itemData.text}
+                value={itemData.name}
                 placeholder="Nome"
-                onChangeText={(t) => setItemData({ id: itemData.id, text: t })}
+                onChangeText={(t) => setItemData({ ...itemData, name: t })}
               />
             </>
           ) : (
@@ -266,7 +279,7 @@ export default (props) => {
                 {itemData.id}
               </Text>
               <Text style={styles.title} numberOfLines={1}>
-                {itemData.text}
+                {itemData.name}
               </Text>
             </>
           )}
@@ -284,10 +297,15 @@ export default (props) => {
           >
             <TouchableIcon
               activeOpacity={buttonOpacity}
-              onPress={() => {
-                setIsLoading(true);
-                props.deleteItem().then(() => setIsLoading(false));
-              }}
+              disabled={isLoading}
+              onPress={
+                isLoading
+                  ? null
+                  : () => {
+                      setIsLoading(true);
+                      props.deleteItem().then(() => setIsLoading(false));
+                    }
+              }
             >
               <Icon
                 name={'trash-can-outline'}
@@ -322,53 +340,58 @@ export default (props) => {
           </View>
         </TouchableCard>
       </Shadow>
-      <AnimatedView animatedProps={viewProps}>
-        {itemData.isEditing && !isLoading ? (
-          <ScrollView style={{ width: '100%' }} nestedScrollEnabled={true}>
-            <View
-              style={{
-                alignItems: 'center',
-                flex: 1,
-                justifyContent: 'space-between',
-                marginVertical: 10,
-              }}
-            >
-              {innerScorecards.map((data) => {
-                return (
-                  <Shadow
-                    key={data.id}
-                    {...cardShadow}
-                    containerViewStyle={{
-                      marginVertical: 8,
-                    }}
-                  >
-                    <TouchableInnerCard activeOpacity={buttonOpacity}>
-                      <Text style={[styles.number, { fontSize: fontSizeNoUnits.text }]}>
-                        {data.id}
-                      </Text>
-                      <Text style={[styles.title, { fontSize: 16 }]} numberOfLines={1}>
-                        {data.name}
-                      </Text>
-                      <TouchableIcon
+      {props?.type === 'services' ? null : (
+        <AnimatedView animatedProps={viewProps}>
+          {itemData.isEditing && !isLoading ? (
+            <ScrollView style={{ width: '100%' }} nestedScrollEnabled={true}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flex: 1,
+                  justifyContent: 'space-between',
+                  marginVertical: 10,
+                }}
+              >
+                {innerScorecards.map((data) => {
+                  return (
+                    <Shadow
+                      key={data.id}
+                      {...cardShadow}
+                      containerViewStyle={{
+                        marginVertical: 8,
+                      }}
+                    >
+                      <TouchableInnerCard
+                        onPress={() => navigateToGlossary(data)}
                         activeOpacity={buttonOpacity}
-                        onPress={() => handleDeleteScorecard(data)}
                       >
-                        <Icon
-                          name={'trash-can-outline'}
-                          size={27}
-                          type="material-community"
-                          color={colors.text}
-                        />
-                      </TouchableIcon>
-                    </TouchableInnerCard>
-                  </Shadow>
-                );
-              })}
-              <AddButton tiny relative onPress={navigateToNewScorecard} />
-            </View>
-          </ScrollView>
-        ) : null}
-      </AnimatedView>
+                        <Text style={[styles.number, { fontSize: fontSizeNoUnits.text }]}>
+                          {data.id}
+                        </Text>
+                        <Text style={[styles.title, { fontSize: 16 }]} numberOfLines={1}>
+                          {data.name}
+                        </Text>
+                        <TouchableIcon
+                          activeOpacity={buttonOpacity}
+                          onPress={() => handleDeleteScorecard(data)}
+                        >
+                          <Icon
+                            name={'trash-can-outline'}
+                            size={27}
+                            type="material-community"
+                            color={colors.text}
+                          />
+                        </TouchableIcon>
+                      </TouchableInnerCard>
+                    </Shadow>
+                  );
+                })}
+                <AddButton tiny relative onPress={navigateToNewScorecard} />
+              </View>
+            </ScrollView>
+          ) : null}
+        </AnimatedView>
+      )}
     </View>
   );
 };
