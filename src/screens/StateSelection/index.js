@@ -5,7 +5,7 @@ import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
 
-import { colors } from '../../defaultStyles';
+import { colors, shadow } from '../../defaultStyles';
 import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
@@ -92,7 +92,7 @@ export default (props) => {
       <Container>
         <Header onPress={() => props.navigation.goBack()} />
         <SearchArea>
-          <SearchInput>
+          <SearchInput style={shadow}>
             <SearchInputText
               placeholder="Buscar estado"
               placeholderTextColor="#C4C4C4"
@@ -123,6 +123,7 @@ export default (props) => {
             data={brazilianStates}
             notRegistredData={noUbsStates}
             handleCardPress={handleCardPress}
+            safeArea={80}
           />
         )}
       </Container>

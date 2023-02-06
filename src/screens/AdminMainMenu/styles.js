@@ -23,12 +23,5 @@ export const ManageTouchableBox = styled.TouchableOpacity`
   height: 160px;
   justify-content: center;
   align-items: center;
+  margin-bottom: 20px;
 `;
-
-export const ManageBoxShadow = {
-  distance: 0,
-  startColor: 'rgba(0,0,0,0.25)',
-  offset: [0, 4],
-  radius: 5,
-  containerViewStyle: { marginBottom: 20 },
-};

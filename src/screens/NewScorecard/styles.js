@@ -36,6 +36,7 @@ export const InputBox = styled.View`
   padding-left: 18px;
   padding-right: 18px;
   flex-direction: row;
+  margin-top: 15px;
 `;
 
 export const Input = styled.TextInput`

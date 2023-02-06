@@ -2,24 +2,16 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { Shadow } from 'react-native-shadow-2';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { AddButton, EmptyListMessage } from '../../components/common';
-import { colors } from '../../defaultStyles';
+import { colors, shadow } from '../../defaultStyles';
 import { Container, SearchArea, SearchInput, SearchInputText } from './styles';
 import EditableCard from '../../components/EditableCard';
 import { collection, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
-
-const searchBoxShadow = {
-  distance: 2,
-  startColor: 'rgba(0,0,0,0.035)',
-  finalColor: 'rgba(0,0,0,0.0)',
-  distance: 10,
-  radius: 5,
-};
+import { View } from 'react-native';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -162,33 +154,23 @@ export default (props) => {
       <Container>
         <Header text={'Administrativo - Indicadores'} onPress={() => props.navigation.goBack()} />
         <SearchArea>
-          <Shadow
-            {...searchBoxShadow}
-            containerViewStyle={{
-              height: 55,
-              marginTop: 45,
-              width: '100%',
-              alignItems: 'center',
-            }}
-          >
-            <SearchInput>
-              <SearchInputText
-                placeholder="Buscar Indicador"
-                onChangeText={(t) => search(t)}
-                placeholderTextColor="#C4C4C4"
-                numberOfLines={1}
-              />
-              <Icon
-                name="search-outline"
-                type="ionicon"
-                color="#c4c4c4"
-                style={{
-                  paddingHorizontal: 15,
-                  paddingVertical: 15,
-                }}
-              />
-            </SearchInput>
-          </Shadow>
+          <SearchInput style={{ ...shadow }}>
+            <SearchInputText
+              placeholder="Buscar Indicador"
+              onChangeText={(t) => search(t)}
+              placeholderTextColor="#C4C4C4"
+              numberOfLines={1}
+            />
+            <Icon
+              name="search-outline"
+              type="ionicon"
+              color="#c4c4c4"
+              style={{
+                paddingHorizontal: 15,
+                paddingVertical: 15,
+              }}
+            />
+          </SearchInput>
         </SearchArea>
 
         {isLoading ? (
@@ -199,22 +181,25 @@ export default (props) => {
             contentContainerStyle={{ alignItems: 'center' }}
           >
             {criteria.length > 0 ? (
-              criteria.map((item) => {
-                return (
-                  <EditableCard
-                    type={'diretriz'}
-                    checkId={checkId}
-                    itemId={item.id}
-                    key={item.id}
-                    text={item.name}
-                    editing={item.editing}
-                    creating={item.creating}
-                    navigation={props.navigation}
-                    saveNew={saveNewCriteria}
-                    deleteItem={() => deleteCriteria(item.id)}
-                  />
-                );
-              })
+              <>
+                <View style={{ height: 5 }} />
+                {criteria.map((item) => {
+                  return (
+                    <EditableCard
+                      type={'diretriz'}
+                      checkId={checkId}
+                      itemId={item.id}
+                      key={item.id}
+                      text={item.name}
+                      editing={item.editing}
+                      creating={item.creating}
+                      navigation={props.navigation}
+                      saveNew={saveNewCriteria}
+                      deleteItem={() => deleteCriteria(item.id)}
+                    />
+                  );
+                })}
+              </>
             ) : (
               <EmptyListMessage alterText />
             )}

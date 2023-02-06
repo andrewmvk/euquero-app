@@ -2,6 +2,8 @@ import styled from 'styled-components/native';
 import * as defaultS from '../../defaultStyles';
 import { Dimensions } from 'react-native';
 
+const screenWidth = Dimensions.get('window').width;
+
 export const Container = styled.SafeAreaView`
   flex: 1;
   align-items: center;
@@ -23,7 +25,7 @@ export const UBSName = styled.Text`
 `;
 
 export const Menu = styled.View`
-  width: 80%;
+  width: 100%;
   height: 100%;
   margin-top: 30px;
   margin-bottom: 20px;
@@ -31,7 +33,8 @@ export const Menu = styled.View`
 
 export const PeriodosCard = styled.TouchableOpacity`
   border-left-color: #ff6b0f;
-  width: ${Dimensions.get('window').width * 0.8}px;
+  z-index: 3;
+  width: ${screenWidth * 0.8}px;
   height: 80px;
   background-color: #fff;
   flex-direction: column;
@@ -42,7 +45,7 @@ export const PeriodosCard = styled.TouchableOpacity`
 `;
 
 export const Periodos = styled.View`
-  width: 95%;
+  width: ${screenWidth * 0.8 * 0.95}px;
   background-color: #fff;
   flex-direction: column;
   align-items: flex-start;

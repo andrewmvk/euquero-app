@@ -13,6 +13,7 @@ export const TouchableIcon = styled.TouchableOpacity`
 
 export const TouchableCard = styled.TouchableOpacity`
   width: ${screenWidth * 0.85}px;
+  z-index: 3;
   height: 70px;
   background-color: #fff;
   flex-direction: row;
@@ -29,4 +30,6 @@ export const TouchableInnerCard = styled.TouchableOpacity`
   align-items: center;
   justify-content: space-between;
   border-radius: 5px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 `;

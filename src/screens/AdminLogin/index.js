@@ -27,7 +27,7 @@ import Wave from '../../components/Waves/Wave';
 import DashedWave from '../../components/Waves/DashedWave';
 import Modal from '../../components/Modal';
 import { SmallButton, InputBox } from '../../components/common';
-import { colors } from '../../defaultStyles';
+import { colors, shadow } from '../../defaultStyles';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { Icon } from 'react-native-elements';
 
@@ -170,7 +170,7 @@ export default (props) => {
               <Subtitle>Acesso Administrativo</Subtitle>
             </LogoView>
             <InputArea>
-              <SearchInput>
+              <SearchInput style={shadow}>
                 <Icon
                   name="person-outline"
                   type="ionicon"
@@ -187,7 +187,7 @@ export default (props) => {
                   onChangeText={setEmail}
                 />
               </SearchInput>
-              <SearchInput>
+              <SearchInput style={shadow}>
                 <Icon
                   name="lock-closed-outline"
                   type="ionicon"

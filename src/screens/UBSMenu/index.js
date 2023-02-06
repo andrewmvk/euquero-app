@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Shadow } from 'react-native-shadow-2';
 
 import {
   Container,
@@ -14,7 +13,7 @@ import {
 } from './styles';
 import { Icon } from 'react-native-elements';
 import Header from '../../components/Header';
-import { buttonOpacity, colors, fonts, fontSizeNoUnits } from '../../defaultStyles';
+import { buttonOpacity, colors, fonts, fontSizeNoUnits, shadow } from '../../defaultStyles';
 import { Map } from '../../components/common';
 import { ScrollView } from 'react-native';
 
@@ -40,18 +39,6 @@ export default (props) => {
     });
   };
 
-  const cardShadow = {
-    startColor: 'rgba(0,0,0,0.035)',
-    finalColor: 'rgba(0,0,0,0.0)',
-    distance: 10,
-    radius: 5,
-    containerViewStyle: {
-      height: 80,
-      width: '100%',
-      zIndex: 3,
-    },
-  };
-
   return (
     <>
       <Container>
@@ -60,49 +47,45 @@ export default (props) => {
         <Map routeParams={routeParams} />
 
         <Menu>
-          <ScrollView>
+          <ScrollView style={{ width: '100%' }} contentContainerStyle={{ alignItems: 'center' }}>
             <UBSName numberOfLines={2}>{routeParams.ubsName}</UBSName>
-            <View>
-              <Shadow {...cardShadow}>
-                <PeriodosCard>
-                  <Text style={styles.cardTitle}>Períodos</Text>
-                  <Text style={styles.cardText} numberOfLines={1}>
-                    Selecione um dos períodos abaixo
-                  </Text>
-                </PeriodosCard>
-              </Shadow>
+            <PeriodosCard style={shadow}>
+              <Text style={styles.cardTitle}>Períodos</Text>
+              <Text style={styles.cardText} numberOfLines={1}>
+                Selecione um dos períodos abaixo
+              </Text>
+            </PeriodosCard>
 
-              <Periodos>
-                {periods.map((item) => {
-                  return (
-                    <Option
-                      key={item.id}
-                      onPress={() => handleNavigate(item, 'UBSScorecards')}
-                      activeOpacity={buttonOpacity}
-                    >
-                      <OptionText>{item.name}</OptionText>
-                      <Icon
-                        name="chevron-forward-outline"
-                        type="ionicon"
-                        color="rgba(127, 127, 127, 0.4)"
-                        style={{ marginLeft: 5 }}
-                      />
-                    </Option>
-                  );
-                })}
-              </Periodos>
-            </View>
+            <Periodos>
+              {periods.map((item) => {
+                return (
+                  <Option
+                    key={item.id}
+                    onPress={() => handleNavigate(item, 'UBSScorecards')}
+                    activeOpacity={buttonOpacity}
+                  >
+                    <OptionText>{item.name}</OptionText>
+                    <Icon
+                      name="chevron-forward-outline"
+                      type="ionicon"
+                      color="rgba(127, 127, 127, 0.4)"
+                      style={{ marginLeft: 5 }}
+                    />
+                  </Option>
+                );
+              })}
+            </Periodos>
             <Space>
               <View style={styles.line} />
               <Text style={styles.spaceText}>ou</Text>
               <View style={styles.line} />
             </Space>
 
-            <PeriodosCard onPress={() => handleNavigate(null, 'UBSServices')}>
-              <Text style={styles.cardTitle} numberOfLines={1}>
-                Serviços
+            <PeriodosCard style={shadow} onPress={() => handleNavigate(null, 'UBSServices')}>
+              <Text style={styles.cardTitle}>Serviços</Text>
+              <Text style={styles.cardText} numberOfLines={1}>
+                Veja a lista de serviços disponíveis
               </Text>
-              <Text style={styles.cardText}>Veja a lista de serviços disponíveis</Text>
             </PeriodosCard>
           </ScrollView>
         </Menu>

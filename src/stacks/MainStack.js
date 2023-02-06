@@ -26,7 +26,7 @@ const Stack = createStackNavigator();
 
 export default () => (
   <Stack.Navigator
-    initialRouteName="AdminLogin"
+    initialRouteName="Home"
     screenOptions={{
       headerShown: false,
       cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,

@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { TouchableOpacity, View, Dimensions, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Animated, { useAnimatedProps, useSharedValue, withSpring } from 'react-native-reanimated';
-import { Shadow } from 'react-native-shadow-2';
 
-import { buttonOpacity } from '../../defaultStyles';
+import { buttonOpacity, shadow } from '../../defaultStyles';
 import { Description, Scorecard, ScorecardText, ScorecardTitle } from './styles';
 
 import Diamond from '../../../assets/images/diamond.svg';
@@ -68,36 +67,22 @@ export default (props) => {
       break;
   }
 
-  const cardShadow = {
-    startColor: 'rgba(0,0,0,0.035)',
-    finalColor: 'rgba(0,0,0,0.0)',
-    distance: 10,
-    radius: 5,
-    containerViewStyle: {
-      height: 80,
-      width: '100%',
-      zIndex: 3,
-    },
-  };
-
   return (
     <View
       key={props.item.scorecard}
       style={{ width: scoreCardWidth, alignItems: 'center', marginBottom: 15, zIndex: 10 }}
     >
-      <Shadow {...cardShadow}>
-        <Scorecard
-          style={{ borderRightColor: color }}
-          activeOpacity={buttonOpacity}
-          onPress={increaseDecreaseHeight}
-        >
-          <View style={{ width: scoreCardWidth - 100 }}>
-            <ScorecardTitle numberOfLines={1}>{props.item.name}</ScorecardTitle>
-            <ScorecardText>Nota: {props.item.score} </ScorecardText>
-          </View>
-          {scoreIcon()}
-        </Scorecard>
-      </Shadow>
+      <Scorecard
+        style={{ borderRightColor: color, ...shadow }}
+        activeOpacity={buttonOpacity}
+        onPress={increaseDecreaseHeight}
+      >
+        <View style={{ width: scoreCardWidth - 100 }}>
+          <ScorecardTitle numberOfLines={1}>{props.item.name}</ScorecardTitle>
+          <ScorecardText>Nota: {props.item.score} </ScorecardText>
+        </View>
+        {scoreIcon()}
+      </Scorecard>
       <AnimatedView animatedProps={viewProps}>
         {isExpanded ? (
           <ScrollView nestedScrollEnabled={true}>

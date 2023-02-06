@@ -4,6 +4,7 @@ import { fonts, colors, fontSize } from '../../defaultStyles';
 
 export const Scorecard = styled.TouchableOpacity`
   height: 80px;
+  z-index: 3;
   width: ${Dimensions.get('window').width * 0.8}px;
   align-items: center;
   background-color: #fff;
