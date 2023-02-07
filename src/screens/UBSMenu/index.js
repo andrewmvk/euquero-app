@@ -77,7 +77,7 @@ export default (props) => {
                   return (
                     <Option
                       key={item.id}
-                      onPress={() => handleNavigate(item, 'UBSScorecards')}
+                      onPress={() => handleNavigate(item, 'UBSScorecardss')}
                       activeOpacity={buttonOpacity}
                     >
                       <OptionText>{item.name}</OptionText>
