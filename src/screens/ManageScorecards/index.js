@@ -20,7 +20,7 @@ export default (props) => {
 
   const fetchData = async () => {
     setIsLoading(true);
-    const querySnapshot = await getDocs(collection(db, 'diretriz'));
+    const querySnapshot = await getDocs(collection(db, "diretriz"));
 
     let criteriaArray = [];
     querySnapshot.forEach((doc) => {
@@ -38,8 +38,10 @@ export default (props) => {
   };
 
   useEffect(() => {
-    const unsubscribe = props.navigation.addListener('focus', async () => {
-      const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
+    const unsubscribe = props.navigation.addListener("focus", async () => {
+      const currentUserSnap = await getDoc(
+        doc(db, "users", auth.currentUser.uid)
+      );
       if (currentUserSnap.exists()) {
         fetchData().then(() => setIsLoading(false));
       }
@@ -54,16 +56,16 @@ export default (props) => {
       setCriteria(
         arr.filter((d) =>
           d.name
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
             .toLowerCase()
             .includes(
               t
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase(),
-            ),
-        ),
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+            )
+        )
       );
       setIsLoading(false);
     }
@@ -71,33 +73,40 @@ export default (props) => {
 
   const deleteCriteria = async (id) => {
     try {
-      const scorecardsQuery = query(collection(db, 'scorecards'), where('criteriaId', '==', +id));
+      const scorecardsQuery = query(
+        collection(db, "scorecards"),
+        where("criteriaId", "==", +id)
+      );
 
       const scorecardsSnapshot = await getDocs(scorecardsQuery);
 
       const promises = scorecardsSnapshot.docs.map(async (data) => {
         const ubsScorecardsQuery = query(
-          collection(db, 'ubsScorecards'),
-          where('scorecard', '==', +data.id),
+          collection(db, "ubsScorecards"),
+          where("scorecard", "==", +data.id)
         );
 
         const ubsScorecardsSnapshot = await getDocs(ubsScorecardsQuery);
 
         const innerPromises = ubsScorecardsSnapshot.docs.map(async (data) => {
-          await deleteDoc(doc(db, 'ubsScorecards', data.id.toString()));
+          await deleteDoc(doc(db, "ubsScorecards", data.id.toString()));
         });
 
         await Promise.all(innerPromises).then(async () => {
-          await deleteDoc(doc(db, 'scorecards', data.id.toString()));
+          await deleteDoc(doc(db, "scorecards", data.id.toString()));
         });
       });
 
       await Promise.all(promises).then(async () => {
-        await deleteDoc(doc(db, 'diretriz', `${id}`)).then(() => {
+        await deleteDoc(doc(db, "diretriz", `${id}`)).then(() => {
           const c = criteria.find((item) => `${item.id}` === `${id}`);
           Alert.alert(
-            'Operação realizada com sucesso!',
-            'A diretriz (' + c.id + ") - '" + c.name + "' foi removida com sucesso",
+            "Operação realizada com sucesso!",
+            "A diretriz (" +
+              c.id +
+              ") - '" +
+              c.name +
+              "' foi removida com sucesso"
           );
           setCriteria(criteria.filter((item) => `${item.id}` !== `${id}`));
         });
@@ -106,7 +115,7 @@ export default (props) => {
       console.log(
         'An error occurred while trying to delete the criteria with id "' +
           id +
-          '" (maybe it does not exist in the database)',
+          '" (maybe it does not exist in the database)'
       );
       setCriteria(criteria.filter((item) => `${item.id}` !== `${id}`));
       console.log(err);
@@ -116,14 +125,14 @@ export default (props) => {
   const checkId = (id) => {
     if (isNaN(id) || +id < 11 || +id > 39) {
       Alert.alert(
-        'Número de ID inválido!',
-        'O número de identificação (ID) da diretriz deve ser um número que obedeça os limites deste tipo de identificador (11-39)',
+        "Número de ID inválido!",
+        "O número de identificação (ID) da diretriz deve ser um número que obedeça os limites deste tipo de identificador (11-39)"
       );
       return false;
     } else if (criteria.some((item) => +item.id === id)) {
       Alert.alert(
-        'Número de ID já existe!',
-        'O número de identificação (' + id + ') não pode ser duplicado',
+        "Número de ID já existe!",
+        "O número de identificação (" + id + ") não pode ser duplicado"
       );
       return false;
     } else {
@@ -132,18 +141,21 @@ export default (props) => {
   };
 
   const handleNewCriteria = () => {
-    if (criteria.some((item) => item.id === '')) {
+    if (criteria.some((item) => item.id === "")) {
       Alert.alert(
-        'Não foi possível adicionar!',
-        'Para adicionar uma nova diretriz é necessário preencher todos os dados da diretriz adicionada anteriormente e salvá-los',
+        "Não foi possível adicionar!",
+        "Para adicionar uma nova diretriz é necessário preencher todos os dados da diretriz adicionada anteriormente e salvá-los"
       );
     } else {
-      setCriteria([...criteria, { id: '', name: '', editing: false, creating: true }]);
+      setCriteria([
+        ...criteria,
+        { id: "", name: "", editing: false, creating: true },
+      ]);
     }
   };
 
   const saveNewCriteria = (data) => {
-    let criteriasArray = criteria.filter((item) => item.id !== '');
+    let criteriasArray = criteria.filter((item) => item.id !== "");
     criteriasArray.push(data);
     setCriteria(criteriasArray);
   };
@@ -152,7 +164,10 @@ export default (props) => {
     <>
       <DashedCircle />
       <Container>
-        <Header text={'Administrativo - Indicadores'} onPress={() => props.navigation.goBack()} />
+        <Header
+          text={"Administrativo - Indicadores"}
+          onPress={() => props.navigation.goBack()}
+        />
         <SearchArea>
           <SearchInput style={{ ...shadow }}>
             <SearchInputText
@@ -174,11 +189,20 @@ export default (props) => {
         </SearchArea>
 
         {isLoading ? (
-          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+          <ActivityIndicator
+            size="large"
+            color={colors.orange}
+            style={{ marginTop: 50 }}
+          />
         ) : (
           <ScrollView
-            style={{ marginTop: 32, marginBottom: 25, width: '100%', zIndex: 0 }}
-            contentContainerStyle={{ alignItems: 'center' }}
+            style={{
+              marginTop: 32,
+              marginBottom: 25,
+              width: "100%",
+              zIndex: 0,
+            }}
+            contentContainerStyle={{ alignItems: "center" }}
           >
             {criteria.length > 0 ? (
               <>
@@ -203,7 +227,9 @@ export default (props) => {
             ) : (
               <EmptyListMessage alterText />
             )}
-            {criteria.length > 0 ? <AddButton small relative onPress={handleNewCriteria} /> : null}
+            {criteria.length > 0 ? (
+              <AddButton small relative onPress={handleNewCriteria} />
+            ) : null}
           </ScrollView>
         )}
       </Container>

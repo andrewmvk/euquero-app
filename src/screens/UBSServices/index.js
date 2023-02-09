@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
 
-import { Card, EmptyListMessage, Map } from '../../components/common';
+import { ServiceCard, EmptyListMessage, Map } from '../../components/common';
 import { FlatList, ActivityIndicator } from 'react-native';
 
 import Header from '../../components/Header';
@@ -42,7 +42,7 @@ export default props => {
     });
   }, []);
 
-  const serviceCard = ({ item }) => <Card color={'#fff'} text={item.name} />;
+  const serviceCard = ({ item }) => <ServiceCard color={'#fff'} text={item.name}/>;
   const headerName = `${routeParams.stateName} - ${routeParams.cityName} - ${routeParams.ubsName}`;
 
   return (

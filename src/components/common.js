@@ -306,6 +306,33 @@ export const Card = (props) => {
   );
 };
 
+export const ServiceCard = (props) => {
+  const color = props.color ? props.color : colors.gray;
+  const textWidth = props.ubsCount
+    ? screenWidth * 0.6
+    : props.textWidth
+    ? screenWidth * props.textWidth
+    : screenWidth * 0.75;
+
+  return (
+    <Shadow {...cardShadow}>
+      <TouchableOpacity
+        activeOpacity={buttonOpacity}
+        style={[cardStyles.container, { borderLeftColor: color }]}
+        onPress={() => props.navigation.navigate('ServicesGlossary')}
+      >
+        {props.text ? (
+          <View style={{ width: textWidth }}>
+            <Text style={cardStyles.cardText} numberOfLines={1}>
+              {props.text}
+            </Text>
+          </View>
+        ) : null}
+      </TouchableOpacity>
+    </Shadow>
+  );
+};
+
 const cardA = StyleSheet.create({
   containerA: {
     zIndex: 3,
