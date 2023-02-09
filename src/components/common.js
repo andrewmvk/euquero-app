@@ -17,12 +17,12 @@ import {
 } from 'react-native';
 
 import { Icon } from 'react-native-elements';
-import { Shadow } from 'react-native-shadow-2';
 import styled from 'styled-components/native';
 
-import { fonts, fontSize, fontSizeNoUnits, colors, buttonOpacity } from '../defaultStyles';
+import { fonts, fontSize, fontSizeNoUnits, colors, buttonOpacity, shadow } from '../defaultStyles';
 
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const BigTitleView = styled.View`
   width: 100%;
@@ -91,29 +91,6 @@ export const MediumTitle = (props) => {
   );
 };
 
-const customButtonShadow = {
-  small: {
-    startColor: 'rgba(0,0,0,0.1)',
-    distance: 10,
-    offset: [0, 4],
-    radius: 20,
-    containerViewStyle: { paddingBottom: 2 },
-  },
-  large: {
-    startColor: 'rgba(0,0,0,0.1)',
-    distance: 10,
-    offset: [0, 4],
-    radius: 25,
-    containerViewStyle: { paddingBottom: 2 },
-  },
-  rounded: {
-    startColor: 'rgba(0,0,0,0.035)',
-    finalColor: 'rgba(0,0,0,0)',
-    radius: 35,
-    distance: 10,
-  },
-};
-
 const buttonStyles = StyleSheet.create({
   small: {
     width: 200,
@@ -122,6 +99,7 @@ const buttonStyles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: 2,
   },
   large: {
     width: 250,
@@ -130,6 +108,7 @@ const buttonStyles = StyleSheet.create({
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: 2,
   },
   register: {
     width: screenWidth * 0.85,
@@ -149,15 +128,13 @@ const SmallButtonText = styled.Text`
 
 export function SmallButton(props) {
   return (
-    <Shadow {...customButtonShadow.small}>
-      <TouchableOpacity
-        activeOpacity={buttonOpacity}
-        style={buttonStyles.small}
-        onPress={props.onPress}
-      >
-        <SmallButtonText>{props.text ? props.text : 'TEXT'}</SmallButtonText>
-      </TouchableOpacity>
-    </Shadow>
+    <TouchableOpacity
+      activeOpacity={buttonOpacity}
+      style={[buttonStyles.small, shadow]}
+      onPress={props.onPress}
+    >
+      <SmallButtonText>{props.text ? props.text : 'TEXT'}</SmallButtonText>
+    </TouchableOpacity>
   );
 }
 
@@ -169,15 +146,13 @@ const LargeButtonText = styled.Text`
 
 export function LargeButton(props) {
   return (
-    <Shadow {...customButtonShadow.large}>
-      <TouchableOpacity
-        activeOpacity={buttonOpacity}
-        style={buttonStyles.large}
-        onPress={props.onPress}
-      >
-        <LargeButtonText>{props.text ? props.text : 'TEXT'}</LargeButtonText>
-      </TouchableOpacity>
-    </Shadow>
+    <TouchableOpacity
+      activeOpacity={buttonOpacity}
+      style={[buttonStyles.large, shadow]}
+      onPress={props.onPress}
+    >
+      <LargeButtonText>{props.text ? props.text : 'TEXT'}</LargeButtonText>
+    </TouchableOpacity>
   );
 }
 
@@ -213,18 +188,15 @@ const RoundedButton = styled.TouchableOpacity`
   background-color: white;
   justify-content: center;
   align-items: center;
+  bottom: 0;
+  right: 0;
 `;
 
 export function AddButton(props) {
-  const containerStyle = {
-    containerViewStyle: {
-      margin: props?.margin ? props.margin : 20,
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      position: props.relative ? 'relative' : 'absolute',
-      bottom: 0,
-      right: 0,
-    },
+  const containerViewStyle = {
+    margin: props?.margin ? props.margin : 20,
+    position: props.relative ? 'relative' : 'absolute',
+    ...shadow,
   };
 
   const properties = props.small
@@ -252,21 +224,25 @@ export function AddButton(props) {
       };
 
   return (
-    <Shadow {...customButtonShadow.rounded} {...containerStyle}>
-      <RoundedButton style={properties.style} activeOpacity={buttonOpacity} onPress={props.onPress}>
-        <Icon
-          name="plus"
-          size={properties.iconSize}
-          type="material-community"
-          color={colors.orange}
-        />
-      </RoundedButton>
-    </Shadow>
+    <RoundedButton
+      style={[properties.style, containerViewStyle]}
+      activeOpacity={buttonOpacity}
+      onPress={props.onPress}
+    >
+      <Icon
+        name="plus"
+        size={properties.iconSize}
+        type="material-community"
+        color={colors.orange}
+      />
+    </RoundedButton>
   );
 }
 
 const cardStyles = StyleSheet.create({
   container: {
+    zIndex: 3,
+    marginVertical: 7,
     width: screenWidth * 0.85,
     height: 70,
     backgroundColor: '#fff',
@@ -298,20 +274,6 @@ const cardStyles = StyleSheet.create({
   },
 });
 
-export const cardShadow = {
-  distance: 2,
-  startColor: 'rgba(0,0,0,0.035)',
-  finalColor: 'rgba(0,0,0,0.0)',
-  distance: 10,
-  radius: 5,
-  containerViewStyle: {
-    marginVertical: 7,
-    height: 71,
-    width: screenWidth * 0.85,
-    zIndex: 3,
-  },
-};
-
 export const Card = (props) => {
   const color = props.color ? props.color : colors.gray;
   const textWidth = props.ubsCount
@@ -321,28 +283,26 @@ export const Card = (props) => {
     : screenWidth * 0.75;
 
   return (
-    <Shadow {...cardShadow}>
-      <TouchableOpacity
-        activeOpacity={buttonOpacity}
-        style={[cardStyles.container, { borderLeftColor: color }]}
-        onPress={props.onPress ? props.onPress : null}
-        disabled={props.onPress === undefined ? true : false}
-      >
-        {props.text ? (
-          <View style={{ width: textWidth }}>
-            <Text style={cardStyles.cardText} numberOfLines={1}>
-              {props.text}
-            </Text>
-          </View>
-        ) : null}
-        {props.ubsCount ? (
-          <Text style={[cardStyles.avaibleUBSText, { width: textWidth }]}>
-            {props.ubsCount + ' UBS'}
+    <TouchableOpacity
+      activeOpacity={buttonOpacity}
+      style={[cardStyles.container, { ...shadow, borderLeftColor: color }]}
+      onPress={props.onPress ? props.onPress : null}
+      disabled={props.onPress === undefined ? true : false}
+    >
+      {props.text ? (
+        <View style={{ width: textWidth }}>
+          <Text style={cardStyles.cardText} numberOfLines={1}>
+            {props.text}
           </Text>
-        ) : null}
-        {props.children ? { ...props.children } : null}
-      </TouchableOpacity>
-    </Shadow>
+        </View>
+      ) : null}
+      {props.ubsCount ? (
+        <Text style={[cardStyles.avaibleUBSText, { width: textWidth }]}>
+          {props.ubsCount + ' UBS'}
+        </Text>
+      ) : null}
+      {props.children ? { ...props.children } : null}
+    </TouchableOpacity>
   );
 };
 
@@ -375,6 +335,7 @@ export const ServiceCard = (props) => {
 
 const cardA = StyleSheet.create({
   containerA: {
+    zIndex: 3,
     width: screenWidth * 0.85,
     height: 80,
     backgroundColor: '#fff',
@@ -383,6 +344,7 @@ const cardA = StyleSheet.create({
     borderRadius: 5,
     borderLeftWidth: 7,
     justifyContent: 'center',
+    marginTop: 7,
   },
   titleCardA: {
     fontFamily: fonts.spartanR,
@@ -421,16 +383,15 @@ export const InDevelopmentCard = (props) => {
     <>
       {isConnected ? (
         <View style={{ zIndex: 3 }}>
-          <Shadow {...cardShadow}>
-            <View style={[cardA.containerA, { borderLeftColor: color }]}>
-              <Text style={cardA.titleCardA} numberOfLines={1}>
-                Em desenvolvimento...
-              </Text>
-              <Text style={cardA.descriptionCardA}>Estados a serem cadastrados:</Text>
-            </View>
-          </Shadow>
+          <View style={[cardA.containerA, shadow, { borderLeftColor: color }]}>
+            <Text style={cardA.titleCardA} numberOfLines={1}>
+              Em desenvolvimento...
+            </Text>
+            <Text style={cardA.descriptionCardA}>Estados a serem cadastrados:</Text>
+          </View>
           <View
             style={{
+              zIndex: 2,
               borderBottomLeftRadius: 5,
               borderBottomRightRadius: 5,
               backgroundColor: 'white',
@@ -443,7 +404,7 @@ export const InDevelopmentCard = (props) => {
             <ScrollView
               keyboardDismissMode={props.keyboardDismiss ? 'on-drag' : 'none'}
               nestedScrollEnabled
-              style={{ paddingHorizontal: 20, paddingTop: 10, zIndex: 3 }}
+              style={{ paddingHorizontal: 20, paddingTop: 10, zIndex: 2 }}
             >
               {props.data.map((item) => {
                 return (
@@ -494,7 +455,7 @@ export const EmptyListMessage = (props) => {
   }, []);
 
   return (
-    <NoResults style={{ ...props?.containerStyle, zIndex: 1 }}>
+    <NoResults style={{ ...props?.containerStyle, zIndex: -1 }}>
       {isConnected ? (
         <>
           <View>
@@ -534,61 +495,52 @@ const SelectView = styled.TouchableOpacity`
 `;
 
 const DropdownTextId = styled.Text`
-  flex: 0.15;
-  font-size: ${fontSize.cardText};
+  flex: 0.23;
+  padding-right: 3px;
+  font-size: ${screenWidth * 0.04}px;
   font-family: ${fonts.spartanR};
   color: ${colors.orange};
 `;
 
 const DropdownText = styled.Text`
-  flex: 0.85;
+  flex: 0.77;
   font-size: ${fontSize.cardText};
   font-family: ${fonts.spartanR};
   color: ${colors.text};
 `;
 
-const selectBoxShadow = {
-  distance: 2,
-  startColor: 'rgba(0,0,0,0.035)',
-  finalColor: 'rgba(0,0,0,0.0)',
-  distance: 10,
-  radius: 5,
-};
-
 export const DropdownSelection = (props) => {
   const [opened, setOpened] = useState(false);
   const dropDownHeight = props.data.items.length > 3 ? 170 : 160;
   const zIndexValue = props.zIndex ? props.zIndex : 4;
-  const itemHeight = (dropDownHeight - 10) / props.data.items.length;
 
   return (
     <View style={[{ alignItems: 'center', zIndex: zIndexValue }, props?.containerStyle]}>
-      <Shadow
-        {...selectBoxShadow}
-        containerViewStyle={{ height: 55, width: '100%', zIndex: zIndexValue }}
+      <SelectView
+        style={[props?.selectContainerStyle, { zIndex: zIndexValue, ...shadow }]}
+        activeOpacity={buttonOpacity}
+        disabled={props.disabled}
+        onPress={() => setOpened(!opened)}
       >
-        <SelectView
-          style={[props?.selectContainerStyle]}
-          activeOpacity={buttonOpacity}
-          disabled={props.disabled}
-          onPress={() => setOpened(!opened)}
-        >
+        {+props.data.value != -1 && !props?.noNumbers ? (
           <DropdownTextId>{props.data.value}</DropdownTextId>
-          <DropdownText
-            numberOfLines={1}
-            style={{
-              color: props.disabled || props.placeholder ? colors.gray : colors.text,
-            }}
-          >
-            {props.data.selected}
-          </DropdownText>
+        ) : null}
+        <DropdownText
+          numberOfLines={1}
+          style={{
+            color: props.disabled || props.placeholder ? colors.gray : colors.text,
+          }}
+        >
+          {props.data.selected}
+        </DropdownText>
+        <View style={{ flex: 0.15 }}>
           <Icon
             name="chevron-down"
             type="material-community"
             color={props.disabled ? colors.gray : colors.text}
           />
-        </SelectView>
-      </Shadow>
+        </View>
+      </SelectView>
       {opened ? (
         <ScrollView
           style={{
@@ -632,7 +584,7 @@ export const DropdownSelection = (props) => {
                     setOpened(!opened);
                   }}
                 >
-                  <DropdownTextId>{item.id}</DropdownTextId>
+                  {!props?.noNumbers ? <DropdownTextId>{item.id}</DropdownTextId> : null}
                   <DropdownText numberOfLines={1}>{item.name}</DropdownText>
                 </TouchableOpacity>
               );
@@ -734,31 +686,40 @@ export const List = (props) => {
   };
 
   return (
-    <FlatList
+    <View
       style={{
+        position: 'absolute',
         width: '100%',
-        marginTop: 25,
-        paddingTop: 5,
-        zIndex: -1,
+        height: screenHeight - props?.safeArea,
+        bottom: 0,
       }}
-      progressViewOffset={-50}
-      contentContainerStyle={{ alignItems: 'center' }}
-      data={props.data}
-      renderItem={props.card ? props.card : card}
-      onRefresh={
-        props.refreshing
-          ? () => {
-              setRefreshing(true);
-              props?.onRefresh().then(() => setRefreshing(false));
-            }
-          : null
-      }
-      refreshing={props.onRefresh ? refreshing : null}
-      keyExtractor={(item) => item.id}
-      ListEmptyComponent={EmptyListMessage}
-      ListFooterComponent={
-        props.notRegistredData ? <InDevelopmentCard data={props.notRegistredData} /> : null
-      }
-    />
+    >
+      <FlatList
+        style={{
+          marginTop: 15,
+          marginBottom: 25,
+          paddingTop: 5,
+          zIndex: -1,
+        }}
+        progressViewOffset={-50}
+        contentContainerStyle={{ alignItems: 'center' }}
+        data={props.data}
+        renderItem={props.card ? props.card : card}
+        onRefresh={
+          props.refreshing
+            ? () => {
+                setRefreshing(true);
+                props?.onRefresh().then(() => setRefreshing(false));
+              }
+            : null
+        }
+        refreshing={props.onRefresh ? refreshing : null}
+        keyExtractor={(item) => item.id}
+        ListEmptyComponent={EmptyListMessage}
+        ListFooterComponent={
+          props.notRegistredData ? <InDevelopmentCard data={props.notRegistredData} /> : null
+        }
+      />
+    </View>
   );
 };

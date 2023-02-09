@@ -7,7 +7,7 @@ import { auth, db } from '../../services/firebase.config';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
-import { colors } from '../../defaultStyles';
+import { colors, shadow } from '../../defaultStyles';
 import {
   ButtonView,
   DescriptionBox,
@@ -105,7 +105,7 @@ export default (props) => {
                 />
               </SubtitleContainer>
             </View>
-            <DescriptionBox style={{ minHeight: '70%' }}>
+            <DescriptionBox style={{ minHeight: '70%', ...shadow }}>
               <DescriptionText
                 onChangeText={(t) => setData({ ...data, description: t })}
                 multiline

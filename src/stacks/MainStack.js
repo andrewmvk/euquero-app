@@ -30,7 +30,7 @@ const Stack = createStackNavigator();
 
 export default () => (
   <Stack.Navigator
-    initialRouteName="UBSScorecards"
+    initialRouteName="Home"
     screenOptions={{
       headerShown: false,
       cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,

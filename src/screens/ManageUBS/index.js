@@ -9,9 +9,8 @@ import Header from '../../components/Header';
 import Modal from '../../components/Modal';
 import DashedCircle from '../../components/DashedCircle';
 import { AddButton, Card, DropdownSelection, List } from '../../components/common';
-import { buttonOpacity, colors } from '../../defaultStyles';
+import { buttonOpacity, colors, shadow } from '../../defaultStyles';
 import axios from 'axios';
-import { Shadow } from 'react-native-shadow-2';
 
 export default (props) => {
   const [modalVisibility, setModalVisibility] = useState(false);
@@ -247,72 +246,60 @@ export default (props) => {
     );
   };
 
-  const searchBoxShadow = {
-    distance: 2,
-    startColor: 'rgba(0,0,0,0.035)',
-    finalColor: 'rgba(0,0,0,0.0)',
-    distance: 10,
-    radius: 5,
-  };
-
   return (
     <>
       <DashedCircle />
       <Container>
         <Header text={'Administrativo - UBS'} onPress={() => props.navigation.goBack()} />
         <SearchArea>
-          <Shadow
-            {...searchBoxShadow}
-            containerViewStyle={{
-              height: 55,
-              marginTop: 45,
-              width: '100%',
-              alignItems: 'center',
-            }}
+          <SearchInput
+            style={{ ...shadow }}
+            pointerEvents={dropdownCity.value == -1 ? 'none' : 'auto'}
           >
-            <SearchInput pointerEvents={dropdownCity.value == -1 ? 'none' : 'auto'}>
-              <SearchInputText
-                placeholder="Buscar UBS"
-                numberOfLines={1}
-                placeholderTextColor="#C4C4C4"
-                onChangeText={(t) => search(t)}
-              />
-              <Icon
-                name="search-outline"
-                type="ionicon"
-                color="#c4c4c4"
-                style={{
-                  paddingHorizontal: 15,
-                  paddingVertical: 15,
-                }}
-              />
-            </SearchInput>
-          </Shadow>
+            <SearchInputText
+              placeholder="Buscar UBS"
+              numberOfLines={1}
+              placeholderTextColor="#C4C4C4"
+              onChangeText={(t) => search(t)}
+            />
+            <Icon
+              name="search-outline"
+              type="ionicon"
+              color="#c4c4c4"
+              style={{
+                paddingHorizontal: 15,
+                paddingVertical: 15,
+              }}
+            />
+          </SearchInput>
         </SearchArea>
-        <SearchArea style={{ justifyContent: 'space-between', marginTop: 20 }}>
+        <SearchArea
+          style={{ alignItems: 'flex-start', justifyContent: 'space-between', marginTop: 20 }}
+        >
           <DropdownSelection
+            noNumbers
             dropdownContainerStyle={{ paddingTop: 12 }}
             style={{ zIndex: 2 }}
             data={dropdownState}
             onSelect={setDropdownState}
-            containerStyle={{ width: '45%' }}
+            containerStyle={{ width: '46%' }}
             disabled={dropdownState.disabled}
           />
           <DropdownSelection
+            noNumbers
             dropdownContainerStyle={{ paddingTop: 12 }}
             style={{ zIndex: 2 }}
             data={dropdownCity}
             onSelect={setDropdownCity}
-            containerStyle={{ width: '45%' }}
+            containerStyle={{ width: '46%' }}
             disabled={dropdownCity.disabled}
           />
         </SearchArea>
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
-        ) : (
-          <List data={ubs} onRefresh={fetchData} card={card} />
-        )}
+        ) : null}
       </Container>
+      {!isLoading ? <List data={ubs} onRefresh={fetchData} card={card} safeArea={200} /> : null}
       <AddButton onPress={() => props.navigation.navigate('UploadUBSTable')} />
       <Modal
         isVisible={modalVisibility}

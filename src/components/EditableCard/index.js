@@ -3,9 +3,8 @@ import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from 'fireb
 import { Dimensions, View, StyleSheet, TextInput, Text, ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Animated, { useAnimatedProps, useSharedValue, withSpring } from 'react-native-reanimated';
-import { Shadow } from 'react-native-shadow-2';
 
-import { buttonOpacity, colors, fonts, fontSizeNoUnits } from '../../defaultStyles';
+import { buttonOpacity, colors, fonts, fontSizeNoUnits, shadow } from '../../defaultStyles';
 import { db } from '../../services/firebase.config';
 import { TouchableCard, TouchableIcon, TouchableInnerCard } from './styles';
 import { Alert } from 'react-native';
@@ -13,12 +12,6 @@ import { ScrollView } from 'react-native';
 import { AddButton } from '../common';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
-const cardShadow = {
-  startColor: 'rgba(0,0,0,0.035)',
-  finalColor: 'rgba(0,0,0,0.0)',
-  distance: 10,
-  radius: 5,
-};
 
 export default (props) => {
   const [isCreating, setIsCreating] = useState(props.creating);
@@ -229,117 +222,109 @@ export default (props) => {
 
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-      <Shadow
-        {...cardShadow}
-        containerViewStyle={{
-          height: 70,
-          width: screenWidth * 0.85,
-          zIndex: 3,
-        }}
+      <TouchableCard
+        style={{ ...shadow }}
+        activeOpacity={buttonOpacity}
+        onPress={props.onPress ? props.onPress : null}
+        disabled={props.onPress === undefined ? true : false}
       >
-        <TouchableCard
-          activeOpacity={buttonOpacity}
-          onPress={props.onPress ? props.onPress : null}
-          disabled={props.onPress === undefined ? true : false}
-        >
-          {isLoading ? (
-            <ActivityIndicator
-              size="large"
-              color={colors.orange}
-              style={{ flex: 2.5, marginLeft: 15, paddingRight: 5 }}
-            />
-          ) : itemData.isEditing || isCreating ? (
-            <>
-              {isCreating ? (
-                <TextInput
-                  style={[styles.number, { textDecorationLine: 'underline' }]}
-                  value={itemData.id}
-                  numberOfLines={1}
-                  maxLength={2}
-                  keyboardType="numeric"
-                  placeholder="ID"
-                  onChangeText={(t) => idInputHandler(t)}
-                />
-              ) : (
-                <Text style={styles.number} numberOfLines={1}>
-                  {itemData.id}
-                </Text>
-              )}
+        {isLoading ? (
+          <ActivityIndicator
+            size="large"
+            color={colors.orange}
+            style={{ flex: 2.5, marginLeft: 15, paddingRight: 5 }}
+          />
+        ) : itemData.isEditing || isCreating ? (
+          <>
+            {isCreating ? (
               <TextInput
-                style={[styles.title, { textDecorationLine: 'underline' }]}
+                style={[styles.number, { textDecorationLine: 'underline' }]}
+                value={itemData.id}
                 numberOfLines={1}
-                value={itemData.name}
-                placeholder="Nome"
-                onChangeText={(t) => setItemData({ ...itemData, name: t })}
+                maxLength={2}
+                keyboardType="numeric"
+                placeholder="ID"
+                onChangeText={(t) => idInputHandler(t)}
               />
-            </>
-          ) : (
-            <>
+            ) : (
               <Text style={styles.number} numberOfLines={1}>
                 {itemData.id}
               </Text>
-              <Text style={styles.title} numberOfLines={1}>
-                {itemData.name}
-              </Text>
-            </>
-          )}
+            )}
+            <TextInput
+              style={[styles.title, { textDecorationLine: 'underline' }]}
+              numberOfLines={1}
+              value={itemData.name}
+              placeholder="Nome"
+              onChangeText={(t) => setItemData({ ...itemData, name: t })}
+            />
+          </>
+        ) : (
+          <>
+            <Text style={styles.number} numberOfLines={1}>
+              {itemData.id}
+            </Text>
+            <Text style={styles.title} numberOfLines={1}>
+              {itemData.name}
+            </Text>
+          </>
+        )}
 
-          <View
-            style={{
-              flex: 1,
-              height: '100%',
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              alignItems: 'center',
-              marginLEft: 5,
-              marginRight: 10,
+        <View
+          style={{
+            flex: 1,
+            height: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            marginLEft: 5,
+            marginRight: 10,
+          }}
+        >
+          <TouchableIcon
+            activeOpacity={buttonOpacity}
+            disabled={isLoading}
+            onPress={
+              isLoading
+                ? null
+                : () => {
+                    setIsLoading(true);
+                    props.deleteItem().then(() => setIsLoading(false));
+                  }
+            }
+          >
+            <Icon
+              name={'trash-can-outline'}
+              size={35}
+              type="material-community"
+              color={colors.text}
+            />
+          </TouchableIcon>
+
+          <TouchableIcon
+            activeOpacity={buttonOpacity}
+            onPress={() => {
+              if (!isCreating) {
+                increaseDecreaseHeight().then(() => {
+                  setIsLoading(false);
+                });
+              }
+              if (itemData.isEditing) {
+                update();
+              } else if (isCreating) {
+                save();
+              }
             }}
           >
-            <TouchableIcon
-              activeOpacity={buttonOpacity}
-              disabled={isLoading}
-              onPress={
-                isLoading
-                  ? null
-                  : () => {
-                      setIsLoading(true);
-                      props.deleteItem().then(() => setIsLoading(false));
-                    }
-              }
-            >
-              <Icon
-                name={'trash-can-outline'}
-                size={35}
-                type="material-community"
-                color={colors.text}
-              />
-            </TouchableIcon>
-
-            <TouchableIcon
-              activeOpacity={buttonOpacity}
-              onPress={() => {
-                if (!isCreating) {
-                  increaseDecreaseHeight().then(() => {
-                    setIsLoading(false);
-                  });
-                }
-                if (itemData.isEditing) {
-                  update();
-                } else if (isCreating) {
-                  save();
-                }
-              }}
-            >
-              <Icon
-                name={itemData.isEditing || isCreating ? 'check' : 'pencil-outline'}
-                size={35}
-                type="material-community"
-                color={itemData.isEditing || isCreating ? colors.orange : colors.text}
-              />
-            </TouchableIcon>
-          </View>
-        </TouchableCard>
-      </Shadow>
+            <Icon
+              name={itemData.isEditing || isCreating ? 'check' : 'pencil-outline'}
+              size={35}
+              type="material-community"
+              color={itemData.isEditing || isCreating ? colors.orange : colors.text}
+            />
+          </TouchableIcon>
+        </View>
+      </TouchableCard>
       {props?.type === 'services' ? null : (
         <AnimatedView animatedProps={viewProps}>
           {itemData.isEditing && !isLoading ? (
@@ -354,36 +339,30 @@ export default (props) => {
               >
                 {innerScorecards.map((data) => {
                   return (
-                    <Shadow
+                    <TouchableInnerCard
                       key={data.id}
-                      {...cardShadow}
-                      containerViewStyle={{
-                        marginVertical: 8,
-                      }}
+                      style={shadow}
+                      onPress={() => navigateToGlossary(data)}
+                      activeOpacity={buttonOpacity}
                     >
-                      <TouchableInnerCard
-                        onPress={() => navigateToGlossary(data)}
+                      <Text style={[styles.number, { fontSize: fontSizeNoUnits.text }]}>
+                        {data.id}
+                      </Text>
+                      <Text style={[styles.title, { fontSize: 16 }]} numberOfLines={1}>
+                        {data.name}
+                      </Text>
+                      <TouchableIcon
                         activeOpacity={buttonOpacity}
+                        onPress={() => handleDeleteScorecard(data)}
                       >
-                        <Text style={[styles.number, { fontSize: fontSizeNoUnits.text }]}>
-                          {data.id}
-                        </Text>
-                        <Text style={[styles.title, { fontSize: 16 }]} numberOfLines={1}>
-                          {data.name}
-                        </Text>
-                        <TouchableIcon
-                          activeOpacity={buttonOpacity}
-                          onPress={() => handleDeleteScorecard(data)}
-                        >
-                          <Icon
-                            name={'trash-can-outline'}
-                            size={27}
-                            type="material-community"
-                            color={colors.text}
-                          />
-                        </TouchableIcon>
-                      </TouchableInnerCard>
-                    </Shadow>
+                        <Icon
+                          name={'trash-can-outline'}
+                          size={27}
+                          type="material-community"
+                          color={colors.text}
+                        />
+                      </TouchableIcon>
+                    </TouchableInnerCard>
                   );
                 })}
                 <AddButton tiny relative onPress={navigateToNewScorecard} />

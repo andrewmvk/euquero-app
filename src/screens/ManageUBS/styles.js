@@ -38,6 +38,7 @@ export const TrashIcon = styled.TouchableOpacity`
 export const SearchInput = styled.View`
   height: 55px;
   width: 100%;
+  margin-top: 45px;
   background-color: #fff;
   border-radius: 5px;
   padding-left: 18px;

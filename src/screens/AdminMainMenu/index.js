@@ -1,12 +1,11 @@
 import React from 'react';
 import { Icon } from 'react-native-elements';
 import { ScrollView, View } from 'react-native';
-import { Shadow } from 'react-native-shadow-2';
 
-import { Container, ManageTouchableBox, ManageBoxShadow, ManageText } from './styles';
+import { Container, ManageTouchableBox, ManageText } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
-import { buttonOpacity, colors } from '../../defaultStyles';
+import { buttonOpacity, colors, shadow } from '../../defaultStyles';
 
 const manageBoxes = [
   {
@@ -49,20 +48,20 @@ export default (props) => {
           {manageBoxes.map((item) => {
             if (!item.adminOnly || (item.adminOnly && props.route.params.isAdmin)) {
               return (
-                <Shadow key={item.text} {...ManageBoxShadow}>
-                  <ManageTouchableBox
-                    activeOpacity={buttonOpacity}
-                    onPress={() => props.navigation.navigate(item.navigateTo)}
-                  >
-                    <Icon
-                      name={item.iconName}
-                      size={70}
-                      type="material-community"
-                      color={colors.text}
-                    />
-                    <ManageText>{item.text}</ManageText>
-                  </ManageTouchableBox>
-                </Shadow>
+                <ManageTouchableBox
+                  style={shadow}
+                  key={item.text}
+                  activeOpacity={buttonOpacity}
+                  onPress={() => props.navigation.navigate(item.navigateTo)}
+                >
+                  <Icon
+                    name={item.iconName}
+                    size={70}
+                    type="material-community"
+                    color={colors.text}
+                  />
+                  <ManageText>{item.text}</ManageText>
+                </ManageTouchableBox>
               );
             }
           })}

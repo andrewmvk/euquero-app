@@ -9,6 +9,7 @@ import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
 import { List, SortButton } from '../../components/common';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
+import { shadow } from '../../defaultStyles';
 
 export default (props) => {
   const [cities, setCities] = useState([]);
@@ -96,7 +97,7 @@ export default (props) => {
       <Container>
         <Header text={props.route.params.stateName} onPress={() => props.navigation.goBack()} />
         <SearchArea>
-          <SearchInput>
+          <SearchInput style={shadow}>
             <SearchInputText
               placeholder="Buscar cidade"
               placeholderTextColor="#C4C4C4"
@@ -120,6 +121,7 @@ export default (props) => {
         ) : (
           <List
             keyboardDismiss
+            safeArea={80}
             data={cities}
             notRegistredData={noUbsCities}
             handleCardPress={handleCardPress}

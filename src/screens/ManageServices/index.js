@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { Shadow } from 'react-native-shadow-2';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { AddButton, EmptyListMessage } from '../../components/common';
 import { auth, db } from '../../services/firebase.config';
@@ -18,15 +17,7 @@ import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { SearchArea, SearchInput, SearchInputText } from './styles';
 import EditableCard from '../../components/EditableCard';
-import { colors } from '../../defaultStyles';
-
-const searchBoxShadow = {
-  distance: 2,
-  startColor: 'rgba(0,0,0,0.035)',
-  finalColor: 'rgba(0,0,0,0.0)',
-  distance: 10,
-  radius: 5,
-};
+import { colors, shadow } from '../../defaultStyles';
 
 export default (props) => {
   const [services, setServices] = useState([]);
@@ -151,33 +142,23 @@ export default (props) => {
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={{ alignItems: 'center' }}>
           <SearchArea>
-            <Shadow
-              {...searchBoxShadow}
-              containerViewStyle={{
-                height: 55,
-                marginTop: 45,
-                width: '100%',
-                alignItems: 'center',
-              }}
-            >
-              <SearchInput>
-                <SearchInputText
-                  placeholder="Buscar Serviços"
-                  onChangeText={(t) => search(t)}
-                  placeholderTextColor="#C4C4C4"
-                  numberOfLines={1}
-                />
-                <Icon
-                  name="search-outline"
-                  type="ionicon"
-                  color="#c4c4c4"
-                  style={{
-                    paddingHorizontal: 15,
-                    paddingVertical: 15,
-                  }}
-                />
-              </SearchInput>
-            </Shadow>
+            <SearchInput style={shadow}>
+              <SearchInputText
+                placeholder="Buscar Serviços"
+                onChangeText={(t) => search(t)}
+                placeholderTextColor="#C4C4C4"
+                numberOfLines={1}
+              />
+              <Icon
+                name="search-outline"
+                type="ionicon"
+                color="#c4c4c4"
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 15,
+                }}
+              />
+            </SearchInput>
           </SearchArea>
           {isLoading ? (
             <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
@@ -187,23 +168,26 @@ export default (props) => {
               contentContainerStyle={{ alignItems: 'center' }}
             >
               {services.length > 0 ? (
-                services.map((item) => {
-                  return (
-                    <View key={item.id} style={{ marginBottom: 20 }}>
-                      <EditableCard
-                        type={'services'}
-                        checkId={checkId}
-                        itemId={item.id}
-                        text={item.name}
-                        editing={item.editing}
-                        creating={item.creating}
-                        navigation={props.navigation}
-                        saveNew={saveNewService}
-                        deleteItem={() => deleteCriteria(item.id)}
-                      />
-                    </View>
-                  );
-                })
+                <>
+                  <View style={{ height: 5 }} />
+                  {services.map((item) => {
+                    return (
+                      <View key={item.id} style={{ marginBottom: 20 }}>
+                        <EditableCard
+                          type={'services'}
+                          checkId={checkId}
+                          itemId={item.id}
+                          text={item.name}
+                          editing={item.editing}
+                          creating={item.creating}
+                          navigation={props.navigation}
+                          saveNew={saveNewService}
+                          deleteItem={() => deleteCriteria(item.id)}
+                        />
+                      </View>
+                    );
+                  })}
+                </>
               ) : (
                 <EmptyListMessage alterText />
               )}

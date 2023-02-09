@@ -8,14 +8,13 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import { Shadow } from 'react-native-shadow-2';
 
 import { DropdownSelection, RegisterButton } from '../../components/common';
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { ButtonText, IDModalButton, Input, InputArea, InputBox, Title } from './styles';
 import { auth, db } from '../../services/firebase.config';
-import { colors } from '../../defaultStyles';
+import { colors, shadow } from '../../defaultStyles';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import NumberSelectionModal from '../../components/NumberSelectionModal';
 
@@ -182,14 +181,6 @@ export default (props) => {
     firstFetch().then(() => setIsLoading({ loading: false, main: false }));
   }, []);
 
-  const searchBoxShadow = {
-    distance: 2,
-    startColor: 'rgba(0,0,0,0.035)',
-    finalColor: 'rgba(0,0,0,0.0)',
-    distance: 10,
-    radius: 5,
-  };
-
   return (
     <>
       <DashedCircle />
@@ -208,56 +199,37 @@ export default (props) => {
                 <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
               ) : (
                 <>
-                  <Shadow
-                    {...searchBoxShadow}
-                    containerViewStyle={{
-                      height: 55,
-                      marginTop: 15,
-                      width: '100%',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <InputBox style={{ justifyContent: 'space-evenly' }}>
-                      <IDModalButton onPress={() => setModalVisible(true)}>
-                        <ButtonText>{data.id}</ButtonText>
-                      </IDModalButton>
-                      <Input
-                        style={{ width: '85%' }}
-                        placeholder="Nome"
-                        placeholderTextColor="#C4C4C4"
-                        numberOfLines={1}
-                        value={data.name}
-                        onChangeText={(t) => setData({ ...data, name: t })}
-                      />
-                    </InputBox>
-                  </Shadow>
-                  <Shadow
-                    {...searchBoxShadow}
-                    containerViewStyle={{
+                  <InputBox style={{ justifyContent: 'space-evenly', ...shadow }}>
+                    <IDModalButton onPress={() => setModalVisible(true)}>
+                      <ButtonText>{data.id}</ButtonText>
+                    </IDModalButton>
+                    <Input
+                      style={{ width: '85%' }}
+                      placeholder="Nome"
+                      placeholderTextColor="#C4C4C4"
+                      numberOfLines={1}
+                      value={data.name}
+                      onChangeText={(t) => setData({ ...data, name: t })}
+                    />
+                  </InputBox>
+                  <InputBox
+                    style={{
+                      ...shadow,
                       height: 150,
-                      marginTop: 15,
-                      width: '100%',
-                      alignItems: 'center',
+                      alignItems: 'flex-start',
+                      paddingTop: 15,
+                      paddingBottom: 15,
                     }}
                   >
-                    <InputBox
-                      style={{
-                        height: 150,
-                        alignItems: 'flex-start',
-                        paddingTop: 15,
-                        paddingBottom: 15,
-                      }}
-                    >
-                      <Input
-                        enablesReturnKeyAutomatically
-                        placeholder="Descrição"
-                        placeholderTextColor="#C4C4C4"
-                        value={data.description}
-                        multiline
-                        onChangeText={(t) => setData({ ...data, description: t })}
-                      />
-                    </InputBox>
-                  </Shadow>
+                    <Input
+                      enablesReturnKeyAutomatically
+                      placeholder="Descrição"
+                      placeholderTextColor="#C4C4C4"
+                      value={data.description}
+                      multiline
+                      onChangeText={(t) => setData({ ...data, description: t })}
+                    />
+                  </InputBox>
                   <View style={{ width: '100%', height: 55, marginTop: 15 }}>
                     <DropdownSelection
                       data={periods}

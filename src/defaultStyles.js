@@ -35,4 +35,16 @@ export const fontSize = {
   subtitle: `${fontSizeNoUnits.subtitle}` + 'px',
 };
 
+export const shadow = {
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 1,
+  },
+  shadowOpacity: 0.2,
+  shadowRadius: 2.2,
+
+  elevation: 3,
+};
+
 export const buttonOpacity = 0.6;
