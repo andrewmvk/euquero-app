@@ -57,11 +57,4 @@ export const extraStyles = {
     height: Dimensions.get('window').height * 0.6,
     justifyContent: 'space-evenly',
   },
-  keyboardAvoidView: {
-    width: '100%',
-    height: Dimensions.get('screen').height,
-    position: 'absolute',
-    justifyContent: 'center',
-    zIndex: 2,
-  },
 };

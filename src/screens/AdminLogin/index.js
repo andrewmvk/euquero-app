@@ -6,7 +6,7 @@ import {
   Image,
   ActivityIndicator,
   TouchableWithoutFeedback,
-  TextInput,
+  StatusBar,
 } from 'react-native';
 import { auth, db } from '../../services/firebase.config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -145,22 +145,24 @@ export default (props) => {
 
   return (
     <>
-      <Header
-        onPress={() => props.navigation.goBack()}
-        color={'white'}
-        position="absolute"
-        margin={getStatusBarHeight()}
-      />
+      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+      <Wave top={true} transition={animationType} />
+      <Wave transition={animationType} />
+      {animationType.type === 'away-out' ? null : (
+        <>
+          <Header
+            onPress={() => props.navigation.goBack()}
+            color={'white'}
+            position="absolute"
+            margin={getStatusBarHeight()}
+          />
+
+          <DashedWave />
+          <DashedWave bottom={true} />
+        </>
+      )}
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <Container>
-          <View style={{ ...extraStyles.keyboardAvoidView }} pointerEvents="none">
-            <Wave top={true} transition={animationType} />
-            <Wave transition={animationType} />
-
-            <DashedWave />
-            <DashedWave bottom={true} />
-          </View>
-
           <View style={{ ...extraStyles.containerView }}>
             <LogoView>
               <Image

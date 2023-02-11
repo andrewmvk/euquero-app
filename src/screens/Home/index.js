@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, StatusBar } from 'react-native';
 import { Icon } from '@rneui/themed';
 
 import { Container, LogoView, Subtitle, Buttons, AdminBtn, extraStyles } from './styles';
@@ -29,6 +29,7 @@ export default (props) => {
 
   return (
     <Container>
+      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
       <Wave top={true} transition={transition} />
       <Wave transition={transition} />
 

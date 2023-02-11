@@ -1,16 +1,14 @@
-import styled from "styled-components/native";
-import { Dimensions } from "react-native";
+import styled from 'styled-components/native';
+import { Dimensions, StyleSheet } from 'react-native';
 
-import * as defaultS from "../../defaultStyles";
+import * as defaultS from '../../defaultStyles';
 
-let titleDistanceTop = Dimensions.get("window").height * 0.025;
-let titleDistanceBottom = titleDistanceTop * 0.85;
+const { width } = Dimensions.get('window');
 
 export const Title = styled.Text`
   text-align: center;
+  margin-top: 15px;
   color: ${defaultS.colors.orange};
-  padding-top: ${titleDistanceTop}px;
-  padding-bottom: ${titleDistanceBottom}px;
   font-size: ${defaultS.fontSize.bigTitle};
   font-family: ${defaultS.fonts.spartanBold};
 `;
@@ -18,28 +16,41 @@ export const Title = styled.Text`
 export const PhaseText = styled.Text`
   text-align: center;
   color: ${defaultS.colors.text};
-  padding-left: 25px;
-  padding-right: 25px;
-  font-size: 15px;
   width: 80%;
-  align-self: center;
+  font-size: 15px;
   font-family: ${defaultS.fonts.spartanR};
   line-height: 30px;
 `;
 
-export const extraStyles = {
+export const DotsView = styled.View`
+  flex: 0.2;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const DesactivatedDot = styled.View`
+  height: 10px;
+  width: 10px;
+  border-radius: 5px;
+  background-color: ${defaultS.colors.gray};
+`;
+
+export const extraStyles = StyleSheet.create({
   containerOut: {
-    flex: 1,
-    justifyContent: "center",
+    marginTop: 20,
+    flex: 0.85,
+    alignItems: 'center',
+    width,
   },
   tutorialImage: {
-    resizeMode: "contain",
-    height: "60%",
-    width: "100%",
-    marginTop: 60,
+    flex: 0.76,
+    resizeMode: 'contain',
+    width: '100%',
   },
   containerIn: {
-    height: "40%",
-    marginTop: 15,
+    flex: 0.24,
+    width: '80%',
+    marginTop: 10,
   },
-};
+});

@@ -1,16 +1,14 @@
-import styled from "styled-components/native";
-import { Dimensions } from "react-native";
+import styled from 'styled-components/native';
+import { Dimensions } from 'react-native';
 
-import * as defaultS from "../../defaultStyles";
+import * as defaultS from '../../defaultStyles';
+import { StyleSheet } from 'react-native';
 
-let titleDistanceTop = Dimensions.get("window").height * 0.025;
-let titleDistanceBottom = titleDistanceTop * 0.85;
+const { width } = Dimensions.get('window');
 
 export const Title = styled.Text`
   text-align: center;
   color: ${defaultS.colors.orange};
-  padding-top: ${titleDistanceTop}px;
-  padding-bottom: ${titleDistanceBottom}px;
   font-size: ${defaultS.fontSize.bigTitle};
   font-family: ${defaultS.fonts.spartanBold};
 `;
@@ -18,33 +16,35 @@ export const Title = styled.Text`
 export const PhaseText = styled.Text`
   text-align: center;
   color: ${defaultS.colors.text};
-  padding-left: 25px;
-  padding-right: 25px;
   font-size: 15px;
   width: 90%;
-  align-self: center;
   font-family: ${defaultS.fonts.spartanR};
   line-height: 25px;
-  height: 100%;
 `;
 
-export const TextScroll = styled.ScrollView`
-  max-height: 50%;
+export const DotsView = styled.View`
+  flex: 0.2;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
-export const extraStyles = {
+export const extraStyles = StyleSheet.create({
   containerOut: {
-    flex: 1,
-    justifyContent: "center",
+    marginTop: 20,
+    flex: 0.85,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width,
   },
   tutorialImage: {
-    resizeMode: "contain",
-    height: "30%",
-    width: "100%",
-    marginTop: 0,
+    flex: 0.4,
+    resizeMode: 'contain',
+    width: '100%',
   },
   containerIn: {
-    height: "60%",
-    marginTop: 15,
+    flex: 0.5,
+    width: '80%',
+    marginTop: 10,
   },
-};
+});
