@@ -11,12 +11,12 @@ import Animated, {
 
 import { colors } from '../../defaultStyles';
 
-const { width, height } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('window');
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
 export default (props) => {
-  let size = 0.2;
+  let size = 0.22;
   const initialHeight = height * size + 5;
 
   const waveAnimated = useSharedValue(props.transition.type === 'nothing' ? 1 : 0.3);
@@ -42,7 +42,7 @@ export default (props) => {
     const secondCHeight = waveHeight * 0.7;
     const thirdCHeight = 5 * Math.pow(waveAnimated.value, 3);
 
-    const pathStart = `0, ${waveHeight * 0.68}`;
+    const pathStart = `0, ${waveHeight * 0.64}`;
 
     const qPointA1 = `${width * 0.05} ${firstCHeight}`;
     const qPointB1 = `${width * 0.11} ${firstCHeight}`;

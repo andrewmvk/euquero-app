@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Icon } from 'react-native-elements';
+import * as NavigationBar from 'expo-navigation-bar';
 import { ScrollView, View } from 'react-native';
 
 import { Container, ManageTouchableBox, ManageText } from './styles';
@@ -35,6 +36,15 @@ const manageBoxes = [
 ];
 
 export default (props) => {
+  useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+  }, []);
+
   return (
     <>
       <DashedCircle />

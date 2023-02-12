@@ -5,14 +5,14 @@ import Svg, { Path } from 'react-native-svg';
 const { width, height } = Dimensions.get('screen');
 
 export default (props) => {
-  let size = 0.18;
+  let size = 0.25;
   const chartHeight = height * size;
 
-  const firstCHeight = chartHeight * 0.5;
+  const firstCHeight = chartHeight * 0.4;
   const secondCHeight = chartHeight * 0.25;
   const thirdCHeight = chartHeight - 2;
 
-  const pathStart = `0, ${chartHeight * 0.2}`;
+  const pathStart = `0, 0`;
 
   const qPointA1 = `${width * 0.05} ${firstCHeight}`;
   const qPointB1 = `${width * 0.11} ${firstCHeight}`;
@@ -31,12 +31,12 @@ export default (props) => {
   const rotateStyle =
     props.bottom != null
       ? {
-          transform: [{ translateX: -(width * 0.15) }, { rotate: '185deg' }],
-          bottom: -chartHeight / 2.5,
+          transform: [{ translateX: -(width * 0.15) }, { rotate: '175deg' }],
+          bottom: -chartHeight / 5,
         }
       : {
-          transform: [{ translateX: width * 0.15 }, { rotate: '5deg' }],
-          top: -chartHeight / 2.5,
+          transform: [{ translateX: width * 0.15 }, { rotate: '-5deg' }],
+          top: -chartHeight / 5,
         };
 
   return (
@@ -54,7 +54,7 @@ export default (props) => {
           Q${qPointA2} ${qPointB2} 
         `}
         strokeDasharray={`10 10 8`}
-        stroke='#fff'
+        stroke="#fff"
         strokeWidth={2}
       />
     </Svg>

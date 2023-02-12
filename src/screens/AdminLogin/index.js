@@ -6,11 +6,12 @@ import {
   Image,
   ActivityIndicator,
   TouchableWithoutFeedback,
-  TextInput,
+  StatusBar,
 } from 'react-native';
 import { auth, db } from '../../services/firebase.config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import {
   Container,
@@ -45,7 +46,14 @@ export default (props) => {
   });
 
   useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('absolute');
+      await NavigationBar.setBackgroundColorAsync('rgba(0,0,0,0.01)');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+
     const unsubscribeFocus = props.navigation.addListener('focus', () => {
+      navBarConfig();
       Keyboard.addListener('keyboardDidShow', () => {
         setAnimationType({ n: true, type: 'away-out' });
       });
@@ -145,22 +153,24 @@ export default (props) => {
 
   return (
     <>
-      <Header
-        onPress={() => props.navigation.goBack()}
-        color={'white'}
-        position="absolute"
-        margin={getStatusBarHeight()}
-      />
+      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+      <Wave top={true} transition={animationType} />
+      <Wave transition={animationType} />
+      {animationType.type === 'away-out' ? null : (
+        <>
+          <Header
+            onPress={() => props.navigation.goBack()}
+            color={'white'}
+            position="absolute"
+            margin={getStatusBarHeight()}
+          />
+
+          <DashedWave />
+          <DashedWave bottom={true} />
+        </>
+      )}
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <Container>
-          <View style={{ ...extraStyles.keyboardAvoidView }} pointerEvents="none">
-            <Wave top={true} transition={animationType} />
-            <Wave transition={animationType} />
-
-            <DashedWave />
-            <DashedWave bottom={true} />
-          </View>
-
           <View style={{ ...extraStyles.containerView }}>
             <LogoView>
               <Image
@@ -210,7 +220,7 @@ export default (props) => {
               {isLoading ? (
                 <ActivityIndicator size="large" color={colors.orange} />
               ) : (
-                <SmallButton onPress={() => handleNavigateTo({ isAdmin: true })} text="Acessar" />
+                <SmallButton onPress={() => signIn()} text="Acessar" />
               )}
             </View>
           </View>

@@ -1,130 +1,172 @@
-import React from 'react';
-import { View, Image } from 'react-native';
-import AppIntroSlider from 'react-native-app-intro-slider';
+import React, { useRef, useState, useEffect } from 'react';
+import { View, Image, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { Icon } from 'react-native-elements';
+import * as NavigationBar from 'expo-navigation-bar';
+import { useSharedValue } from 'react-native-reanimated';
 
-import { Title, PhaseText, extraStyles } from './styles';
+import { Title, PhaseText, extraStyles, DotsView } from './styles';
 import Header from '../../components/Header';
-import { colors } from '../../defaultStyles';
+import { buttonOpacity, colors } from '../../defaultStyles';
+import { Dot } from '../../components/common';
 
 const slides = [
   {
-    key: 1,
+    key: 0,
     image: require('../../../assets/images/passo1Img.png'),
     title: 'PASSO 1',
-    text: 'Para encontrar a UBS, clique no botão “Buscar UBS” da tela inicial;'
+    text: 'Para encontrar a UBS, clique no botão “Buscar UBS” da tela inicial;',
+  },
+  {
+    key: 1,
+    image: require('../../../assets/images/passo2Img.png'),
+    title: 'PASSO 2',
+    text: 'Selecione o Estado ao qual sua Cidade pertence. Outros Estados estão “Em desenvolvimento”, ou seja, não disponíveis por enquanto;',
   },
   {
     key: 2,
-    image: require('../../../assets/images/passo2Img.png'),
-    title: 'PASSO 2',
-    text: 'Selecione o Estado ao qual sua Cidade pertence. Outros Estados estão “Em desenvolvimento”, ou seja, não disponíveis por enquanto;'
+    image: require('../../../assets/images/passo3Img.png'),
+    title: 'PASSO 3',
+    text: 'Selecione a Cidade para encontrar uma UBS. Cidades que não tenham UBS estão “Em desenvolvimento”;',
   },
   {
     key: 3,
-    image: require('../../../assets/images/passo3Img.png'),
-    title: 'PASSO 3',
-    text: 'Selecione a Cidade para encontrar uma UBS. Cidades que não tenham UBS estão “Em desenvolvimento”;'
+    image: require('../../../assets/images/passo4Img.png'),
+    title: 'PASSO 4',
+    text: 'Selecione a UBS para ver seus serviços e localização;',
   },
   {
     key: 4,
-    image: require('../../../assets/images/passo4Img.png'),
-    title: 'PASSO 4',
-    text: 'Selecione a UBS para ver seus serviços e localização;'
+    image: require('../../../assets/images/passo5Img.png'),
+    title: 'PASSO 5',
+    text: 'Selecione a opção “Serviços” ou a de um dos “Períodos” desejados;',
   },
   {
     key: 5,
-    image: require('../../../assets/images/passo5Img.png'),
-    title: 'PASSO 5',
-    text: 'Selecione a opção “Serviços” ou a de um dos “Períodos” desejados;'
+    image: require('../../../assets/images/passo6Img.png'),
+    title: 'PASSO 6',
+    text: 'Caso selecione algum período: serão listadas as notas de alguns indicadores daquela UBS, juntamente com uma descrição do mesmo; ',
   },
   {
     key: 6,
-    image: require('../../../assets/images/passo6Img.png'),
-    title: 'PASSO 6',
-    text: 'Caso selecione algum período: serão listadas as notas de alguns indicadores daquela UBS, juntamente com uma descrição do mesmo; '
+    image: require('../../../assets/images/notas.png'),
+    text: 'Sendo que, quanto mais perto do “Diamante”, melhor a avaliação do serviço;',
   },
   {
     key: 7,
-    image: require('../../../assets/images/notas.png'),
-    text: 'Sendo que, quanto mais perto do “Diamante”, melhor a avaliação do serviço;'
-  },
-  {
-    key: 8,
     image: require('../../../assets/images/passo7Img.png'),
     title: 'PASSO 7',
-    text: 'Caso selecione serviços: serão listados todos os serviços disponíveis daquela UBS.'
-  }
+    text: 'Caso selecione serviços: serão listados todos os serviços disponíveis daquela UBS.',
+  },
 ];
 
-export default props => {
-  function renderSlides({ item }) {
+export default (props) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollX = useSharedValue(0);
+
+  useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+  }, []);
+
+  const flatListRef = useRef(null);
+  const viewableItemsChanged = useRef(({ viewableItems }) => {
+    setCurrentIndex(viewableItems[0].index);
+  }).current;
+
+  const renderSlides = ({ item }) => {
     return (
-      <View style={{ ...extraStyles.containerOut }}>
-        <Image source={item.image} style={{ ...extraStyles.tutorialImage }} />
-        <View style={{ ...extraStyles.containerIn }}>
-          <Title>{item.title}</Title>
-          <PhaseText>{item.text}</PhaseText>
+      <View style={extraStyles.containerOut}>
+        <Image source={item.image} style={extraStyles.tutorialImage} />
+        <Title>{item.title}</Title>
+        <View style={extraStyles.containerIn}>
+          <ScrollView
+            contentContainerStyle={{ alignItems: 'center' }}
+            showsVerticalScrollIndicator={false}
+          >
+            <PhaseText>{item.text}</PhaseText>
+          </ScrollView>
         </View>
       </View>
     );
-  }
-
-  _renderNextButton = () => {
-    return (
-      <View style={{ marginTop: 7, marginRight: 60 }}>
-        <Icon
-          name="arrow-right"
-          type="material-community"
-          color={colors.orange}
-          size={28}
-        />
-      </View>
-    );
   };
 
-  _renderPrevButton = () => {
-    return (
-      <View style={{ marginTop: 7, marginLeft: 60 }}>
-        <Icon
-          name="arrow-left"
-          type="material-community"
-          color={colors.orange}
-          size={28}
-        />
-      </View>
-    );
-  };
+  const PageIndicator = () => {
+    const factor = 8;
 
-  _renderDoneButton = () => {
+    const scrollTo = (direction) => {
+      let index = currentIndex;
+      if (
+        (direction < 0 && currentIndex > 0) ||
+        (direction > 0 && currentIndex < slides.length - 1)
+      ) {
+        index = currentIndex + direction;
+      }
+      flatListRef.current?.scrollToIndex({
+        animated: true,
+        index,
+      });
+    };
+
     return (
-      <View style={{ marginTop: 7, marginRight: 60 }}>
-        <Icon
-          name="check"
-          type="material-community"
-          color={colors.orange}
-          size={28}
-        />
-      </View>
+      <DotsView style={{ width: `${factor * (slides.length + 2)}%` }}>
+        <TouchableOpacity onPress={() => scrollTo(-1)} activeOpacity={buttonOpacity}>
+          <Icon
+            style={{ marginRight: '5%', opacity: currentIndex > 0 ? 1 : 0 }}
+            type="material-community"
+            name="arrow-left"
+            size={30}
+            color={colors.orange}
+          />
+        </TouchableOpacity>
+        {slides.map((slides) => {
+          return <Dot id={slides.key} key={slides.key} scrollX={scrollX} />;
+        })}
+        <TouchableOpacity
+          onPress={() =>
+            currentIndex == slides.length - 1 ? props.navigation.goBack() : scrollTo(1)
+          }
+          activeOpacity={buttonOpacity}
+        >
+          <Icon
+            style={{ marginLeft: '5%' }}
+            type="material-community"
+            name={currentIndex == slides.length - 1 ? 'check' : 'arrow-right'}
+            size={30}
+            color={colors.orange}
+          />
+        </TouchableOpacity>
+      </DotsView>
     );
   };
 
   return (
     <>
-      <Header onPress={() => props.navigation.goBack()} />
-      <AppIntroSlider
-        renderItem={renderSlides}
-        data={slides}
-        activeDotStyle={{
-          backgroundColor: colors.orange,
-          width: 30
-        }}
-        showPrevButton={true}
-        onDone={() => props.navigation.goBack()}
-        renderDoneButton={this._renderDoneButton}
-        renderNextButton={this._renderNextButton}
-        renderPrevButton={this._renderPrevButton}
-      />
+      <Header onPress={() => props.navigation.goBack()} margin={getStatusBarHeight()} />
+      <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
+        <FlatList
+          ref={flatListRef}
+          data={slides}
+          renderItem={renderSlides}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          bounces={false}
+          pagingEnabled
+          keyExtractor={(item) => item.key}
+          viewabilityConfig={{
+            viewAreaCoveragePercentThreshold: 30,
+          }}
+          onViewableItemsChanged={viewableItemsChanged}
+          onScroll={({ nativeEvent }) => {
+            scrollX.value = nativeEvent.contentOffset.x;
+          }}
+        />
+        <PageIndicator />
+      </View>
     </>
   );
 };

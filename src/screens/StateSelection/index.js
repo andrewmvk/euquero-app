@@ -4,6 +4,7 @@ import { ActivityIndicator, Keyboard, TouchableWithoutFeedback, Platform } from 
 import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import { colors, shadow } from '../../defaultStyles';
 import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
@@ -59,6 +60,12 @@ export default (props) => {
 
   useEffect(() => {
     setIsLoading(true);
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
     fetchData().then(() => setIsLoading(false));
   }, []);
 

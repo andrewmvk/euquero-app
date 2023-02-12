@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Switch } from 'react-native';
+import * as NavigationBar from 'expo-navigation-bar';
 import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 
@@ -24,8 +25,16 @@ export default (props) => {
   });
   const [modalVisibility, setModalVisibility] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+  }, []);
 
   const fetchData = async () => {
     let list = [];
@@ -162,8 +171,8 @@ export default (props) => {
   return (
     <>
       <DashedCircle />
+      <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
       <Container>
-        <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
         ) : (

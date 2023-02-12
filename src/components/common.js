@@ -20,6 +20,7 @@ import { Icon } from 'react-native-elements';
 import styled from 'styled-components/native';
 
 import { fonts, fontSize, fontSizeNoUnits, colors, buttonOpacity, shadow } from '../defaultStyles';
+import Animated, { Extrapolation, interpolate, useAnimatedProps } from 'react-native-reanimated';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -315,21 +316,19 @@ export const ServiceCard = (props) => {
     : screenWidth * 0.75;
 
   return (
-    <Shadow {...cardShadow}>
-      <TouchableOpacity
-        activeOpacity={buttonOpacity}
-        style={[cardStyles.container, { borderLeftColor: color }]}
-        onPress={() => props.navigation.navigate('ServicesGlossary')}
-      >
-        {props.text ? (
-          <View style={{ width: textWidth }}>
-            <Text style={cardStyles.cardText} numberOfLines={1}>
-              {props.text}
-            </Text>
-          </View>
-        ) : null}
-      </TouchableOpacity>
-    </Shadow>
+    <TouchableOpacity
+      activeOpacity={buttonOpacity}
+      style={[cardStyles.container, { ...shadow, borderLeftColor: color }]}
+      onPress={() => props.navigation.navigate('ServicesGlossary')}
+    >
+      {props.text ? (
+        <View style={{ width: textWidth }}>
+          <Text style={cardStyles.cardText} numberOfLines={1}>
+            {props.text}
+          </Text>
+        </View>
+      ) : null}
+    </TouchableOpacity>
   );
 };
 
@@ -722,4 +721,41 @@ export const List = (props) => {
       />
     </View>
   );
+};
+
+// PageIndicator:
+const AnimatedDot = Animated.createAnimatedComponent(View);
+
+export const Dot = ({ id, scrollX }) => {
+  const dotProps = useAnimatedProps(() => {
+    const inputRange = [
+      (id - 2) * screenWidth,
+      (id - 1) * screenWidth,
+      id * screenWidth,
+      (id + 1) * screenWidth,
+      (id + 2) * screenWidth,
+    ];
+
+    const opacity = interpolate(scrollX.value, inputRange, [0.3, 0.45, 1, 0.45, 0.3], {
+      extrapolateLeft: Extrapolation.CLAMP,
+      extrapolateRight: Extrapolation.CLAMP,
+    });
+
+    const newWidth = interpolate(scrollX.value, inputRange, [16, 22, 35, 22, 16], {
+      extrapolateLeft: Extrapolation.CLAMP,
+      extrapolateRight: Extrapolation.CLAMP,
+    });
+
+    return {
+      width: newWidth,
+      opacity: opacity,
+      style: {
+        height: 10,
+        backgroundColor: colors.orange,
+        borderRadius: 5,
+      },
+    };
+  });
+
+  return <AnimatedDot animatedProps={dotProps} />;
 };

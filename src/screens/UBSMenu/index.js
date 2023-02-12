@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import {
   Container,
@@ -26,6 +27,15 @@ const periods = [
 export default (props) => {
   const routeParams = props.route.params;
   const headerName = `${routeParams.stateName} - ${routeParams.cityName} - ${routeParams.ubsName}`;
+
+  useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+  }, []);
 
   const handleNavigate = (item, page) => {
     props.navigation.navigate(page, {

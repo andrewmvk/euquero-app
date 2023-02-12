@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
-import { colors, fonts, fontSize, fontSizeNoUnits } from '../../defaultStyles';
+import { colors, fonts, fontSize } from '../../defaultStyles';
 
 export const Container = styled.View`
   flex: 1;
@@ -8,7 +8,7 @@ export const Container = styled.View`
 `;
 
 export const Title = styled.Text`
-  margin-top: 15px;
+  margin-top: 10px;
   font-size: ${fontSize.bigTitle};
   font-family: ${fonts.spartanR};
   color: ${colors.text};
@@ -16,7 +16,7 @@ export const Title = styled.Text`
 
 export const SimpleText = styled.Text`
   line-height: 18px;
-  margin-top: 20px;
+  margin-top: 15px;
   margin-bottom: 20px;
   width: 80%;
   text-align: center;

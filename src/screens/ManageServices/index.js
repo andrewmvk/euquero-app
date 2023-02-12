@@ -12,6 +12,7 @@ import { Icon } from 'react-native-elements';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { AddButton, EmptyListMessage } from '../../components/common';
 import { auth, db } from '../../services/firebase.config';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
@@ -44,6 +45,13 @@ export default (props) => {
   };
 
   useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+
     const unsubscribe = props.navigation.addListener('focus', async () => {
       const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
       if (currentUserSnap.exists()) {

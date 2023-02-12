@@ -3,29 +3,30 @@ import { Text, TouchableOpacity, View, Linking, Alert, ActivityIndicator } from 
 import { Icon } from 'react-native-elements';
 import { auth, db, storage } from '../../services/firebase.config';
 import { getDownloadURL, ref } from 'firebase/storage';
+import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import * as DocumentPicker from 'expo-document-picker';
 import * as XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import { colors, fonts } from '../../defaultStyles';
-import { DropdownSelection, RegisterButton } from '../../components/common';
+import { RegisterButton } from '../../components/common';
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { SimpleText, Title, Container, ButtonView, TouchableText } from './styles';
 import { useEffect } from 'react';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import AnimatedButton from '../../components/AnimatedButton';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(false);
   const [fileType, setFileType] = useState({
     items: [
-      { name: 'UBS', id: 1 },
-      { name: 'Serviços', id: 2 },
-      { name: 'Indicadores', id: 3 },
+      { id: 0, name: 'UNIDADES' },
+      { id: 1, name: 'INDICADORES' },
+      { id: 2, name: 'SERVIÇOS' },
     ],
-    selected: 'Escolha o tipo de arquivo',
     value: -1,
   });
 
@@ -106,6 +107,7 @@ export default (props) => {
                   finalMessage,
               };
             }
+            setFileType({ items: fileType.items, value: -1 });
             Alert.alert(alertDescription.title, alertDescription.text);
           }
         });
@@ -113,7 +115,7 @@ export default (props) => {
       console.log(err);
       Alert.alert(
         'Erro ao carregar arquivo!',
-        'Por favor verifique a formatação do arquivo o mesmo deve seguir o modelo e ter extensão .xlsx',
+        'Por favor verifique a formatação do arquivo, o mesmo deve a formatação padrão e ter extensão .xlsx',
       );
     }
   };
@@ -121,8 +123,8 @@ export default (props) => {
   const uploadUbs = async (dataFile) => {
     const promises = dataFile.map(async (data) => {
       await setDoc(doc(db, 'ubs', data.id.toString()), {
-        uf: data.uf,
-        city: data.city,
+        uf: +data.uf,
+        city: +data.city,
         name: data.name,
         location: {
           latitude: data?.latitude ? data.latitude : null,
@@ -137,9 +139,9 @@ export default (props) => {
   const uploadScorecards = async (dataFile) => {
     const promises = dataFile.map(async (data) => {
       await setDoc(doc(db, 'ubsScorecards', data.scorecard.toString() + data.ubsid.toString()), {
-        ubsid: data.ubsid,
-        scorecard: data.scorecard,
-        score: data.score,
+        ubsid: +data.ubsid,
+        scorecard: +data.scorecard,
+        score: +data.score,
       });
     });
 
@@ -148,10 +150,9 @@ export default (props) => {
 
   const uploadServices = async (dataFile) => {
     const promises = dataFile.map(async (data) => {
-      await setDoc(doc(db, 'ubsServices', data.id.toString() + data.ubsid.toString()), {
-        ubsid: data.ubsid,
-        name: data.name,
-        id: data.id,
+      await setDoc(doc(db, 'ubsServices', data.service.toString() + data.ubsid.toString()), {
+        ubsid: +data.ubsid,
+        service: +data.service,
       });
     });
 
@@ -160,7 +161,7 @@ export default (props) => {
 
   const uploadToDatabase = async (dataFile, worksheetName) => {
     let error = null;
-    if (fileType.value === 1) {
+    if (fileType.value === 0) {
       await uploadUbs(dataFile)
         .then(async () => {
           await updateUbsCount();
@@ -169,12 +170,12 @@ export default (props) => {
           console.log(err);
           error = worksheetName;
         });
-    } else if (fileType.value === 2) {
-      await uploadServices(dataFile).catch(() => {
+    } else if (fileType.value === 1) {
+      await uploadScorecards(dataFile).catch(() => {
         error = worksheetName;
       });
-    } else if (fileType.value === 3) {
-      await uploadScorecards(dataFile).catch(() => {
+    } else if (fileType.value === 2) {
+      await uploadServices(dataFile).catch(() => {
         error = worksheetName;
       });
     } else {
@@ -249,7 +250,19 @@ export default (props) => {
     }
   };
 
+  const handleSelectFileType = (id) => {
+    const newValue = fileType.value != id ? id : -1;
+    setFileType({ items: fileType.items, value: newValue });
+  };
+
   useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+
     const currentUser = async () => {
       const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
       setUser(currentUserSnap.exists());
@@ -270,7 +283,13 @@ export default (props) => {
         <Container>
           <View style={{ marginTop: '5%' }}>
             <Icon
-              name="file-excel-outline"
+              name={
+                fileType.value == -1
+                  ? 'file-excel-outline'
+                  : fileType.value == 0
+                  ? 'plus-box-outline'
+                  : 'merge'
+              }
               type="material-community"
               size={110}
               color={colors.orange}
@@ -280,35 +299,54 @@ export default (props) => {
           <Title>Adicionar novos dados</Title>
 
           <SimpleText>
-            <Text>
-              Abaixo escolha o tipo de arquivo que deseja inserir, faça upload do arquivo .xlsx com
-              a{' '}
-            </Text>
-            <Text style={{ fontFamily: fonts.spartanBold }}>formatação padrão.</Text>
+            {fileType.value == -1 ? (
+              <>
+                <Text>
+                  Abaixo escolha o tipo de arquivo que deseja inserir, faça upload do arquivo .xlsx
+                  com a{' '}
+                </Text>
+                <Text style={{ fontFamily: fonts.spartanBold }}>formatação padrão.</Text>
+              </>
+            ) : fileType.value == 0 ? (
+              <>
+                <Text style={{ fontFamily: fonts.spartanBold }}>Unidades Básicas de Saúde </Text>
+                <Text>
+                  só podem ser adicionadas por aqui e devem conter nome, id, estado, cidade,
+                  latitude e longitude.
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text style={{ fontFamily: fonts.spartanBold }}>Indicadores ou Serviços. </Text>
+                <Text>
+                  Esta seleção não deve ser utilizada para adicionar, mas sim para fazer conexões
+                  com suas UBSs.
+                </Text>
+              </>
+            )}
           </SimpleText>
 
           {isLoading ? (
             <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
           ) : (
             <ButtonView>
-              <DropdownSelection
-                data={fileType}
-                onSelect={setFileType}
-                disabled={false}
-                dropdownContainerStyle={{ width: '95%' }}
-                padding={10}
-                selectContainerStyle={{
-                  borderLeftColor: colors.orange,
-                  borderLeftWidth: 7,
-                }}
-                rounded
-                placeholder={fileType.value == -1 ? true : false}
-              />
+              <View style={{ height: 185, justifyContent: 'space-between' }}>
+                {fileType.items.map((item) => {
+                  return (
+                    <AnimatedButton
+                      key={item.id}
+                      text={item.name}
+                      active={fileType.value == item.id}
+                      onPress={() => handleSelectFileType(item.id)}
+                    />
+                  );
+                })}
+              </View>
               <RegisterButton
                 text="CADASTRAR"
                 pointerEvents={isLoading ? 'none' : 'auto'}
                 containerStyle={{
-                  marginTop: 145,
+                  marginTop: 20,
                   backgroundColor: fileType.value == -1 ? colors.gray : colors.orange,
                 }}
                 isLoading={isLoading}
@@ -325,7 +363,7 @@ export default (props) => {
               alignItems: 'center',
             }}
           >
-            <SimpleText>
+            <SimpleText style={{ marginBottom: 5 }}>
               <Text>Modelo com a </Text>
               <Text style={{ fontFamily: fonts.spartanBold }}>formatação padrão</Text>
             </SimpleText>

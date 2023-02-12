@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TouchableWithoutFeedback, Keyboard, View, Dimensions, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
@@ -24,6 +25,15 @@ const screenHeight = Dimensions.get('window').height;
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(props.route.params.data);
+
+  useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+  }, []);
 
   const updateScorecard = async () => {
     let noErrors = false;
