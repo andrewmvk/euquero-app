@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { TouchableWithoutFeedback, Keyboard, View, Dimensions, Alert } from 'react-native';
+import React, { useEffect } from 'react';
+import { TouchableWithoutFeedback, Keyboard, View, Dimensions } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
@@ -10,6 +11,15 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export default (props) => {
+  useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+  }, []);
+
   return (
     <>
       <DashedCircle />

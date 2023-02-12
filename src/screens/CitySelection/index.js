@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
+import * as NavigationBar from 'expo-navigation-bar';
 import { ActivityIndicator, Keyboard, TouchableWithoutFeedback, Platform } from 'react-native';
 import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
@@ -62,6 +63,12 @@ export default (props) => {
 
   useEffect(() => {
     setIsLoading(true);
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
     fetchData().then(() => setIsLoading(false));
   }, []);
 

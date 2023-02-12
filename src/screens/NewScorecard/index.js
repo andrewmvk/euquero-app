@@ -8,6 +8,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import { DropdownSelection, RegisterButton } from '../../components/common';
 import DashedCircle from '../../components/DashedCircle';
@@ -177,6 +178,13 @@ export default (props) => {
   };
 
   useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+
     setIsLoading({ loading: true, main: true });
     firstFetch().then(() => setIsLoading({ loading: false, main: false }));
   }, []);

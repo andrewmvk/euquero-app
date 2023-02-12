@@ -11,6 +11,7 @@ import {
 import { auth, db } from '../../services/firebase.config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import {
   Container,
@@ -45,7 +46,14 @@ export default (props) => {
   });
 
   useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('absolute');
+      await NavigationBar.setBackgroundColorAsync('rgba(0,0,0,0.01)');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+
     const unsubscribeFocus = props.navigation.addListener('focus', () => {
+      navBarConfig();
       Keyboard.addListener('keyboardDidShow', () => {
         setAnimationType({ n: true, type: 'away-out' });
       });
@@ -212,7 +220,7 @@ export default (props) => {
               {isLoading ? (
                 <ActivityIndicator size="large" color={colors.orange} />
               ) : (
-                <SmallButton onPress={() => handleNavigateTo({ isAdmin: true })} text="Acessar" />
+                <SmallButton onPress={() => signIn()} text="Acessar" />
               )}
             </View>
           </View>

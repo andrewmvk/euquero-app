@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StatusBar } from 'react-native';
+import * as NavigationBar from 'expo-navigation-bar';
 import { Icon } from '@rneui/themed';
 
 import { Container, LogoView, Subtitle, Buttons, AdminBtn, extraStyles } from './styles';
@@ -14,9 +15,17 @@ export default (props) => {
   const [transition, setTransition] = useState({ n: false, type: '' });
 
   useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('absolute');
+      await NavigationBar.setBackgroundColorAsync('rgba(0,0,0,0.01)');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+
     const unsubscribe = props.navigation.addListener('focus', () => {
       setTransition({ n: true, type: 'from' });
+      navBarConfig();
     });
+
     return () => unsubscribe();
   }, []);
 

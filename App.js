@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import MainStack from './src/stacks/MainStack';
+import * as NavigationBar from 'expo-navigation-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 
@@ -18,6 +19,10 @@ export default () => {
   useEffect(() => {
     async function prepare() {
       try {
+        await NavigationBar.setPositionAsync('absolute');
+        await NavigationBar.setBackgroundColorAsync('rgba(0,0,0,0.01)');
+        await NavigationBar.setButtonStyleAsync('light');
+
         await SplashScreen.preventAutoHideAsync();
 
         await Font.loadAsync({

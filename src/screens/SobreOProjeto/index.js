@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Image,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import * as NavigationBar from 'expo-navigation-bar';
 import { useSharedValue } from 'react-native-reanimated';
 
 import { Title, PhaseText, extraStyles, DotsView } from './styles';
@@ -40,13 +41,21 @@ const slides = [
 
 export default (props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollX = useSharedValue(0);
+
+  useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+  }, []);
 
   const flatListRef = useRef(null);
   const viewableItemsChanged = useRef(({ viewableItems }) => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
-
-  const scrollX = useSharedValue(0);
 
   const renderSlides = ({ item }) => {
     let windowHeight = Dimensions.get('window').height;

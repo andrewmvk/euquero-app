@@ -3,10 +3,11 @@ import { Text, TouchableOpacity, View, Linking, Alert, ActivityIndicator } from 
 import { Icon } from 'react-native-elements';
 import { auth, db, storage } from '../../services/firebase.config';
 import { getDownloadURL, ref } from 'firebase/storage';
+import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import * as DocumentPicker from 'expo-document-picker';
 import * as XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import { colors, fonts } from '../../defaultStyles';
 import { RegisterButton } from '../../components/common';
@@ -255,6 +256,13 @@ export default (props) => {
   };
 
   useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+
     const currentUser = async () => {
       const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
       setUser(currentUserSnap.exists());

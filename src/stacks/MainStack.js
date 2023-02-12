@@ -17,7 +17,6 @@ import UBSMenu from '../screens/UBSMenu';
 import ManageScorecards from '../screens/ManageScorecards';
 import NewScorecard from '../screens/NewScorecard';
 import UBSServices from '../screens/UBSServices';
-import NumberSelectionModal from '../components/NumberSelectionModal';
 import ManageGlossary from '../screens/ManageGlossary';
 import ManageServices from '../screens/ManageServices';
 import UBSScorecards from '../screens/UBSScorecards';
@@ -51,7 +50,6 @@ export default () => (
     <Stack.Screen name="ManageGlossary" component={ManageGlossary} />
     <Stack.Screen name="ManageServices" component={ManageServices} />
     <Stack.Screen name="UBSServices" component={UBSServices} />
-    <Stack.Screen name="NumberSelectionModal" component={NumberSelectionModal} />
     <Stack.Screen name="ServicesGlossary" component={ScorecardGlossary} />
     <Stack.Screen name="UBSScorecards" component={UBSScorecards} />
   </Stack.Navigator>

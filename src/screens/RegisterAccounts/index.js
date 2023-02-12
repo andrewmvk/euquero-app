@@ -3,6 +3,7 @@ import { Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { auth, authSecondary, db } from '../../services/firebase.config';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
@@ -15,6 +16,15 @@ export default (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+  }, []);
 
   const handleSignUp = async () => {
     setIsLoading(true);

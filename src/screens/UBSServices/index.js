@@ -1,27 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
-
-import { ServiceCard, EmptyListMessage, Map } from '../../components/common';
+import * as NavigationBar from 'expo-navigation-bar';
 import { FlatList, ActivityIndicator } from 'react-native';
 
+import { ServiceCard, EmptyListMessage, Map } from '../../components/common';
 import Header from '../../components/Header';
 import { Container, Period, TextView, UBSName } from './styles';
 import { colors } from '../../defaultStyles';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 
-export default props => {
+export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [services, setServices] = useState([]);
 
   const routeParams = props.route?.params;
 
   useEffect(() => {
+    const navBarConfig = async () => {
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+    navBarConfig();
+
     const fetchData = async () => {
       setIsLoading(true);
       const ubsServicesQuery = query(
         collection(db, 'ubsServices'),
-        where('ubsid', '==', +routeParams.ubsID)
+        where('ubsid', '==', +routeParams.ubsID),
       );
 
       const ubsServicesSnap = await getDocs(ubsServicesQuery);
@@ -30,7 +37,7 @@ export default props => {
         const service = ubsServicesSnap.docs[i].data();
         let servicesObject = {
           name: service.name,
-          id: service.id
+          id: service.id,
         };
         servicesArray.push(servicesObject);
       }
@@ -42,7 +49,7 @@ export default props => {
     });
   }, []);
 
-  const serviceCard = ({ item }) => <ServiceCard color={'#fff'} text={item.name}/>;
+  const serviceCard = ({ item }) => <ServiceCard color={'#fff'} text={item.name} />;
   const headerName = `${routeParams.stateName} - ${routeParams.cityName} - ${routeParams.ubsName}`;
 
   return (
@@ -61,18 +68,14 @@ export default props => {
       </TextView>
 
       {isLoading ? (
-        <ActivityIndicator
-          size="large"
-          color={colors.orange}
-          style={{ marginTop: 50 }}
-        />
+        <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
       ) : (
         <FlatList
           style={{ paddingBottom: 25, width: '100%', zIndex: 0 }}
           contentContainerStyle={{ alignItems: 'center' }}
           data={services}
           renderItem={serviceCard}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           ListEmptyComponent={
             <EmptyListMessage
               containerStyle={{ marginTop: '0%', width: '80%', height: '65%' }}

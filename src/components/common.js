@@ -316,21 +316,19 @@ export const ServiceCard = (props) => {
     : screenWidth * 0.75;
 
   return (
-    <Shadow {...cardShadow}>
-      <TouchableOpacity
-        activeOpacity={buttonOpacity}
-        style={[cardStyles.container, { borderLeftColor: color }]}
-        onPress={() => props.navigation.navigate('ServicesGlossary')}
-      >
-        {props.text ? (
-          <View style={{ width: textWidth }}>
-            <Text style={cardStyles.cardText} numberOfLines={1}>
-              {props.text}
-            </Text>
-          </View>
-        ) : null}
-      </TouchableOpacity>
-    </Shadow>
+    <TouchableOpacity
+      activeOpacity={buttonOpacity}
+      style={[cardStyles.container, { ...shadow, borderLeftColor: color }]}
+      onPress={() => props.navigation.navigate('ServicesGlossary')}
+    >
+      {props.text ? (
+        <View style={{ width: textWidth }}>
+          <Text style={cardStyles.cardText} numberOfLines={1}>
+            {props.text}
+          </Text>
+        </View>
+      ) : null}
+    </TouchableOpacity>
   );
 };
 
