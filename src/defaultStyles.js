@@ -1,42 +1,46 @@
 export const colors = {
-  orange: '#FF6B0F',
-  text: '#7F7F7F',
-  titleSubtitle: '#fff',
-  backgroundMain: '#2C3196',
-  backgroundSecond: '#F8F8F8',
-  gray: '#C4C4C4',
+  orange: "#FF6B0F",
+  text: "#7F7F7F",
+  titleSubtitle: "#fff",
+  backgroundMain: "#2C3196",
+  backgroundSecond: "#F8F8F8",
+  gray: "#C4C4C4",
 };
 
 export const fonts = {
-  spartanL: 'Spartan_300Light',
-  spartanR: 'Spartan_400Regular',
-  spartanM: 'Spartan_500Medium',
-  spartanBold: 'Spartan_700Bold',
-  spartanBlack: 'Spartan_900Black',
+  spartanL: "Spartan_300Light",
+  spartanR: "Spartan_400Regular",
+  spartanM: "Spartan_500Medium",
+  spartanBold: "Spartan_700Bold",
+  spartanBlack: "Spartan_900Black",
 };
 
 export const fontSizeNoUnits = {
   bigTitle: 22,
   cardText: 19,
+  cardText2: 13,
   title: 17,
   textInput: 16,
   text: 15,
   header: 13,
   subtitle: 13,
+  grade: 12,
 };
 
 export const fontSize = {
-  bigTitle: `${fontSizeNoUnits.bigTitle}` + 'px',
-  cardText: `${fontSizeNoUnits.cardText}` + 'px',
-  title: `${fontSizeNoUnits.title}` + 'px',
-  textInput: `${fontSizeNoUnits.textInput}` + 'px',
-  text: `${fontSizeNoUnits.text}` + 'px',
-  header: `${fontSizeNoUnits.header}` + 'px',
-  subtitle: `${fontSizeNoUnits.subtitle}` + 'px',
+  bigTitle: `${fontSizeNoUnits.bigTitle}` + "px",
+  cardText: `${fontSizeNoUnits.cardText}` + "px",
+  cardText2: `${fontSizeNoUnits.cardText2}` + "px",
+  title: `${fontSizeNoUnits.title}` + "px",
+  textInput: `${fontSizeNoUnits.textInput}` + "px",
+  text: `${fontSizeNoUnits.text}` + "px",
+  header: `${fontSizeNoUnits.header}` + "px",
+  subtitle: `${fontSizeNoUnits.subtitle}` + "px",
+  grade: `${fontSizeNoUnits.grade}` + "px",
 };
 
 export const shadow = {
-  shadowColor: '#000',
+  shadowColor: "#000",
   shadowOffset: {
     width: 0,
     height: 1,
