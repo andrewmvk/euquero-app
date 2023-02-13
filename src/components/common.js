@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import NetInfo from '@react-native-community/netinfo';
-import Pin from '../../assets/images/map-pin.svg';
-import NoConnection from '../../assets/images/no-connection.svg';
+import React, { useEffect, useState } from "react";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import NetInfo from "@react-native-community/netinfo";
+import Pin from "../../assets/images/map-pin.svg";
+import NoConnection from "../../assets/images/no-connection.svg";
+import Diamond from "../../assets/images/diamond.svg";
+
 import {
   TextInput,
   TouchableOpacity,
@@ -14,16 +16,28 @@ import {
   ActivityIndicator,
   ScrollView,
   FlatList,
-} from 'react-native';
+} from "react-native";
 
-import { Icon } from 'react-native-elements';
-import styled from 'styled-components/native';
+import { Svg } from "react-native-svg";
+import { Icon } from "react-native-elements";
+import styled from "styled-components/native";
 
-import { fonts, fontSize, fontSizeNoUnits, colors, buttonOpacity, shadow } from '../defaultStyles';
-import Animated, { Extrapolation, interpolate, useAnimatedProps } from 'react-native-reanimated';
+import {
+  fonts,
+  fontSize,
+  fontSizeNoUnits,
+  colors,
+  buttonOpacity,
+  shadow,
+} from "../defaultStyles";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedProps,
+} from "react-native-reanimated";
 
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 
 const BigTitleView = styled.View`
   width: 100%;
@@ -51,9 +65,9 @@ export const BigTitle = (props) => {
     <BigTitleView>
       <View
         style={{
-          justifyContent: 'space-around',
-          width: '100%',
-          alignItems: 'center',
+          justifyContent: "space-around",
+          width: "100%",
+          alignItems: "center",
         }}
       >
         <BigTitleText>{props.children}</BigTitleText>
@@ -81,9 +95,9 @@ export const MediumTitle = (props) => {
     <MediumTitleView>
       <View
         style={{
-          justifyContent: 'space-around',
-          width: '100%',
-          alignItems: 'flex-start',
+          justifyContent: "space-around",
+          width: "100%",
+          alignItems: "flex-start",
         }}
       >
         <MediumTitleText>{props.text}</MediumTitleText>
@@ -98,8 +112,8 @@ const buttonStyles = StyleSheet.create({
     height: 40,
     backgroundColor: colors.orange,
     borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingBottom: 2,
   },
   large: {
@@ -107,8 +121,8 @@ const buttonStyles = StyleSheet.create({
     height: 50,
     backgroundColor: colors.orange,
     borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingBottom: 2,
   },
   register: {
@@ -116,8 +130,8 @@ const buttonStyles = StyleSheet.create({
     height: 60,
     backgroundColor: colors.orange,
     borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
@@ -134,7 +148,7 @@ export function SmallButton(props) {
       style={[buttonStyles.small, shadow]}
       onPress={props.onPress}
     >
-      <SmallButtonText>{props.text ? props.text : 'TEXT'}</SmallButtonText>
+      <SmallButtonText>{props.text ? props.text : "TEXT"}</SmallButtonText>
     </TouchableOpacity>
   );
 }
@@ -152,7 +166,7 @@ export function LargeButton(props) {
       style={[buttonStyles.large, shadow]}
       onPress={props.onPress}
     >
-      <LargeButtonText>{props.text ? props.text : 'TEXT'}</LargeButtonText>
+      <LargeButtonText>{props.text ? props.text : "TEXT"}</LargeButtonText>
     </TouchableOpacity>
   );
 }
@@ -175,7 +189,9 @@ export function RegisterButton(props) {
       {props.isLoading ? (
         <ActivityIndicator size="large" color="#fff" />
       ) : (
-        <RegisterButtonText>{props.text ? props.text : 'TEXT'}</RegisterButtonText>
+        <RegisterButtonText>
+          {props.text ? props.text : "TEXT"}
+        </RegisterButtonText>
       )}
     </TouchableOpacity>
   );
@@ -196,7 +212,7 @@ const RoundedButton = styled.TouchableOpacity`
 export function AddButton(props) {
   const containerViewStyle = {
     margin: props?.margin ? props.margin : 20,
-    position: props.relative ? 'relative' : 'absolute',
+    position: props.relative ? "relative" : "absolute",
     ...shadow,
   };
 
@@ -246,28 +262,54 @@ const cardStyles = StyleSheet.create({
     marginVertical: 7,
     width: screenWidth * 0.85,
     height: 70,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     borderRadius: 5,
     borderLeftWidth: 7,
   },
+  gradeContainer: {
+    zIndex: 3,
+    marginVertical: 7,
+    width: screenWidth * 0.85,
+    height: 70,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderRadius: 5,
+    borderRightWidth: 7,
+  },
   cardText: {
-    textAlign: 'left',
+    textAlign: "left",
     fontFamily: fonts.spartanR,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     fontSize: fontSizeNoUnits.cardText,
     marginLeft: 22,
     color: colors.text,
   },
+  cardText2: {
+    textAlign: "left",
+    fontFamily: fonts.spartanL,
+    fontSize: fontSizeNoUnits.cardText2,
+    marginLeft: 15,
+    color: colors.text,
+  },
+  gradeText: {
+    textAlign: "left",
+    fontFamily: fonts.spartanR,
+    fontSize: fontSizeNoUnits.gradeText,
+    marginLeft: 15,
+    color: colors.text,
+  },
   avaibleUBSText: {
     fontFamily: fonts.spartanR,
-    position: 'absolute',
-    textAlign: 'right',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: "absolute",
+    textAlign: "right",
+    alignItems: "center",
+    justifyContent: "center",
     fontSize: fontSizeNoUnits.subtitle,
     bottom: 10,
     right: 22,
@@ -299,7 +341,7 @@ export const Card = (props) => {
       ) : null}
       {props.ubsCount ? (
         <Text style={[cardStyles.avaibleUBSText, { width: textWidth }]}>
-          {props.ubsCount + ' UBS'}
+          {props.ubsCount + " UBS"}
         </Text>
       ) : null}
       {props.children ? { ...props.children } : null}
@@ -319,7 +361,7 @@ export const ServiceCard = (props) => {
     <TouchableOpacity
       activeOpacity={buttonOpacity}
       style={[cardStyles.container, { ...shadow, borderLeftColor: color }]}
-      onPress={() => props.navigation.navigate('ServicesGlossary')}
+      onPress={() => props.navigation.navigate("ServicesGlossary")}
     >
       {props.text ? (
         <View style={{ width: textWidth }}>
@@ -337,18 +379,18 @@ const cardA = StyleSheet.create({
     zIndex: 3,
     width: screenWidth * 0.85,
     height: 80,
-    backgroundColor: '#fff',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    backgroundColor: "#fff",
+    flexDirection: "column",
+    alignItems: "flex-start",
     borderRadius: 5,
     borderLeftWidth: 7,
-    justifyContent: 'center',
+    justifyContent: "center",
     marginTop: 7,
   },
   titleCardA: {
     fontFamily: fonts.spartanR,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     fontSize: 18,
     marginLeft: 22,
     marginTop: -5,
@@ -356,8 +398,8 @@ const cardA = StyleSheet.create({
   },
   descriptionCardA: {
     fontFamily: fonts.spartanR,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     fontSize: 12,
     marginLeft: 22,
     color: colors.text,
@@ -374,7 +416,9 @@ export const InDevelopmentCard = (props) => {
   };
 
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => setIsConnected(state.isConnected));
+    const unsubscribe = NetInfo.addEventListener((state) =>
+      setIsConnected(state.isConnected)
+    );
     unsubscribe();
   }, []);
 
@@ -386,28 +430,33 @@ export const InDevelopmentCard = (props) => {
             <Text style={cardA.titleCardA} numberOfLines={1}>
               Em desenvolvimento...
             </Text>
-            <Text style={cardA.descriptionCardA}>Estados a serem cadastrados:</Text>
+            <Text style={cardA.descriptionCardA}>
+              Estados a serem cadastrados:
+            </Text>
           </View>
           <View
             style={{
               zIndex: 2,
               borderBottomLeftRadius: 5,
               borderBottomRightRadius: 5,
-              backgroundColor: 'white',
+              backgroundColor: "white",
               width: screenWidth * 0.85 * 0.95,
               height: height(),
-              alignSelf: 'center',
+              alignSelf: "center",
               marginBottom: 30,
             }}
           >
             <ScrollView
-              keyboardDismissMode={props.keyboardDismiss ? 'on-drag' : 'none'}
+              keyboardDismissMode={props.keyboardDismiss ? "on-drag" : "none"}
               nestedScrollEnabled
               style={{ paddingHorizontal: 20, paddingTop: 10, zIndex: 2 }}
             >
               {props.data.map((item) => {
                 return (
-                  <Text key={item.id} style={{ color: colors.text, marginBottom: 5 }}>
+                  <Text
+                    key={item.id}
+                    style={{ color: colors.text, marginBottom: 5 }}
+                  >
                     {item.name}
                   </Text>
                 );
@@ -443,6 +492,48 @@ const SimpleText = styled.Text`
   margin: 16px 30px 16px 30px;
 `;
 
+export const DeviceCard = (props) => {
+  const color = props.color ? props.color : colors.gray;
+
+  return (
+    <TouchableOpacity
+      activeOpacity={buttonOpacity}
+      style={[
+        cardStyles.gradeContainer,
+        {
+          ...shadow,
+          borderRightColor: color,
+          width: screenWidth * 0.75,
+          height: 80,
+        },
+      ]}
+      onPress={() => props.navigation.navigate("ServicesGlossary")}
+    >
+      {props.text ? (
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <Text style={cardStyles.gradeText} numberOfLines={1}>
+              Educação em saúde
+            </Text>
+            <Text style={cardStyles.cardText2} numberOfLines={1}>
+              Nota: Diamante
+            </Text>
+          </View>
+          <View style={{ width: 50, height: 50, marginRight: 10 }}>
+            <Diamond width={50} height={50} />
+          </View>
+        </View>
+      ) : null}
+    </TouchableOpacity>
+  );
+};
+
 export const EmptyListMessage = (props) => {
   const [isConnected, setIsConnected] = useState(false);
 
@@ -459,22 +550,28 @@ export const EmptyListMessage = (props) => {
         <>
           <View>
             <Image
-              source={require('../../assets/images/noResultsImg.png')}
-              style={{ resizeMode: 'contain', height: 200 }}
+              source={require("../../assets/images/noResultsImg.png")}
+              style={{ resizeMode: "contain", height: 200 }}
             />
           </View>
           <Title>NADA POR AQUI!</Title>
           {props.alterText ? (
-            <SimpleText>Nenhum item foi encontrado para esta escolha.</SimpleText>
+            <SimpleText>
+              Nenhum item foi encontrado para esta escolha.
+            </SimpleText>
           ) : (
-            <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
+            <SimpleText>
+              Não encontramos nenhum item correspondente à sua pesquisa.
+            </SimpleText>
           )}
         </>
       ) : (
         <>
           <NoConnection height={200} width={200} />
           <Title>SEM CONEXÃO</Title>
-          <SimpleText>Conecte-se à internet para visualizar os itens.</SimpleText>
+          <SimpleText>
+            Conecte-se à internet para visualizar os itens.
+          </SimpleText>
         </>
       )}
     </NoResults>
@@ -514,9 +611,17 @@ export const DropdownSelection = (props) => {
   const zIndexValue = props.zIndex ? props.zIndex : 4;
 
   return (
-    <View style={[{ alignItems: 'center', zIndex: zIndexValue }, props?.containerStyle]}>
+    <View
+      style={[
+        { alignItems: "center", zIndex: zIndexValue },
+        props?.containerStyle,
+      ]}
+    >
       <SelectView
-        style={[props?.selectContainerStyle, { zIndex: zIndexValue, ...shadow }]}
+        style={[
+          props?.selectContainerStyle,
+          { zIndex: zIndexValue, ...shadow },
+        ]}
         activeOpacity={buttonOpacity}
         disabled={props.disabled}
         onPress={() => setOpened(!opened)}
@@ -527,7 +632,8 @@ export const DropdownSelection = (props) => {
         <DropdownText
           numberOfLines={1}
           style={{
-            color: props.disabled || props.placeholder ? colors.gray : colors.text,
+            color:
+              props.disabled || props.placeholder ? colors.gray : colors.text,
           }}
         >
           {props.data.selected}
@@ -543,10 +649,10 @@ export const DropdownSelection = (props) => {
       {opened ? (
         <ScrollView
           style={{
-            width: '100%',
+            width: "100%",
             maxHeight: dropDownHeight,
             marginTop: -5,
-            backgroundColor: '#fff',
+            backgroundColor: "#fff",
             borderBottomLeftRadius: 5,
             borderBottomRightRadius: 5,
             zIndex: zIndexValue - 1,
@@ -556,7 +662,7 @@ export const DropdownSelection = (props) => {
           <View
             style={{
               flex: 1,
-              justifyContent: 'space-between',
+              justifyContent: "space-between",
               marginVertical: 8,
             }}
           >
@@ -568,9 +674,9 @@ export const DropdownSelection = (props) => {
                   style={{
                     marginVertical: 4,
                     height: 40,
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
                     paddingRight: 18,
                     paddingLeft: 18,
                   }}
@@ -583,7 +689,9 @@ export const DropdownSelection = (props) => {
                     setOpened(!opened);
                   }}
                 >
-                  {!props?.noNumbers ? <DropdownTextId>{item.id}</DropdownTextId> : null}
+                  {!props?.noNumbers ? (
+                    <DropdownTextId>{item.id}</DropdownTextId>
+                  ) : null}
                   <DropdownText numberOfLines={1}>{item.name}</DropdownText>
                 </TouchableOpacity>
               );
@@ -626,8 +734,8 @@ export const SortButton = (props) => {
 
 const mapStyle = {
   marginTop: 20,
-  height: Dimensions.get('window').height * 0.3,
-  width: Dimensions.get('window').width,
+  height: Dimensions.get("window").height * 0.3,
+  width: Dimensions.get("window").width,
 };
 
 export const Map = (props) => {
@@ -687,8 +795,8 @@ export const List = (props) => {
   return (
     <View
       style={{
-        position: 'absolute',
-        width: '100%',
+        position: "absolute",
+        width: "100%",
         height: screenHeight - props?.safeArea,
         bottom: 0,
       }}
@@ -701,7 +809,7 @@ export const List = (props) => {
           zIndex: -1,
         }}
         progressViewOffset={-50}
-        contentContainerStyle={{ alignItems: 'center' }}
+        contentContainerStyle={{ alignItems: "center" }}
         data={props.data}
         renderItem={props.card ? props.card : card}
         onRefresh={
@@ -716,7 +824,9 @@ export const List = (props) => {
         keyExtractor={(item) => item.id}
         ListEmptyComponent={EmptyListMessage}
         ListFooterComponent={
-          props.notRegistredData ? <InDevelopmentCard data={props.notRegistredData} /> : null
+          props.notRegistredData ? (
+            <InDevelopmentCard data={props.notRegistredData} />
+          ) : null
         }
       />
     </View>
@@ -736,15 +846,25 @@ export const Dot = ({ id, scrollX }) => {
       (id + 2) * screenWidth,
     ];
 
-    const opacity = interpolate(scrollX.value, inputRange, [0.3, 0.45, 1, 0.45, 0.3], {
-      extrapolateLeft: Extrapolation.CLAMP,
-      extrapolateRight: Extrapolation.CLAMP,
-    });
+    const opacity = interpolate(
+      scrollX.value,
+      inputRange,
+      [0.3, 0.45, 1, 0.45, 0.3],
+      {
+        extrapolateLeft: Extrapolation.CLAMP,
+        extrapolateRight: Extrapolation.CLAMP,
+      }
+    );
 
-    const newWidth = interpolate(scrollX.value, inputRange, [16, 22, 35, 22, 16], {
-      extrapolateLeft: Extrapolation.CLAMP,
-      extrapolateRight: Extrapolation.CLAMP,
-    });
+    const newWidth = interpolate(
+      scrollX.value,
+      inputRange,
+      [16, 22, 35, 22, 16],
+      {
+        extrapolateLeft: Extrapolation.CLAMP,
+        extrapolateRight: Extrapolation.CLAMP,
+      }
+    );
 
     return {
       width: newWidth,

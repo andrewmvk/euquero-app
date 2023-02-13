@@ -11,7 +11,9 @@ import {
   colors,
   fonts,
   fontSizeNoUnits,
+  shadow,
 } from "../../defaultStyles";
+import { DeviceCard } from "../../components/common";
 import { TouchableCard, Subtitle, SubtitleContainer, Title } from "./styles";
 import { ScrollView } from "react-native";
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -29,12 +31,13 @@ export default (props) => {
 
   const screenWidth = Dimensions.get("window").width;
 
-  const animatedHeight = useSharedValue(10);
+  const animatedHeight = useSharedValue(15);
   const viewProps = useAnimatedProps(() => {
     return {
       height: animatedHeight.value,
-      width: screenWidth * 0.8,
+      width: screenWidth * 0.85,
       style: {
+        ...shadow,
         backgroundColor: "#fff",
         marginBottom: 20,
         alignItems: "center",
@@ -51,7 +54,7 @@ export default (props) => {
     if (innerScorecards.length == 0 && !itemData.isEditing) {
       setIsLoading(true);
     }
-    animatedHeight.value = withSpring(!itemData.isEditing ? 100 : 10);
+    animatedHeight.value = withSpring(!itemData.isEditing ? 210 : 15);
   };
 
   const closeTab = async () => {
@@ -59,8 +62,9 @@ export default (props) => {
   };
 
   return (
-    <View style={{ justifyContent: "center", alignItems: "center" }}>
+    <View style={{ alignItems: "center", justifyContent: "center" }}>
       <TouchableCard
+        style={{ ...shadow, zIndex: 1 }}
         activeOpacity={buttonOpacity}
         onPress={() => {
           if (!isCreating) {
@@ -83,14 +87,18 @@ export default (props) => {
           <ScrollView style={{ width: "100%" }} nestedScrollEnabled={true}>
             <View
               style={{
-                alignItems: "flex-start",
+                zIndex: 0,
+                alignItems: "center",
                 flex: 1,
                 justifyContent: "space-between",
                 marginVertical: 10,
               }}
             >
-              <Text>item1</Text>
-              <Text>item2</Text>
+              <DeviceCard color={"orange"} text={props.text} />
+              <DeviceCard color={"orange"} text={props.text} />
+              <DeviceCard color={"orange"} text={props.text} />
+              <DeviceCard color={"orange"} text={props.text} />
+              <DeviceCard color={"orange"} text={props.text} />
             </View>
           </ScrollView>
         ) : null}
@@ -106,8 +114,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     fontSize: fontSizeNoUnits.cardText,
-    marginLeft: 5,
-    paddingRight: 5,
+    paddingHorizontal: 20,
     color: colors.text,
     flex: 2,
   },
