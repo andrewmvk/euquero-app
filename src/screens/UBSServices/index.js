@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
 import * as NavigationBar from 'expo-navigation-bar';
-import { FlatList, ActivityIndicator } from 'react-native';
+import { ScrollView, ActivityIndicator } from 'react-native';
 
-import { ServiceCard, EmptyListMessage, Map } from '../../components/common';
+import { ServiceCard, Map } from '../../components/common';
 import Header from '../../components/Header';
 import { Container, Period, TextView, UBSName } from './styles';
 import { colors } from '../../defaultStyles';
@@ -15,6 +15,7 @@ export default (props) => {
   const [services, setServices] = useState([]);
 
   const routeParams = props.route?.params;
+  const ubsId = +routeParams.ubsID;
 
   useEffect(() => {
     const navBarConfig = async () => {
@@ -26,30 +27,40 @@ export default (props) => {
 
     const fetchData = async () => {
       setIsLoading(true);
-      const ubsServicesQuery = query(
-        collection(db, 'ubsServices'),
-        where('ubsid', '==', +routeParams.ubsID),
-      );
+      try {
+        const ubsServicesQuery = query(collection(db, 'ubsServices'), where('ubsid', '==', ubsId));
+        const ubsServicesSnap = await getDocs(ubsServicesQuery);
+        let servicesArray = [];
+        const promises = [];
 
-      const ubsServicesSnap = await getDocs(ubsServicesQuery);
-      let servicesArray = [];
-      for (i = 0; i < ubsServicesSnap.docs.length; i++) {
-        const service = ubsServicesSnap.docs[i].data();
-        let servicesObject = {
-          name: service.name,
-          id: service.id,
-        };
-        servicesArray.push(servicesObject);
+        ubsServicesSnap.forEach(async (item) => {
+          promises.push(getDoc(doc(db, 'services', `${item.data().service}`)));
+        });
+
+        Promise.all(promises).then(async (docs) => {
+          docs.forEach((doc) => {
+            if (doc.exists()) {
+              const servicesObject = {
+                id: doc.data().id,
+                name: doc.data().name,
+              };
+              servicesArray.push(servicesObject);
+            }
+          });
+
+          setServices(servicesArray);
+        });
+      } catch (err) {
+        console.log('Something went wrong while trying to fetch data');
+        console.log(err);
       }
-
-      setServices(servicesArray);
     };
+
     fetchData().then(() => {
       setIsLoading(false);
     });
   }, []);
 
-  const serviceCard = ({ item }) => <ServiceCard color={'#fff'} text={item.name} />;
   const headerName = `${routeParams.stateName} - ${routeParams.cityName} - ${routeParams.ubsName}`;
 
   return (
@@ -70,19 +81,14 @@ export default (props) => {
       {isLoading ? (
         <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
       ) : (
-        <FlatList
-          style={{ paddingBottom: 25, width: '100%', zIndex: 0 }}
+        <ScrollView
+          style={{ paddingTop: 10, marginBottom: 15, width: '100%', zIndex: 0 }}
           contentContainerStyle={{ alignItems: 'center' }}
-          data={services}
-          renderItem={serviceCard}
-          keyExtractor={(item) => item.id}
-          ListEmptyComponent={
-            <EmptyListMessage
-              containerStyle={{ marginTop: '0%', width: '80%', height: '65%' }}
-              alterText
-            />
-          }
-        />
+        >
+          {services.map((item) => {
+            return <ServiceCard color={'#fff'} key={item.id} text={item.name} />;
+          })}
+        </ScrollView>
       )}
     </Container>
   );

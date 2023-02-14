@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import * as NavigationBar from "expo-navigation-bar";
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import {
   Container,
@@ -11,23 +11,17 @@ import {
   OptionText,
   Option,
   Space,
-} from "./styles";
-import { Icon } from "react-native-elements";
-import Header from "../../components/Header";
-import {
-  buttonOpacity,
-  colors,
-  fonts,
-  fontSizeNoUnits,
-  shadow,
-} from "../../defaultStyles";
-import { Map } from "../../components/common";
-import { ScrollView } from "react-native";
+} from './styles';
+import { Icon } from 'react-native-elements';
+import Header from '../../components/Header';
+import { buttonOpacity, colors, fonts, fontSizeNoUnits, shadow } from '../../defaultStyles';
+import { Map } from '../../components/common';
+import { ScrollView } from 'react-native';
 
 const periods = [
-  { name: "Pré-Natal", id: 1 },
-  { name: "Pós-Natal", id: 2 },
-  { name: "Saúde da Criança", id: 3 },
+  { name: 'Pré-Natal', id: 1 },
+  { name: 'Pós-Natal', id: 2 },
+  { name: 'Saúde da Criança', id: 3 },
 ];
 
 export default (props) => {
@@ -36,9 +30,9 @@ export default (props) => {
 
   useEffect(() => {
     const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync("relative");
-      await NavigationBar.setBackgroundColorAsync("#f2f2f2");
-      await NavigationBar.setButtonStyleAsync("dark");
+      await NavigationBar.setPositionAsync('relative');
+      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
+      await NavigationBar.setButtonStyleAsync('dark');
     };
     navBarConfig();
   }, []);
@@ -63,12 +57,9 @@ export default (props) => {
         <Map routeParams={routeParams} />
 
         <Menu>
-          <ScrollView
-            style={{ width: "100%" }}
-            contentContainerStyle={{ alignItems: "center" }}
-          >
+          <ScrollView style={{ width: '100%' }} contentContainerStyle={{ alignItems: 'center' }}>
             <UBSName numberOfLines={2}>{routeParams.ubsName}</UBSName>
-            <PeriodosCard style={shadow}>
+            <PeriodosCard style={shadow} activeOpacity={buttonOpacity}>
               <Text style={styles.cardTitle}>Períodos</Text>
               <Text style={styles.cardText} numberOfLines={1}>
                 Selecione um dos períodos abaixo
@@ -80,7 +71,7 @@ export default (props) => {
                 return (
                   <Option
                     key={item.id}
-                    onPress={() => handleNavigate(item, "UBSScorecards")}
+                    onPress={() => handleNavigate(item, 'UBSScorecards')}
                     activeOpacity={buttonOpacity}
                   >
                     <OptionText>{item.name}</OptionText>
@@ -101,8 +92,9 @@ export default (props) => {
             </Space>
 
             <PeriodosCard
-              style={shadow}
-              onPress={() => handleNavigate(null, "UBSServices")}
+              style={[shadow, { marginVertical: 5 }]}
+              activeOpacity={buttonOpacity}
+              onPress={() => handleNavigate(null, 'UBSServices')}
             >
               <Text style={styles.cardTitle}>Serviços</Text>
               <Text style={styles.cardText} numberOfLines={1}>
@@ -118,20 +110,20 @@ export default (props) => {
 
 const styles = StyleSheet.create({
   line: {
-    backgroundColor: "#c4c4c4",
+    backgroundColor: '#c4c4c4',
     height: 2,
     flex: 1,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   spaceText: {
-    alignSelf: "center",
+    alignSelf: 'center',
     paddingHorizontal: 5,
     fontSize: 14,
     color: colors.text,
   },
   cardTitle: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     fontSize: fontSizeNoUnits.cardText,
     marginLeft: 22,
     marginTop: -5,
@@ -139,8 +131,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.spartanR,
   },
   cardText: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     fontSize: fontSizeNoUnits.subtitle,
     marginLeft: 22,
     color: colors.text,
