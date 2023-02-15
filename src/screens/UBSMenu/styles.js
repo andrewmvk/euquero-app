@@ -9,14 +9,8 @@ export const Container = styled.SafeAreaView`
   align-items: center;
 `;
 
-export const Map = styled.View`
-  width: 100%;
-  height: 30%;
-  margin-top: 20px;
-  background-color: ${defaultS.colors.text};
-`;
-
 export const UBSName = styled.Text`
+  width: ${screenWidth * 0.8}px;
   font-family: ${defaultS.fonts.spartanR};
   font-size: ${defaultS.fontSize.bigTitle};
   color: ${defaultS.colors.text};
