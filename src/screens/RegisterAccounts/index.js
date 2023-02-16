@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { auth, authSecondary, db } from '../../services/firebase.config';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
@@ -8,7 +8,7 @@ import * as NavigationBar from 'expo-navigation-bar';
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { BigTitle, RegisterButton } from '../../components/common';
-import { ButtonView, Container, InputArea, SearchInput, SearchInputText } from './styles';
+import { ButtonView, Container, ContentInput, ContentInputText, InputArea } from './styles';
 import { Icon } from 'react-native-elements';
 
 export default (props) => {
@@ -65,18 +65,21 @@ export default (props) => {
   const inputs = [
     {
       id: 1,
+      secureTextEntry: false,
       onChange: setEmail,
       placeholder: 'E-mail',
       iconName: 'person-outline',
     },
     {
       id: 2,
+      secureTextEntry: true,
       onChange: setPassword,
       placeholder: 'Senha',
       iconName: 'lock-closed-outline',
     },
     {
       id: 3,
+      secureTextEntry: true,
       onChange: setConfirmPassword,
       placeholder: 'Confirmar Senha',
       iconName: 'lock-closed-outline',
@@ -93,7 +96,7 @@ export default (props) => {
           <InputArea>
             {inputs.map((item) => {
               return (
-                <SearchInput key={item.id}>
+                <ContentInput key={item.id}>
                   <Icon
                     name={item.iconName}
                     type="ionicon"
@@ -103,13 +106,15 @@ export default (props) => {
                       paddingVertical: 15,
                     }}
                   />
-                  <SearchInputText
+                  <ContentInputText
                     placeholder={item.placeholder}
+                    secureTextEntry={item?.secureTextEntry}
                     numberOfLines={1}
+                    autoCapitalize="none"
                     placeholderTextColor="#C4C4C4"
                     onChangeText={item.onChange}
                   />
-                </SearchInput>
+                </ContentInput>
               );
             })}
           </InputArea>

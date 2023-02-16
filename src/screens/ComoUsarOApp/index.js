@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, Image, FlatList, ScrollView, TouchableOpacity } from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { Icon } from 'react-native-elements';
 import * as NavigationBar from 'expo-navigation-bar';
 import { useSharedValue } from 'react-native-reanimated';
@@ -146,7 +145,7 @@ export default (props) => {
 
   return (
     <>
-      <Header onPress={() => props.navigation.goBack()} margin={getStatusBarHeight()} />
+      <Header onPress={() => props.navigation.goBack()} />
       <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
         <FlatList
           ref={flatListRef}

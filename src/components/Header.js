@@ -1,6 +1,7 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, SafeAreaView, Text, Platform } from 'react-native';
+import { TouchableOpacity, StyleSheet, SafeAreaView, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 import { colors, fonts, buttonOpacity } from '../defaultStyles';
 
@@ -11,7 +12,7 @@ export default (props) => {
         styles.container,
         {
           position: props.position,
-          marginTop: props.margin ? props.margin + 15 : Platform.OS == 'ios' ? 15 : '10%',
+          marginTop: getStatusBarHeight() + getStatusBarHeight() * 0.5,
         },
       ]}
     >

@@ -8,7 +8,7 @@ export const Title = styled.Text`
   color: ${colors.text};
 `;
 
-export const Subtitle = styled.TextInput`
+export const Subtitle = styled.Text`
   max-width: 88%;
   margin-right: 2%;
   font-size: ${fontSize.cardText};
@@ -22,6 +22,7 @@ export const SubtitleContainer = styled.View`
 `;
 
 export const DescriptionBox = styled.View`
+  margin-top: 15px;
   background-color: white;
   padding: 25px;
   border-radius: 5px;

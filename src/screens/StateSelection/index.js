@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import { ActivityIndicator, Keyboard, TouchableWithoutFeedback, Platform } from 'react-native';
+import { ActivityIndicator, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
@@ -11,6 +11,7 @@ import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
 import { SortButton, List } from '../../components/common';
+import { useCallback } from 'react';
 
 export default (props) => {
   const [brazilianStates, setBrazilianStates] = useState([]);
@@ -76,77 +77,69 @@ export default (props) => {
     });
   };
 
-  const search = (t) => {
-    let arr = [...originalData];
-    setBrazilianStates(
-      arr.filter((d) =>
-        d.name
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .toLowerCase()
-          .includes(
-            t
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase(),
-          ),
-      ),
-    );
-  };
-
-  const Screen = () => {
-    return (
-      <Container>
-        <Header onPress={() => props.navigation.goBack()} />
-        <SearchArea>
-          <SearchInput style={shadow}>
-            <SearchInputText
-              placeholder="Buscar estado"
-              placeholderTextColor="#C4C4C4"
-              numberOfLines={1}
-              onChangeText={(t) => search(t)}
-            />
-            <Icon
-              name="search-outline"
-              type="ionicon"
-              color="#c4c4c4"
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 15,
-              }}
-            />
-          </SearchInput>
-          <SortButton
-            data={brazilianStates}
-            setData={setBrazilianStates}
-            dataBackup={originalData}
-          />
-        </SearchArea>
-        {isLoading ? (
-          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
-        ) : (
-          <List
-            keyboardDismiss
-            data={brazilianStates}
-            notRegistredData={noUbsStates}
-            handleCardPress={handleCardPress}
-            safeArea={80}
-          />
-        )}
-      </Container>
-    );
-  };
+  const search = useCallback(
+    (t) => {
+      let arr = [...originalData];
+      setBrazilianStates(
+        arr.filter((d) =>
+          d.name
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .includes(
+              t
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase(),
+            ),
+        ),
+      );
+    },
+    [originalData],
+  );
 
   return (
     <>
       <DashedCircle />
-      {Platform.OS === 'ios' ? (
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <Screen />
-        </TouchableWithoutFeedback>
-      ) : (
-        <Screen />
-      )}
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <Container>
+          <Header onPress={() => props.navigation.goBack()} />
+          <SearchArea>
+            <SearchInput style={shadow}>
+              <SearchInputText
+                placeholder="Buscar estado"
+                placeholderTextColor="#C4C4C4"
+                numberOfLines={1}
+                onChangeText={(t) => search(t)}
+              />
+              <Icon
+                name="search-outline"
+                type="ionicon"
+                color="#c4c4c4"
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 15,
+                }}
+              />
+            </SearchInput>
+            <SortButton
+              data={brazilianStates}
+              setData={setBrazilianStates}
+              dataBackup={originalData}
+            />
+          </SearchArea>
+          {isLoading ? (
+            <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+          ) : (
+            <List
+              data={brazilianStates}
+              notRegistredData={noUbsStates}
+              handleCardPress={handleCardPress}
+              safeArea={80}
+            />
+          )}
+        </Container>
+      </TouchableWithoutFeedback>
     </>
   );
 };

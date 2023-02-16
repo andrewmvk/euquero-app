@@ -71,7 +71,7 @@ export default (props) => {
       setInnerScorecards(innerScorecardsArray);
     }
     animatedHeight.value = withSpring(
-      !itemData.isEditing ? (scorecardsArrayLength == 0 ? 110 : 150) : 10,
+      !itemData.isEditing ? (scorecardsArrayLength == 0 ? 110 : 200) : 10,
     );
   };
 

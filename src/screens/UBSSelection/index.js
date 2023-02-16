@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Icon } from 'react-native-elements';
 import { ActivityIndicator, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { collection, getDocs, query, where } from 'firebase/firestore';
@@ -49,23 +49,26 @@ export default (props) => {
     fetchData().then(() => setIsLoading(false));
   }, []);
 
-  const search = (t) => {
-    let arr = [...ubsBackup];
-    setUbs(
-      arr.filter((d) =>
-        d.name
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .toLowerCase()
-          .includes(
-            t
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase(),
-          ),
-      ),
-    );
-  };
+  const search = useCallback(
+    (t) => {
+      let arr = [...ubsBackup];
+      setUbs(
+        arr.filter((d) =>
+          d.name
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .includes(
+              t
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase(),
+            ),
+        ),
+      );
+    },
+    [ubsBackup],
+  );
 
   const handleCardPress = (item) => {
     props.navigation.navigate('UBSMenu', {

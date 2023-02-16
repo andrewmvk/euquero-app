@@ -15,7 +15,6 @@ import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { SimpleText, Title, Container, ButtonView, TouchableText } from './styles';
 import { useEffect } from 'react';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import AnimatedButton from '../../components/AnimatedButton';
 
 export default (props) => {
@@ -274,7 +273,6 @@ export default (props) => {
     <>
       <DashedCircle />
       <Header
-        margin={getStatusBarHeight()}
         text={'Administrativo - Upload'}
         onPress={() => props.navigation.goBack()}
         pointerEvents={isLoading ? 'none' : 'auto'}

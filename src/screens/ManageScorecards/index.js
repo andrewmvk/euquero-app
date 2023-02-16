@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
@@ -55,27 +55,30 @@ export default (props) => {
     return () => unsubscribe();
   }, []);
 
-  const search = (t) => {
-    if (criteriaBackup.length > 0) {
-      setIsLoading(true);
-      let arr = [...criteriaBackup];
-      setCriteria(
-        arr.filter((d) =>
-          d.name
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .includes(
-              t
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase(),
-            ),
-        ),
-      );
-      setIsLoading(false);
-    }
-  };
+  const search = useCallback(
+    (t) => {
+      if (criteriaBackup.length > 0) {
+        setIsLoading(true);
+        let arr = [...criteriaBackup];
+        setCriteria(
+          arr.filter((d) =>
+            d.name
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .toLowerCase()
+              .includes(
+                t
+                  .normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '')
+                  .toLowerCase(),
+              ),
+          ),
+        );
+        setIsLoading(false);
+      }
+    },
+    [criteriaBackup],
+  );
 
   const deleteCriteria = async (id) => {
     try {

@@ -40,7 +40,7 @@ export const SearchInput = styled.View`
 
 export const SearchInputText = styled.TextInput`
   flex: 1;
-  font-size: ${defaultS.fontSize.cardText};
+  font-size: ${defaultS.fontSize.textInput};
   font-family: ${defaultS.fonts.spartanR};
   color: ${defaultS.colors.text};
 `;

@@ -15,7 +15,7 @@ export const InputArea = styled.View`
   width: 75%;
 `;
 
-export const SearchInput = styled.View`
+export const ContentInput = styled.View`
   height: 55px;
   width: 100%;
   background-color: #fff;
@@ -26,17 +26,11 @@ export const SearchInput = styled.View`
   align-items: center;
 `;
 
-export const SearchInputText = styled.TextInput`
+export const ContentInputText = styled.TextInput`
   flex: 1;
-  font-size: ${defaultS.fontSize.cardText};
+  font-size: ${defaultS.fontSize.textInput};
   font-family: ${defaultS.fonts.spartanR};
   color: ${defaultS.colors.text};
-`;
-
-export const SearchArea = styled.View`
-  width: 85%;
-  flex-direction: row;
-  align-items: center;
 `;
 
 export const ButtonView = styled.View`

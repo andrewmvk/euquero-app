@@ -19,9 +19,9 @@ import {
   ActivityIndicator,
   ScrollView,
   FlatList,
+  Keyboard,
 } from 'react-native';
 
-import { Svg } from 'react-native-svg';
 import { Icon } from 'react-native-elements';
 import styled from 'styled-components/native';
 
@@ -348,11 +348,7 @@ export const ServiceCard = (props) => {
     : screenWidth * 0.75;
 
   return (
-    <TouchableOpacity
-      activeOpacity={buttonOpacity}
-      style={[cardStyles.container, { ...shadow, borderLeftColor: color }]}
-      onPress={() => props.navigation.navigate('ServicesGlossary')}
-    >
+    <View style={[cardStyles.container, { ...shadow, borderLeftColor: color }]}>
       {props.text ? (
         <View style={{ width: textWidth }}>
           <Text style={cardStyles.cardText} numberOfLines={1}>
@@ -360,7 +356,7 @@ export const ServiceCard = (props) => {
           </Text>
         </View>
       ) : null}
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -433,7 +429,6 @@ export const InDevelopmentCard = (props) => {
             }}
           >
             <ScrollView
-              keyboardDismissMode={props.keyboardDismiss ? 'on-drag' : 'none'}
               nestedScrollEnabled
               style={{ paddingHorizontal: 20, paddingTop: 10, zIndex: 2 }}
             >
@@ -453,28 +448,6 @@ export const InDevelopmentCard = (props) => {
   );
 };
 
-const NoResults = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  margin-top: 50px;
-`;
-
-const Title = styled.Text`
-  font-size: 24px;
-  color: #9bb5cc;
-  font-family: ${fonts.spartanBold};
-  margin-top: 16px;
-`;
-
-const SimpleText = styled.Text`
-  font-size: 20px;
-  font-family: ${fonts.spartanR};
-  color: #808080;
-  text-align: center;
-  margin: 16px 30px 16px 30px;
-`;
-
 export const DeviceCard = (props) => {
   const selectStyleByScore = (score) => {
     switch (score) {
@@ -491,7 +464,7 @@ export const DeviceCard = (props) => {
     }
   };
 
-  const data = selectStyleByScore(props.score);
+  const data = selectStyleByScore(props.scorecard.score);
 
   return (
     <TouchableOpacity
@@ -505,9 +478,15 @@ export const DeviceCard = (props) => {
           height: 80,
         },
       ]}
-      onPress={() => props.navigation.navigate('ServicesGlossary')}
+      onPress={() =>
+        props.navigation.navigate('ScorecardGlossary', {
+          scorecard: props.scorecard,
+          criteriaName: props.criteriaName,
+          headerName: props.headerName,
+        })
+      }
     >
-      {props.text ? (
+      {props.scorecard ? (
         <View
           style={{
             display: 'flex',
@@ -518,7 +497,7 @@ export const DeviceCard = (props) => {
         >
           <View style={{ flex: 1 }}>
             <Text style={cardStyles.gradeText} numberOfLines={1}>
-              {props.text}
+              {props.scorecard.name}
             </Text>
             <Text style={cardStyles.cardText2} numberOfLines={1}>
               {`Nota: ${data[1]}`}
@@ -530,6 +509,28 @@ export const DeviceCard = (props) => {
     </TouchableOpacity>
   );
 };
+
+const NoResults = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+const Title = styled.Text`
+  font-size: 24px;
+  color: #9bb5cc;
+  font-family: ${fonts.spartanBold};
+  margin-top: 16px;
+`;
+
+const SimpleText = styled.Text`
+  font-size: 20px;
+  font-family: ${fonts.spartanR};
+  color: #808080;
+  text-align: center;
+  margin: 4px 30px 16px 30px;
+`;
 
 export const EmptyListMessage = (props) => {
   const [isConnected, setIsConnected] = useState(false);
@@ -552,7 +553,9 @@ export const EmptyListMessage = (props) => {
             />
           </View>
           <Title>NADA POR AQUI!</Title>
-          {props.alterText ? (
+          {props.text ? (
+            <SimpleText>{props.text}</SimpleText>
+          ) : props.alterText ? (
             <SimpleText>Nenhum item foi encontrado para esta escolha.</SimpleText>
           ) : (
             <SimpleText>Não encontramos nenhum item correspondente à sua pesquisa.</SimpleText>
@@ -582,8 +585,7 @@ const SelectView = styled.TouchableOpacity`
 `;
 
 const DropdownTextId = styled.Text`
-  flex: 0.23;
-  padding-right: 3px;
+  flex: 0.12;
   font-size: ${screenWidth * 0.04}px;
   font-family: ${fonts.spartanR};
   color: ${colors.orange};
@@ -654,10 +656,10 @@ export const DropdownSelection = (props) => {
                   key={item.id}
                   activeOpacity={buttonOpacity}
                   style={{
+                    flex: 1,
                     marginVertical: 4,
                     height: 40,
                     alignItems: 'center',
-                    justifyContent: 'space-between',
                     flexDirection: 'row',
                     paddingRight: 18,
                     paddingLeft: 18,
@@ -775,7 +777,6 @@ export const List = (props) => {
   return (
     <View
       style={{
-        position: 'absolute',
         width: '100%',
         height: screenHeight - props?.safeArea,
         bottom: 0,
@@ -788,6 +789,7 @@ export const List = (props) => {
           paddingTop: 5,
           zIndex: -1,
         }}
+        onScrollBeginDrag={Keyboard.dismiss}
         progressViewOffset={-50}
         contentContainerStyle={{ alignItems: 'center' }}
         data={props.data}

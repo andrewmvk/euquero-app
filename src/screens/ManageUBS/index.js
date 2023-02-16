@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
@@ -222,27 +222,30 @@ export default (props) => {
     setModalVisibility(!modalVisibility);
   }
 
-  const search = (t) => {
-    if (ubsBackup.length > 0) {
-      setIsLoading(true);
-      let arr = [...ubsBackup];
-      setUbs(
-        arr.filter((d) =>
-          d.name
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .includes(
-              t
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase(),
-            ),
-        ),
-      );
-      setIsLoading(false);
-    }
-  };
+  const search = useCallback(
+    (t) => {
+      if (ubsBackup.length > 0) {
+        setIsLoading(true);
+        let arr = [...ubsBackup];
+        setUbs(
+          arr.filter((d) =>
+            d.name
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .toLowerCase()
+              .includes(
+                t
+                  .normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '')
+                  .toLowerCase(),
+              ),
+          ),
+        );
+        setIsLoading(false);
+      }
+    },
+    [ubsBackup],
+  );
 
   const card = ({ item }) => {
     return (
@@ -306,8 +309,8 @@ export default (props) => {
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
         ) : null}
+        {!isLoading ? <List data={ubs} onRefresh={fetchData} card={card} safeArea={215} /> : null}
       </Container>
-      {!isLoading ? <List data={ubs} onRefresh={fetchData} card={card} safeArea={200} /> : null}
       <AddButton onPress={() => props.navigation.navigate('UploadUBSTable')} />
       <Modal
         isVisible={modalVisibility}

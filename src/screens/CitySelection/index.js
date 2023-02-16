@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
 import * as NavigationBar from 'expo-navigation-bar';
 import { ActivityIndicator, Keyboard, TouchableWithoutFeedback, Platform } from 'react-native';
@@ -81,73 +81,66 @@ export default (props) => {
     });
   };
 
-  const search = (t) => {
-    let arr = [...originalData];
-    setCities(
-      arr.filter((d) =>
-        d.name
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .toLowerCase()
-          .includes(
-            t
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-              .toLowerCase(),
-          ),
-      ),
-    );
-  };
-
-  const Screen = () => {
-    return (
-      <Container>
-        <Header text={props.route.params.stateName} onPress={() => props.navigation.goBack()} />
-        <SearchArea>
-          <SearchInput style={shadow}>
-            <SearchInputText
-              placeholder="Buscar cidade"
-              placeholderTextColor="#C4C4C4"
-              numberOfLines={1}
-              onChangeText={(t) => search(t)}
-            />
-            <Icon
-              name="search-outline"
-              type="ionicon"
-              color="#c4c4c4"
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 15,
-              }}
-            />
-          </SearchInput>
-          <SortButton data={cities} setData={setCities} dataBackup={originalData} />
-        </SearchArea>
-        {isLoading ? (
-          <ActivityIndicator size="large" color="#FF6B0F" style={{ marginTop: 50 }} />
-        ) : (
-          <List
-            keyboardDismiss
-            safeArea={80}
-            data={cities}
-            notRegistredData={noUbsCities}
-            handleCardPress={handleCardPress}
-          />
-        )}
-      </Container>
-    );
-  };
+  const search = useCallback(
+    (t) => {
+      let arr = [...originalData];
+      setCities(
+        arr.filter((d) =>
+          d.name
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .includes(
+              t
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase(),
+            ),
+        ),
+      );
+    },
+    [originalData],
+  );
 
   return (
     <>
       <DashedCircle />
-      {Platform.OS === 'ios' ? (
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <Screen />
-        </TouchableWithoutFeedback>
-      ) : (
-        <Screen />
-      )}
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <Container>
+          <Header text={props.route.params.stateName} onPress={() => props.navigation.goBack()} />
+          <SearchArea>
+            <SearchInput style={shadow}>
+              <SearchInputText
+                placeholder="Buscar cidade"
+                placeholderTextColor="#C4C4C4"
+                numberOfLines={1}
+                onChangeText={(t) => search(t)}
+              />
+              <Icon
+                name="search-outline"
+                type="ionicon"
+                color="#c4c4c4"
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 15,
+                }}
+              />
+            </SearchInput>
+            <SortButton data={cities} setData={setCities} dataBackup={originalData} />
+          </SearchArea>
+          {isLoading ? (
+            <ActivityIndicator size="large" color="#FF6B0F" style={{ marginTop: 50 }} />
+          ) : (
+            <List
+              keyboardDismiss
+              safeArea={80}
+              data={cities}
+              notRegistredData={noUbsCities}
+              handleCardPress={handleCardPress}
+            />
+          )}
+        </Container>
+      </TouchableWithoutFeedback>
     </>
   );
 };
