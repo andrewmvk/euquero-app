@@ -1,62 +1,74 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { View, Image, FlatList, ScrollView, TouchableOpacity } from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { Icon } from 'react-native-elements';
-import * as NavigationBar from 'expo-navigation-bar';
-import { useSharedValue } from 'react-native-reanimated';
+import React, { useRef, useState, useEffect } from "react";
+import {
+  View,
+  Image,
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+import { Icon } from "react-native-elements";
+import * as NavigationBar from "expo-navigation-bar";
+import { useSharedValue } from "react-native-reanimated";
 
-import { Title, PhaseText, extraStyles, DotsView } from './styles';
-import Header from '../../components/Header';
-import { buttonOpacity, colors } from '../../defaultStyles';
-import { Dot } from '../../components/common';
+import { Title, PhaseText, extraStyles, DotsView } from "./styles";
+import Header from "../../components/Header";
+import { buttonOpacity, colors } from "../../defaultStyles";
+import { Dot } from "../../components/common";
 
 const slides = [
   {
     key: 0,
-    image: require('../../../assets/images/passo1Img.png'),
-    title: 'PASSO 1',
-    text: 'Para encontrar a UBS, clique no botão “Buscar UBS” da tela inicial;',
+    image: require("../../../assets/images/passo1Img.png"),
+    title: "PASSO 1",
+    text: "Para encontrar a UBS, clique no botão “Buscar UBS” da tela inicial;",
   },
   {
     key: 1,
-    image: require('../../../assets/images/passo2Img.png'),
-    title: 'PASSO 2',
-    text: 'Selecione o Estado ao qual sua Cidade pertence. Outros Estados estão “Em desenvolvimento”, ou seja, não disponíveis por enquanto;',
+    image: require("../../../assets/images/passo2Img.png"),
+    title: "PASSO 2",
+    text: "Selecione o Estado ao qual sua Cidade pertence. Outros Estados estão “Em desenvolvimento”, ou seja, não disponíveis por enquanto;",
   },
   {
     key: 2,
-    image: require('../../../assets/images/passo3Img.png'),
-    title: 'PASSO 3',
-    text: 'Selecione a Cidade para encontrar uma UBS. Cidades que não tenham UBS estão “Em desenvolvimento”;',
+    image: require("../../../assets/images/passo3Img.png"),
+    title: "PASSO 3",
+    text: "Selecione a Cidade para encontrar uma UBS. Cidades que não tenham UBS estão “Em desenvolvimento”;",
   },
   {
     key: 3,
-    image: require('../../../assets/images/passo4Img.png'),
-    title: 'PASSO 4',
-    text: 'Selecione a UBS para ver seus serviços e localização;',
+    image: require("../../../assets/images/passo4Img.png"),
+    title: "PASSO 4",
+    text: "Selecione a UBS para ver seus serviços e localização;",
   },
   {
     key: 4,
-    image: require('../../../assets/images/passo5Img.png'),
-    title: 'PASSO 5',
-    text: 'Selecione a opção “Serviços” ou a de um dos “Períodos” desejados;',
+    image: require("../../../assets/images/passo5Img.png"),
+    title: "PASSO 5",
+    text: "Selecione a opção “Serviços” ou a de um dos “Períodos” desejados;",
   },
   {
     key: 5,
-    image: require('../../../assets/images/passo6Img.png'),
-    title: 'PASSO 6',
-    text: 'Caso selecione algum período: serão listadas as notas de alguns indicadores daquela UBS, juntamente com uma descrição do mesmo; ',
+    image: require("../../../assets/images/passo6Img.png"),
+    title: "PASSO 6",
+    text: "Caso selecione algum período: serão listadas as notas de alguns indicadores daquela UBS, juntamente com uma descrição do mesmo; ",
   },
   {
     key: 6,
-    image: require('../../../assets/images/notas.png'),
-    text: 'Sendo que, quanto mais perto do “Diamante”, melhor a avaliação do serviço;',
+    image: require("../../../assets/images/notas.png"),
+    text: "Sendo que, quanto mais perto do “Diamante”, melhor a avaliação do serviço;",
   },
   {
     key: 7,
-    image: require('../../../assets/images/passo7Img.png'),
-    title: 'PASSO 7',
-    text: 'Caso selecione serviços: serão listados todos os serviços disponíveis daquela UBS.',
+    image: require("../../../assets/images/passo7Img.png"),
+    title: "PASSO 7",
+    text: "Selecione um Indicador para poder ver seu Glossário, onde este é a página na qual você poderá entender mais sobre o Indicador Selecionado;",
+  },
+  {
+    key: 8,
+    image: require("../../../assets/images/passo8Img.png"),
+    title: "PASSO 8",
+    text: "Caso selecione serviços: serão listados todos os serviços disponíveis daquela UBS.",
   },
 ];
 
@@ -66,9 +78,9 @@ export default (props) => {
 
   useEffect(() => {
     const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
+      await NavigationBar.setPositionAsync("relative");
+      await NavigationBar.setBackgroundColorAsync("#f2f2f2");
+      await NavigationBar.setButtonStyleAsync("dark");
     };
     navBarConfig();
   }, []);
@@ -85,7 +97,7 @@ export default (props) => {
         <Title>{item.title}</Title>
         <View style={extraStyles.containerIn}>
           <ScrollView
-            contentContainerStyle={{ alignItems: 'center' }}
+            contentContainerStyle={{ alignItems: "center" }}
             showsVerticalScrollIndicator={false}
           >
             <PhaseText>{item.text}</PhaseText>
@@ -114,9 +126,12 @@ export default (props) => {
 
     return (
       <DotsView style={{ width: `${factor * (slides.length + 2)}%` }}>
-        <TouchableOpacity onPress={() => scrollTo(-1)} activeOpacity={buttonOpacity}>
+        <TouchableOpacity
+          onPress={() => scrollTo(-1)}
+          activeOpacity={buttonOpacity}
+        >
           <Icon
-            style={{ marginRight: '5%', opacity: currentIndex > 0 ? 1 : 0 }}
+            style={{ marginRight: "5%", opacity: currentIndex > 0 ? 1 : 0 }}
             type="material-community"
             name="arrow-left"
             size={30}
@@ -128,14 +143,16 @@ export default (props) => {
         })}
         <TouchableOpacity
           onPress={() =>
-            currentIndex == slides.length - 1 ? props.navigation.goBack() : scrollTo(1)
+            currentIndex == slides.length - 1
+              ? props.navigation.goBack()
+              : scrollTo(1)
           }
           activeOpacity={buttonOpacity}
         >
           <Icon
-            style={{ marginLeft: '5%' }}
+            style={{ marginLeft: "5%" }}
             type="material-community"
-            name={currentIndex == slides.length - 1 ? 'check' : 'arrow-right'}
+            name={currentIndex == slides.length - 1 ? "check" : "arrow-right"}
             size={30}
             color={colors.orange}
           />
@@ -146,8 +163,11 @@ export default (props) => {
 
   return (
     <>
-      <Header onPress={() => props.navigation.goBack()} margin={getStatusBarHeight()} />
-      <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
+      <Header
+        onPress={() => props.navigation.goBack()}
+        margin={getStatusBarHeight()}
+      />
+      <View style={{ flex: 1, width: "100%", alignItems: "center" }}>
         <FlatList
           ref={flatListRef}
           data={slides}
