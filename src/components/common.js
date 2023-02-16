@@ -20,6 +20,7 @@ import {
   ScrollView,
   FlatList,
   Keyboard,
+  Alert,
 } from 'react-native';
 
 import { Icon } from 'react-native-elements';
@@ -848,4 +849,29 @@ export const Dot = ({ id, scrollX }) => {
   });
 
   return <AnimatedDot animatedProps={dotProps} />;
+};
+
+export const ConfirmationModal = (props) => {
+  const isModalVisible = props.modalData.isVisible;
+
+  const handleCancel = () => {
+    props.setModalData({ ...props.modalData, isVisible: false });
+  };
+
+  const handleDelete = () => {
+    props.setModalData({ ...props.modalData, isVisible: false });
+    props.delete(props.modalData.itemID);
+  };
+
+  return (
+    <Alert
+      visible={isModalVisible}
+      title="Confirmação"
+      message={props.modalData.message}
+      buttons={[
+        { text: 'Cancelar', onPress: handleCancel },
+        { text: 'Deletar', onPress: handleDelete },
+      ]}
+    />
+  );
 };

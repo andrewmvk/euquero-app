@@ -74,8 +74,8 @@ export default (props) => {
 
       setCriterias({
         items: criteriaArray,
-        selected: criteriaArray[0].name,
-        value: criteriaArray[0].id,
+        selected: criteriaArray[criteriaIndex].name,
+        value: criteriaArray[criteriaIndex].id,
       });
 
       return criteriaArray[criteriaIndex].id;

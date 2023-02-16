@@ -120,7 +120,8 @@ export default (props) => {
     setServices(servicesArray);
   };
 
-  const deleteCriteria = async (id) => {
+  const deleteService = async (id) => {
+    setIsLoading(true);
     try {
       await deleteDoc(doc(db, 'services', `${id}`)).then(() => {
         const c = services.find((item) => `${item.id}` === `${id}`);
@@ -138,6 +139,21 @@ export default (props) => {
       );
       setServices(services.filter((item) => `${item.id}` !== `${id}`));
       console.log(err);
+    }
+  };
+
+  const handleDelete = (id, name, creating) => {
+    if (!creating) {
+      Alert.alert(
+        'Confirmação!',
+        'Deseja realmente deletar o serviço (' + id + ") - '" + name + "' ?",
+        [
+          { text: 'Cancelar' },
+          { text: 'Confirmar', onPress: () => deleteService(id).then(() => setIsLoading(false)) },
+        ],
+      );
+    } else {
+      deleteService(id).then(() => setIsLoading(false));
     }
   };
 
@@ -188,7 +204,7 @@ export default (props) => {
                           creating={item.creating}
                           navigation={props.navigation}
                           saveNew={saveNewService}
-                          deleteItem={() => deleteCriteria(item.id)}
+                          deleteItem={() => handleDelete(item.id, item.name, item.creating)}
                         />
                       </View>
                     );

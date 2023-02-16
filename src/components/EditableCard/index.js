@@ -284,14 +284,7 @@ export default (props) => {
           <TouchableIcon
             activeOpacity={buttonOpacity}
             disabled={isLoading}
-            onPress={
-              isLoading
-                ? null
-                : () => {
-                    setIsLoading(true);
-                    props.deleteItem().then(() => setIsLoading(false));
-                  }
-            }
+            onPress={isLoading ? null : props.deleteItem}
           >
             <Icon
               name={'trash-can-outline'}
