@@ -29,7 +29,6 @@ import DashedWave from '../../components/Waves/DashedWave';
 import Modal from '../../components/Modal';
 import { SmallButton, InputBox } from '../../components/common';
 import { colors, shadow } from '../../defaultStyles';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { Icon } from 'react-native-elements';
 
 export default (props) => {
@@ -158,12 +157,7 @@ export default (props) => {
       <Wave transition={animationType} />
       {animationType.type === 'away-out' ? null : (
         <>
-          <Header
-            onPress={() => props.navigation.goBack()}
-            color={'white'}
-            position="absolute"
-            margin={getStatusBarHeight()}
-          />
+          <Header onPress={() => props.navigation.goBack()} color={'white'} position="absolute" />
 
           <DashedWave />
           <DashedWave bottom={true} />
@@ -193,6 +187,7 @@ export default (props) => {
                 <SearchInputText
                   placeholder="E-mail"
                   numberOfLines={1}
+                  autoCapitalize="none"
                   placeholderTextColor="#C4C4C4"
                   onChangeText={setEmail}
                 />
@@ -212,6 +207,7 @@ export default (props) => {
                   secureTextEntry
                   numberOfLines={1}
                   placeholderTextColor="#C4C4C4"
+                  autoCapitalize="none"
                   onChangeText={setPassword}
                 />
               </SearchInput>

@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react';
 import { TouchableWithoutFeedback, Keyboard, View, Dimensions } from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import * as NavigationBar from 'expo-navigation-bar';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 
 import { DescriptionBox, DescriptionText, Subtitle, SubtitleContainer, Title } from './styles';
+import { shadow } from '../../defaultStyles';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export default (props) => {
+  const routeParams = props.route.params;
+
   useEffect(() => {
     const navBarConfig = async () => {
       await NavigationBar.setPositionAsync('relative');
@@ -23,11 +25,7 @@ export default (props) => {
   return (
     <>
       <DashedCircle />
-      <Header
-        margin={getStatusBarHeight()}
-        text={'Histórico'}
-        onPress={() => props.navigation.goBack()}
-      />
+      <Header text={routeParams.headerName} onPress={() => props.navigation.goBack()} />
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View
           style={{
@@ -44,14 +42,14 @@ export default (props) => {
             }}
           >
             <View style={{ minHeight: '7%' }}>
-              <Title numberOfLines={1}>Title </Title>
+              <Title numberOfLines={2}>{routeParams.criteriaName}</Title>
               <SubtitleContainer>
-                <Subtitle numberOfLines={1}>Subtitle</Subtitle>
+                <Subtitle numberOfLines={1}>{routeParams.scorecard.name}</Subtitle>
               </SubtitleContainer>
             </View>
-            <DescriptionBox style={{ minHeight: '85%' }}>
+            <DescriptionBox style={{ minHeight: '85%', ...shadow }}>
               <DescriptionText multiline lineHeight={23} textAlignVertical="top">
-                Descrição:
+                {routeParams.scorecard.description}
               </DescriptionText>
             </DescriptionBox>
           </View>

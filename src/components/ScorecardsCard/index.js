@@ -31,7 +31,7 @@ export default (props) => {
   }, []);
 
   const switchTab = async () => {
-    animatedHeight.value = withSpring(isOpened ? 15 : 210);
+    animatedHeight.value = withSpring(isOpened ? 15 : props.scorecards.length == 1 ? 120 : 210);
     setIsOpened(!isOpened);
   };
 
@@ -52,7 +52,15 @@ export default (props) => {
           <ScrollView style={{ width: '100%' }} nestedScrollEnabled={true}>
             <ScorecardsView>
               {props.scorecards.map((item) => {
-                return <DeviceCard key={item.id} score={item.score} text={item.name} />;
+                return (
+                  <DeviceCard
+                    key={item.id}
+                    navigation={props.navigation}
+                    scorecard={item}
+                    criteriaName={props.title}
+                    headerName={props?.headerName}
+                  />
+                );
               })}
             </ScorecardsView>
           </ScrollView>

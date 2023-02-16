@@ -16,7 +16,6 @@ import Header from '../../components/Header';
 import { ButtonText, IDModalButton, Input, InputArea, InputBox, Title } from './styles';
 import { auth, db } from '../../services/firebase.config';
 import { colors, shadow } from '../../defaultStyles';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import NumberSelectionModal from '../../components/NumberSelectionModal';
 
 export default (props) => {
@@ -53,7 +52,7 @@ export default (props) => {
     setModalNumbers(newArray);
   };
 
-  const fetchCriteriasData = async (periodId) => {
+  const fetchCriteriasData = async (periodId, criteriaIndex) => {
     if (periodId != 0) {
       const criteriasQuery = query(
         collection(db, 'diretriz'),
@@ -75,11 +74,11 @@ export default (props) => {
 
       setCriterias({
         items: criteriaArray,
-        selected: criteriaArray[0].name,
-        value: criteriaArray[0].id,
+        selected: criteriaArray[criteriaIndex].name,
+        value: criteriaArray[criteriaIndex].id,
       });
 
-      return criteriaArray[periodId].id;
+      return criteriaArray[criteriaIndex].id;
     }
   };
 
@@ -145,7 +144,7 @@ export default (props) => {
   const handleSetPeriods = async (data) => {
     setIsLoading({ loading: true, main: true });
     setPeriods(data);
-    const selectedCriteria = await fetchCriteriasData(+data.value);
+    const selectedCriteria = await fetchCriteriasData(+data.value, 0);
     await fetchScorecardsData(+selectedCriteria);
   };
 
@@ -173,7 +172,9 @@ export default (props) => {
   };
 
   const firstFetch = async () => {
-    const selectedCriteria = await fetchCriteriasData(+periods.value);
+    const routeCriteriaID = props.route.params.criteria.id;
+    const criteriaIndex = routeCriteriaID - (10 * Math.floor(routeCriteriaID / 10) + 1);
+    const selectedCriteria = await fetchCriteriasData(+periods.value, criteriaIndex);
     await fetchScorecardsData(+selectedCriteria);
   };
 
@@ -185,18 +186,18 @@ export default (props) => {
     };
     navBarConfig();
 
-    setIsLoading({ loading: true, main: true });
-    firstFetch().then(() => setIsLoading({ loading: false, main: false }));
+    const unsubscribe = props.navigation.addListener('focus', async () => {
+      setIsLoading({ loading: true, main: true });
+      firstFetch().then(() => setIsLoading({ loading: false, main: false }));
+    });
+
+    return () => unsubscribe();
   }, []);
 
   return (
     <>
       <DashedCircle />
-      <Header
-        margin={getStatusBarHeight()}
-        text={'Administrativo - Indicadores'}
-        onPress={() => props.navigation.goBack()}
-      />
+      <Header text={'Administrativo - Indicadores'} onPress={() => props.navigation.goBack()} />
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={{ flex: 1, height: '100%' }}>
           <ScrollView style={{ height: '90%' }} contentContainerStyle={{ alignItems: 'center' }}>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView } from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
 import * as NavigationBar from 'expo-navigation-bar';
@@ -9,7 +8,7 @@ import Header from '../../components/Header';
 import { colors } from '../../defaultStyles';
 import { Container, Period, TextView, UBSName } from './styles';
 import ScorecardsCard from '../../components/ScorecardsCard';
-import { Map } from '../../components/common';
+import { EmptyListMessage, Map } from '../../components/common';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -78,11 +77,7 @@ export default (props) => {
   return (
     <>
       <Container>
-        <Header
-          margin={getStatusBarHeight()}
-          text={headerName}
-          onPress={() => props.navigation.goBack()}
-        />
+        <Header text={headerName} onPress={() => props.navigation.goBack()} />
         <Map routeParams={routeParams} />
         <TextView>
           <Period>Período</Period>
@@ -90,17 +85,25 @@ export default (props) => {
         </TextView>
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
-        ) : (
+        ) : data.length > 0 ? (
           <ScrollView
             style={{ paddingTop: 10, marginBottom: 15, width: '100%', zIndex: 0 }}
             contentContainerStyle={{ alignItems: 'center' }}
           >
             {data.map((item) => {
               return (
-                <ScorecardsCard key={item.id} title={item.name} scorecards={item.scorecards} />
+                <ScorecardsCard
+                  navigation={props.navigation}
+                  key={item.id}
+                  title={item.name}
+                  scorecards={item.scorecards}
+                  headerName={headerName}
+                />
               );
             })}
           </ScrollView>
+        ) : (
+          <EmptyListMessage text="Nenhum indicador cadastrado para esta UBS." />
         )}
       </Container>
     </>

@@ -4,11 +4,10 @@ import { db } from '../../services/firebase.config';
 import * as NavigationBar from 'expo-navigation-bar';
 import { ScrollView, ActivityIndicator } from 'react-native';
 
-import { ServiceCard, Map } from '../../components/common';
+import { ServiceCard, Map, EmptyListMessage } from '../../components/common';
 import Header from '../../components/Header';
 import { Container, Period, TextView, UBSName } from './styles';
 import { colors } from '../../defaultStyles';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -64,32 +63,31 @@ export default (props) => {
   const headerName = `${routeParams.stateName} - ${routeParams.cityName} - ${routeParams.ubsName}`;
 
   return (
-    <Container>
-      <Header
-        text={headerName}
-        onPress={() => props.navigation.goBack()}
-        margin={getStatusBarHeight()}
-      />
+    <>
+      <Header text={headerName} onPress={() => props.navigation.goBack()} />
+      <Container>
+        <Map routeParams={routeParams} />
 
-      <Map routeParams={routeParams} />
+        <TextView>
+          <Period>Serviços</Period>
+          <UBSName numberOfLines={2}>{routeParams.ubsName}</UBSName>
+        </TextView>
 
-      <TextView>
-        <Period>Serviços</Period>
-        <UBSName numberOfLines={2}>{routeParams.ubsName}</UBSName>
-      </TextView>
-
-      {isLoading ? (
-        <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
-      ) : (
-        <ScrollView
-          style={{ paddingTop: 10, marginBottom: 15, width: '100%', zIndex: 0 }}
-          contentContainerStyle={{ alignItems: 'center' }}
-        >
-          {services.map((item) => {
-            return <ServiceCard color={'#fff'} key={item.id} text={item.name} />;
-          })}
-        </ScrollView>
-      )}
-    </Container>
+        {isLoading ? (
+          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+        ) : services.length > 0 ? (
+          <ScrollView
+            style={{ paddingTop: 10, marginBottom: 15, width: '100%', zIndex: 0 }}
+            contentContainerStyle={{ alignItems: 'center' }}
+          >
+            {services.map((item) => {
+              return <ServiceCard color={'#fff'} key={item.id} text={item.name} />;
+            })}
+          </ScrollView>
+        ) : (
+          <EmptyListMessage text="Nenhum serviço cadastrado para esta UBS." />
+        )}
+      </Container>
+    </>
   );
 };

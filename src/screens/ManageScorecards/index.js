@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
@@ -55,29 +55,33 @@ export default (props) => {
     return () => unsubscribe();
   }, []);
 
-  const search = (t) => {
-    if (criteriaBackup.length > 0) {
-      setIsLoading(true);
-      let arr = [...criteriaBackup];
-      setCriteria(
-        arr.filter((d) =>
-          d.name
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .includes(
-              t
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase(),
-            ),
-        ),
-      );
-      setIsLoading(false);
-    }
-  };
+  const search = useCallback(
+    (t) => {
+      if (criteriaBackup.length > 0) {
+        setIsLoading(true);
+        let arr = [...criteriaBackup];
+        setCriteria(
+          arr.filter((d) =>
+            d.name
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .toLowerCase()
+              .includes(
+                t
+                  .normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '')
+                  .toLowerCase(),
+              ),
+          ),
+        );
+        setIsLoading(false);
+      }
+    },
+    [criteriaBackup],
+  );
 
   const deleteCriteria = async (id) => {
+    setIsLoading(true);
     try {
       const scorecardsQuery = query(collection(db, 'scorecards'), where('criteriaId', '==', +id));
 
@@ -118,6 +122,21 @@ export default (props) => {
       );
       setCriteria(criteria.filter((item) => `${item.id}` !== `${id}`));
       console.log(err);
+    }
+  };
+
+  const handleDelete = (id, name, creating) => {
+    if (!creating) {
+      Alert.alert(
+        'Confirmação!',
+        'Deseja realmente deletar a diretriz (' + id + ") - '" + name + "' ?",
+        [
+          { text: 'Cancelar' },
+          { text: 'Confirmar', onPress: () => deleteCriteria(id).then(() => setIsLoading(false)) },
+        ],
+      );
+    } else {
+      deleteCriteria(id).then(() => setIsLoading(false));
     }
   };
 
@@ -208,7 +227,7 @@ export default (props) => {
                       creating={item.creating}
                       navigation={props.navigation}
                       saveNew={saveNewCriteria}
-                      deleteItem={() => deleteCriteria(item.id)}
+                      deleteItem={() => handleDelete(item.id, item.name, item.creating)}
                     />
                   );
                 })}

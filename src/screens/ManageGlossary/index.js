@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TouchableWithoutFeedback, Keyboard, View, Dimensions, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 import * as NavigationBar from 'expo-navigation-bar';
@@ -85,11 +84,7 @@ export default (props) => {
   return (
     <>
       <DashedCircle />
-      <Header
-        margin={getStatusBarHeight()}
-        text={'Administrativo - Indicadores'}
-        onPress={() => props.navigation.goBack()}
-      />
+      <Header text={'Administrativo - Indicadores'} onPress={() => props.navigation.goBack()} />
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View
           style={{

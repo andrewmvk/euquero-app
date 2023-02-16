@@ -71,7 +71,7 @@ export default (props) => {
       setInnerScorecards(innerScorecardsArray);
     }
     animatedHeight.value = withSpring(
-      !itemData.isEditing ? (scorecardsArrayLength == 0 ? 110 : 150) : 10,
+      !itemData.isEditing ? (scorecardsArrayLength == 0 ? 110 : 200) : 10,
     );
   };
 
@@ -284,14 +284,7 @@ export default (props) => {
           <TouchableIcon
             activeOpacity={buttonOpacity}
             disabled={isLoading}
-            onPress={
-              isLoading
-                ? null
-                : () => {
-                    setIsLoading(true);
-                    props.deleteItem().then(() => setIsLoading(false));
-                  }
-            }
+            onPress={isLoading ? null : props.deleteItem}
           >
             <Icon
               name={'trash-can-outline'}

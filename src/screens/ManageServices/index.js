@@ -1,5 +1,5 @@
 import { collection, deleteDoc, doc, getDoc, getDocs } from 'firebase/firestore';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Keyboard,
   TouchableWithoutFeedback,
@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { AddButton, EmptyListMessage } from '../../components/common';
 import { auth, db } from '../../services/firebase.config';
 import * as NavigationBar from 'expo-navigation-bar';
@@ -61,27 +60,30 @@ export default (props) => {
     return () => unsubscribe();
   }, []);
 
-  const search = (t) => {
-    if (servicesBackup.length > 0) {
-      setIsLoading(true);
-      let arr = [...servicesBackup];
-      setServices(
-        arr.filter((d) =>
-          d.name
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .includes(
-              t
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase(),
-            ),
-        ),
-      );
-      setIsLoading(false);
-    }
-  };
+  const search = useCallback(
+    (t) => {
+      if (servicesBackup.length > 0) {
+        setIsLoading(true);
+        let arr = [...servicesBackup];
+        setServices(
+          arr.filter((d) =>
+            d.name
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .toLowerCase()
+              .includes(
+                t
+                  .normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '')
+                  .toLowerCase(),
+              ),
+          ),
+        );
+        setIsLoading(false);
+      }
+    },
+    [servicesBackup],
+  );
 
   const checkId = (id) => {
     if (isNaN(id)) {
@@ -118,7 +120,8 @@ export default (props) => {
     setServices(servicesArray);
   };
 
-  const deleteCriteria = async (id) => {
+  const deleteService = async (id) => {
+    setIsLoading(true);
     try {
       await deleteDoc(doc(db, 'services', `${id}`)).then(() => {
         const c = services.find((item) => `${item.id}` === `${id}`);
@@ -139,14 +142,25 @@ export default (props) => {
     }
   };
 
+  const handleDelete = (id, name, creating) => {
+    if (!creating) {
+      Alert.alert(
+        'Confirmação!',
+        'Deseja realmente deletar o serviço (' + id + ") - '" + name + "' ?",
+        [
+          { text: 'Cancelar' },
+          { text: 'Confirmar', onPress: () => deleteService(id).then(() => setIsLoading(false)) },
+        ],
+      );
+    } else {
+      deleteService(id).then(() => setIsLoading(false));
+    }
+  };
+
   return (
     <>
       <DashedCircle />
-      <Header
-        margin={getStatusBarHeight()}
-        text={'Administrativo - Serviços'}
-        onPress={() => props.navigation.goBack()}
-      />
+      <Header text={'Administrativo - Serviços'} onPress={() => props.navigation.goBack()} />
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={{ alignItems: 'center' }}>
           <SearchArea>
@@ -190,7 +204,7 @@ export default (props) => {
                           creating={item.creating}
                           navigation={props.navigation}
                           saveNew={saveNewService}
-                          deleteItem={() => deleteCriteria(item.id)}
+                          deleteItem={() => handleDelete(item.id, item.name, item.creating)}
                         />
                       </View>
                     );
