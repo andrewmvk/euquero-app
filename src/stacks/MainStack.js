@@ -26,7 +26,7 @@ const Stack = createStackNavigator();
 
 export default () => (
   <Stack.Navigator
-    initialRouteName="ComoUsarOApp"
+    initialRouteName="Home"
     screenOptions={{
       headerShown: false,
       cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid,

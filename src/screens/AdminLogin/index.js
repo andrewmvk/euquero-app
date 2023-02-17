@@ -128,25 +128,27 @@ export default (props) => {
 
   const signIn = () => {
     setIsLoading(true);
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        getUser(user);
-      })
-      .catch(() =>
-        Alert.alert(
-          'Erro de autenticação',
-          'Ops! Email e/ou senha inválido(s), utilize apenas dados de contas já criadas.',
-        ),
-      )
-      .finally(() => {
-        setIsLoading(false);
-      });
     if (email == '' || password == '') {
       Alert.alert(
         'Erro de autenticação',
         'Ops! Algum campo não foi preenchido corretamente, verifique novamente.',
       );
+      setIsLoading(false);
+    } else {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredentials) => {
+          const user = userCredentials.user;
+          getUser(user);
+        })
+        .catch(() =>
+          Alert.alert(
+            'Erro de autenticação',
+            'Ops! Email e/ou senha inválido(s), utilize apenas dados de contas já criadas.',
+          ),
+        )
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
   };
 
