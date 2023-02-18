@@ -1,6 +1,6 @@
 {
-  "name": "euquero-android",
-  "version": "1.0.0",
+  "name": "euquero-app",
+  "version": "1.0.2",
   "main": "index.js",
   "scripts": {
     "start": "expo start --dev-client",
@@ -17,7 +17,7 @@
     "@rneui/base": "^4.0.0-rc.4",
     "@rneui/themed": "^4.0.0-rc.4",
     "axios": "^0.27.2",
-    "expo": "^46.0.0",
+    "expo": "~46.0.19",
     "expo-document-picker": "~10.3.0",
     "expo-file-system": "~14.1.0",
     "expo-font": "~10.2.0",
@@ -51,7 +51,9 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.6"
+    "@babel/core": "^7.18.6",
+    "metro-react-native-babel-preset": "^0.70.3",
+    "react-test-renderer": "18.0.0"
   },
   "private": true
 }
