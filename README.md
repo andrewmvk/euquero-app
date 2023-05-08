@@ -39,7 +39,7 @@ _Other dependecies_ (use ```yarn``` to install them)
 And others... see [package.json](https://github.com/Elojr/euquero-android/blob/master/package.json) for more.
 
 ## Compile and Run 🚀
-It is simple to setup this project, but you need to install [Android Studio](https://developer.android.com/studio) and the other **MAIN** dependecies said in [Technologies](#technologies) to then be able to follow this instructions:
+It is simple to setup this project, but you need to install [Android Studio](https://developer.android.com/studio) and the other **MAIN** dependecies said in [Technologies](https://github.com/Elojr/euquero-android#technologies-) to then be able to follow this instructions:
 #### 1° - Clone this repository in the desired folder:
 ```shell
 git clone https://github.com/Elojr/euquero-android.git
@@ -71,24 +71,42 @@ When in the terminal, choose how you want to open the APP: <br/>
 
 ***
 
-#### 1° Baixe os arquivos necessários e os coloque em suas respectivas pastas:
+#### 1° Baixe os arquivos necessários da plataforma desejada e os coloque em suas respectivas pastas:
 
 <ul>
-  <li>./<a href="">android</a> <img style="height: 16px;" src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="Android icons created by Pixel perfect - Flaticon" />
-  <li>./<a href="">ios</a> <img style="height: 16px;" src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="iOS icons created by Pixel perfect - Flaticon"/>
-  <li>./<a href="">app.json</a>
-  <li>./<a href="">eas.json</a>
-  <li>./src/services/<a href="">firebase.config.js</a>
+  <li> Android <img style="height: 16px;" src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="Android icons created by Pixel perfect - Flaticon" />
+    <ul>
+      <li>./<a href="https://drive.google.com/drive/folders/1oNviB_Bh6GmejO1rScuOAnMuv_Y7VX72?usp=share_link">android</a></li>
+      <li>./<a href="https://drive.google.com/file/d/1CakbUQ36x8DsUGrXmrsAWlGkc_wjRJCf/view?usp=share_link">app.json</a></li>
+      <li>./<a href="https://drive.google.com/file/d/12-q7LBLovIkUkWSUbBp_IYi5UF3nWc_d/view?usp=share_link">eas.json</a></li>
+    </ul>
+  </li>
+  <li> iOS <img style="height: 16px;" src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="iOS icons created by Pixel perfect - Flaticon"/> 
+    <ul>
+      <li>./<a href="">ios</a></li>
+      <li>./<a href="">app.json</a></li>
+      <li>./<a href="">eas.json</a></li>
+    </ul>
+  </li>
+  <li> <strong>Ambos</strong>
+    <ul>
+      <li>./src/services/<a href="https://drive.google.com/file/d/1L3m1lJcXqexWCyiTr8d2sjTX5D2wgImW/view?usp=share_link">firebase.config.js</a></li>
+    </ul>
+  </li>
 </ul>
 
 #### 2° Faça as mudanças desejadas e incremente a versão da build:
 
-* Em app.json e package.json, procure por "version"
+* Em app.json e package.json, procure por "version" e "versionCode"
 ```javascript
 "expo": {
   "some-code":"...",
   "version":"1.x.x", //<- incremente esta versão depois de qualquer mudança
   "some-code":"..."
+  "android": {
+    "...":"...",
+    "versionCode": "x" //<- incremente esta versão depois de qualquer mudança
+  }
 }
 ```
 * <img style="height: 20px;" src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="Android icons created by Pixel perfect - Flaticon" /> Em root/android/app/build.gradle, procure por "versionCode" e "versionName"
