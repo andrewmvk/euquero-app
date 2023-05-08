@@ -72,6 +72,7 @@ When in the terminal, choose how you want to open the APP: <br/>
 ***
 
 #### 1° Baixe os arquivos necessários da plataforma desejada e os coloque em suas respectivas pastas:
+<em>Os arquivos necessários estão na <a href="https://drive.google.com/drive/folders/18Bqf2jlvbuQVDf-RRa67pAkS2-l1WqTm?usp=share_link">pasta da demanda</a> no Google Drive da ELO</em>
 
 <ul>
   <li> Android <img style="height: 16px;" src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="Android icons created by Pixel perfect - Flaticon" />
