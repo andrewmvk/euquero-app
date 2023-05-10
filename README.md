@@ -98,7 +98,7 @@ When in the terminal, choose how you want to open the APP: <br/>
 
 #### 2° Faça as mudanças desejadas e incremente a versão da build:
 
-* Em app.json e package.json, procure por "version" e "versionCode"
+* Em <em><strong>app.json</em></strong> e <em><strong>package.json</em></strong>, procure por <code>version</code> e <code>versionCode</code>
 ```javascript
 "expo": {
   "some-code":"...",
@@ -110,7 +110,7 @@ When in the terminal, choose how you want to open the APP: <br/>
   }
 }
 ```
-* <img style="height: 20px;" src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="Android icons created by Pixel perfect - Flaticon" /> Em root/android/app/build.gradle, procure por "versionCode" e "versionName"
+* <img style="height: 20px;" src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="Android icons created by Pixel perfect - Flaticon" /> Em <em><strong>root/android/app/build.gradle</strong></em>, procure por <code>versionCode</code> e <code>versionName</code>
 ```gradle
 android {
   //...
@@ -120,6 +120,17 @@ android {
     versionName "1.1.2" //<- incremente esta versão depois de qualquer mudança
   }
 }
+```
+* <img style="height: 20px;" src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="iOS icons created by Pixel perfect - Flaticon"/> Em <em><strong>root/ios/EuQuero/Info.plist</strong></em> procure por <code>CFBundleShortVersionString</code> e <code>CFBundleVersion</code>
+```javascript
+  <plist version="1.0">
+    {/*...*/}
+    <key>CFBundleShortVersionString</key>
+    <string>1.1.2</string> //<- incremente esta versão depois de qualquer mudança
+    {/*...*/}
+    <key>CFBundleVersion</key>
+    <string>6</string> //<- incremente esta versão depois de qualquer mudança
+  </plist>
 ```
 
 #### 3° Faça login no EAS-CLI utilizando a conta do Expo:
