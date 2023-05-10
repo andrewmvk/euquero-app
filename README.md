@@ -84,9 +84,9 @@ When in the terminal, choose how you want to open the APP: <br/>
   </li>
   <li> iOS <img style="height: 16px;" src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="iOS icons created by Pixel perfect - Flaticon"/> 
     <ul>
-      <li>./<a href="">ios</a></li>
-      <li>./<a href="">app.json</a></li>
-      <li>./<a href="">eas.json</a></li>
+      <li>./<a href="https://drive.google.com/file/d/1fDNZxRUWRh-PhKBY-Lf5ubzRNTB9sssm/view?usp=share_link">ios</a></li>
+      <li>./<a href="https://drive.google.com/file/d/1lCHnrobMWGfmcZxt1vyw-aFwGvEz_g-z/view?usp=share_link">app.json</a></li>
+      <li>./<a href="https://drive.google.com/file/d/1_dZZq-vmKcdUU8deolYZod8_NRxi91ax/view?usp=share_link">eas.json</a></li>
     </ul>
   </li>
   <li> <strong>Ambos</strong>
