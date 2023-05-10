@@ -141,14 +141,6 @@ npm install -g eas-cli
 eas build --platform [android/ios]
 ```
 ***
-* Publique as mudanças (mesmo sendo nativas ou código-fonte):
-```shell
-eas update
-```
-<em>OU, caso não funcione</em>
-```shell
-expo publish
-```
 * Envie as mudanças para a PlayStore / App Store
 ```shell
 eas submit --platform [android/ios] --latest
