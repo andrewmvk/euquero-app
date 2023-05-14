@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableWithoutFeedback, Keyboard, View, Dimensions, Alert } from 'react-native';
+import { TouchableWithoutFeedback, Keyboard, View, Dimensions, Alert, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
-import * as NavigationBar from 'expo-navigation-bar';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
-import { colors, shadow } from '../../defaultStyles';
+import { colors, navBarConfig, shadow } from '../../defaultStyles';
 import {
   ButtonView,
   DescriptionBox,
@@ -26,12 +25,7 @@ export default (props) => {
   const [data, setData] = useState(props.route.params.data);
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
   }, []);
 
   const updateScorecard = async () => {
@@ -84,19 +78,21 @@ export default (props) => {
   return (
     <>
       <DashedCircle />
-      <Header text={'Administrativo - Indicadores'} onPress={() => props.navigation.goBack()} />
+      <SafeAreaView>
+        <Header text={'Administrativo - Indicadores'} onPress={() => props.navigation.goBack()} />
+      </SafeAreaView>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View
           style={{
             alignItems: 'center',
-            marginTop: 30,
+            marginTop: 20,
             height: screenHeight * 0.84,
           }}
         >
           <View
-            style={{ width: screenWidth * 0.85, height: '100%', justifyContent: 'space-between' }}
+            style={{ width: screenWidth * 0.85, height: '100%' }}
           >
-            <View style={{ minHeight: '7%' }}>
+            <View style={{ minHeight: '7%'}}>
               <Title numberOfLines={1}>{data.criteriaName}</Title>
               <SubtitleContainer>
                 <Subtitle onChangeText={(t) => setData({ ...data, name: t })} numberOfLines={1}>
@@ -110,7 +106,7 @@ export default (props) => {
                 />
               </SubtitleContainer>
             </View>
-            <DescriptionBox style={{ minHeight: '70%', ...shadow }}>
+            <DescriptionBox style={{ minHeight: '70%', ...shadow, marginTop: 20 }}>
               <DescriptionText
                 onChangeText={(t) => setData({ ...data, description: t })}
                 multiline
@@ -120,7 +116,7 @@ export default (props) => {
                 {data.description}
               </DescriptionText>
             </DescriptionBox>
-            <ButtonView style={{ minHeight: '7.5%' }}>
+            <ButtonView style={{ minHeight: '7.5%', marginTop: 40 }}>
               <RegisterButton
                 text="Atualizar"
                 pointerEvents={isLoading ? 'none' : 'auto'}

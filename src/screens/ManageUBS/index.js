@@ -3,14 +3,13 @@ import { ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
-import * as NavigationBar from 'expo-navigation-bar';
 
 import { Container, TrashIcon, SearchInput, SearchInputText, SearchArea } from './styles';
 import Header from '../../components/Header';
 import Modal from '../../components/Modal';
 import DashedCircle from '../../components/DashedCircle';
 import { AddButton, Card, DropdownSelection, List } from '../../components/common';
-import { buttonOpacity, colors, shadow } from '../../defaultStyles';
+import { buttonOpacity, colors, navBarConfig, shadow } from '../../defaultStyles';
 import axios from 'axios';
 
 export default (props) => {
@@ -45,12 +44,7 @@ export default (props) => {
 
   //One time useEffect to load brazilian States
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
 
     const fetchStateData = async () => {
       setIsLoading(true);

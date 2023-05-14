@@ -3,9 +3,8 @@ import { Icon } from 'react-native-elements';
 import { ActivityIndicator, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
-import * as NavigationBar from 'expo-navigation-bar';
 
-import { colors, shadow } from '../../defaultStyles';
+import { colors, navBarConfig, shadow } from '../../defaultStyles';
 import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
 import { List, SortButton } from '../../components/common';
 import Header from '../../components/Header';
@@ -40,12 +39,7 @@ export default (props) => {
 
   useEffect(() => {
     setIsLoading(true);
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
     fetchData().then(() => setIsLoading(false));
   }, []);
 

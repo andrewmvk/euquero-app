@@ -1,12 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Image, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Image, FlatList, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import * as NavigationBar from 'expo-navigation-bar';
 import { useSharedValue } from 'react-native-reanimated';
 
 import { Title, PhaseText, extraStyles, DotsView } from "./styles";
 import Header from "../../components/Header";
-import { buttonOpacity, colors } from "../../defaultStyles";
+import { buttonOpacity, colors, navBarConfig } from "../../defaultStyles";
 import { Dot } from "../../components/common";
 
 const slides = [
@@ -70,12 +69,7 @@ export default (props) => {
   const scrollX = useSharedValue(0);
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync("relative");
-      await NavigationBar.setBackgroundColorAsync("#f2f2f2");
-      await NavigationBar.setButtonStyleAsync("dark");
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
   }, []);
 
   const flatListRef = useRef(null);
@@ -156,7 +150,9 @@ export default (props) => {
 
   return (
     <>
-      <Header onPress={() => props.navigation.goBack()} />
+      <SafeAreaView>
+        <Header onPress={() => props.navigation.goBack()} />
+      </SafeAreaView>
       <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
         <FlatList
           ref={flatListRef}

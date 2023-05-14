@@ -3,13 +3,13 @@ import { Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { auth, authSecondary, db } from '../../services/firebase.config';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import * as NavigationBar from 'expo-navigation-bar';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { BigTitle, RegisterButton } from '../../components/common';
 import { ButtonView, Container, ContentInput, ContentInputText, InputArea } from './styles';
 import { Icon } from 'react-native-elements';
+import { navBarConfig } from '../../defaultStyles';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,12 +18,7 @@ export default (props) => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
   }, []);
 
   const handleSignUp = async () => {

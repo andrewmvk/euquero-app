@@ -2,10 +2,9 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-import { REACT_APP_FIREBASE_KEY } from '@env';
 
 const firebaseConfig = {
-  apiKey: REACT_APP_FIREBASE_KEY,
+  apiKey: '***REMOVED***',
   authDomain: 'euquero-app-50e1e.firebaseapp.com',
   projectId: 'euquero-app-50e1e',
   storageBucket: 'euquero-app-50e1e.appspot.com',

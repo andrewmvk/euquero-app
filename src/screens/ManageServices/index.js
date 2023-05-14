@@ -2,22 +2,21 @@ import { collection, deleteDoc, doc, getDoc, getDocs } from 'firebase/firestore'
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Keyboard,
-  TouchableWithoutFeedback,
   View,
   ScrollView,
   Alert,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { AddButton, EmptyListMessage } from '../../components/common';
 import { auth, db } from '../../services/firebase.config';
-import * as NavigationBar from 'expo-navigation-bar';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { SearchArea, SearchInput, SearchInputText } from './styles';
 import EditableCard from '../../components/EditableCard';
-import { colors, shadow } from '../../defaultStyles';
+import { colors, navBarConfig, shadow } from '../../defaultStyles';
 
 export default (props) => {
   const [services, setServices] = useState([]);
@@ -44,12 +43,7 @@ export default (props) => {
   };
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
 
     const unsubscribe = props.navigation.addListener('focus', async () => {
       const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
@@ -160,66 +154,66 @@ export default (props) => {
   return (
     <>
       <DashedCircle />
-      <Header text={'Administrativo - Serviços'} onPress={() => props.navigation.goBack()} />
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={{ alignItems: 'center' }}>
-          <SearchArea>
-            <SearchInput style={shadow}>
-              <SearchInputText
-                placeholder="Buscar Serviços"
-                onChangeText={(t) => search(t)}
-                placeholderTextColor="#C4C4C4"
-                numberOfLines={1}
-              />
-              <Icon
-                name="search-outline"
-                type="ionicon"
-                color="#c4c4c4"
-                style={{
-                  paddingHorizontal: 15,
-                  paddingVertical: 15,
-                }}
-              />
-            </SearchInput>
-          </SearchArea>
-          {isLoading ? (
-            <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
-          ) : (
-            <ScrollView
-              style={{ marginTop: 32, marginBottom: 25, width: '100%', zIndex: 0 }}
-              contentContainerStyle={{ alignItems: 'center' }}
-            >
-              {services.length > 0 ? (
-                <>
-                  <View style={{ height: 5 }} />
-                  {services.map((item) => {
-                    return (
-                      <View key={item.id} style={{ marginBottom: 20 }}>
-                        <EditableCard
-                          type={'services'}
-                          checkId={checkId}
-                          itemId={item.id}
-                          text={item.name}
-                          editing={item.editing}
-                          creating={item.creating}
-                          navigation={props.navigation}
-                          saveNew={saveNewService}
-                          deleteItem={() => handleDelete(item.id, item.name, item.creating)}
-                        />
-                      </View>
-                    );
-                  })}
-                </>
-              ) : (
-                <EmptyListMessage alterText />
-              )}
-              {services.length > 0 ? (
+      <SafeAreaView>
+        <Header text={'Administrativo - Serviços'} onPress={() => props.navigation.goBack()} />
+      </SafeAreaView>
+      <View style={{ alignItems: 'center' }}>
+        <SearchArea>
+          <SearchInput style={shadow}>
+            <SearchInputText
+              onSubmitingEdit={() => Keyboard.dismiss()}
+              placeholder="Buscar Serviços"
+              onChangeText={(t) => search(t)}
+              placeholderTextColor="#C4C4C4"
+              numberOfLines={1}
+            />
+            <Icon
+              name="search-outline"
+              type="ionicon"
+              color="#c4c4c4"
+              style={{
+                paddingHorizontal: 15,
+                paddingVertical: 15,
+              }}
+            />
+          </SearchInput>
+        </SearchArea>
+
+        {isLoading ? (
+          <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />
+        ) : (
+          <ScrollView
+            style={{ marginTop: 32, marginBottom: 25, width: '100%', zIndex: 0 }}
+            contentContainerStyle={{ alignItems: 'center' }}
+          >
+            {services.length > 0 ? (
+              <>
+                <View style={{ height: 5 }} />
+                {services.map((item) => {
+                  return (
+                    <EditableCard
+                      key={item.id}
+                      type={'services'}
+                      checkId={checkId}
+                      itemId={item.id}
+                      text={item.name}
+                      editing={item.editing}
+                      creating={item.creating}
+                      navigation={props.navigation}
+                      saveNew={saveNewService}
+                      deleteItem={() => handleDelete(item.id, item.name, item.creating)}
+                    />
+                  );
+                })}
                 <AddButton small relative margin={10} onPress={handleNewCriteria} />
-              ) : null}
-            </ScrollView>
-          )}
-        </View>
-      </TouchableWithoutFeedback>
+                <View style={{ height: 200 }}/>
+              </>
+            ) : (
+              <EmptyListMessage alterText />
+            )}
+          </ScrollView>
+        )}
+      </View>
     </>
   );
 };

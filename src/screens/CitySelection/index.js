@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Icon } from 'react-native-elements';
-import * as NavigationBar from 'expo-navigation-bar';
 import { ActivityIndicator, Keyboard, TouchableWithoutFeedback, Platform } from 'react-native';
 import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
@@ -10,7 +9,7 @@ import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
 import { List, SortButton } from '../../components/common';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
-import { shadow } from '../../defaultStyles';
+import { navBarConfig, shadow } from '../../defaultStyles';
 
 export default (props) => {
   const [cities, setCities] = useState([]);
@@ -63,12 +62,7 @@ export default (props) => {
 
   useEffect(() => {
     setIsLoading(true);
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
     fetchData().then(() => setIsLoading(false));
   }, []);
 
@@ -135,7 +129,7 @@ export default (props) => {
               keyboardDismiss
               safeArea={80}
               data={cities}
-              notRegistredData={noUbsCities}
+              notRegisteredData={noUbsCities}
               handleCardPress={handleCardPress}
             />
           )}

@@ -1,3 +1,6 @@
+import * as NavigationBar from 'expo-navigation-bar';
+import { Platform } from 'react-native';
+
 export const colors = {
   orange: "#FF6B0F",
   text: "#7F7F7F",
@@ -52,3 +55,11 @@ export const shadow = {
 };
 
 export const buttonOpacity = 0.6;
+
+export const navBarConfig = async (position, background, style) => {
+  if(Platform.OS === 'android') {
+    await NavigationBar.setPositionAsync(position ? position : 'absolute');
+    await NavigationBar.setBackgroundColorAsync(background ? background : 'rgba(0,0,0,0.01)');
+    await NavigationBar.setButtonStyleAsync(style ? style : 'dark');
+  }
+};

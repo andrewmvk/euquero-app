@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, View, Linking, Alert, ActivityIndicator } from 'react-native';
+import { Text, View, Linking, Alert, ActivityIndicator, SafeAreaView, Pressable } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { auth, db, storage } from '../../services/firebase.config';
 import { getDownloadURL, ref } from 'firebase/storage';
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, getCountFromServer, doc, getDoc, query, setDoc, where } from 'firebase/firestore';
 import * as DocumentPicker from 'expo-document-picker';
 import * as XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
-import * as NavigationBar from 'expo-navigation-bar';
 
-import { colors, fonts } from '../../defaultStyles';
+import { colors, fonts, navBarConfig } from '../../defaultStyles';
 import { RegisterButton } from '../../components/common';
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { SimpleText, Title, Container, ButtonView, TouchableText } from './styles';
 import { useEffect } from 'react';
 import AnimatedButton from '../../components/AnimatedButton';
+import axios from 'axios';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +39,7 @@ export default (props) => {
   };
 
   const handleDocument = async () => {
+    console.log('handleDocument function called!')
     setIsLoading(true);
     try {
       const fileDoc = await DocumentPicker.getDocumentAsync({
@@ -120,6 +121,7 @@ export default (props) => {
   };
 
   const uploadUbs = async (dataFile) => {
+    console.log('uploadUbs function called!')
     const promises = dataFile.map(async (data) => {
       await setDoc(doc(db, 'ubs', data.id.toString()), {
         uf: +data.uf,
@@ -188,64 +190,66 @@ export default (props) => {
   };
 
   const updateUbsCount = async () => {
-    //Get all UBS
-    const querySnapshot = await getDocs(collection(db, 'ubs'));
+    console.log('updateUbsCount function called!')
+    //Get brazilian states
+    const states = await axios.get(
+      'https://servicodados.ibge.gov.br/api/v1/localidades/estados/',
+    );
+      
+    //For each brazilian state, get the count
+    const statesPromises = states.data.map(async(state) => {
+      //Query the state's BHUs
+      const q = query(collection(db, 'ubs'), where('uf', '==', state.id));
 
-    //The array that will contain the amount of UBS in a State and the amount of UBS in its cities
-    let ubsAmountStates = [];
-    let ubsAmountCities = [];
-    querySnapshot.forEach((doc) => {
-      //Search for the State in the array
-      const stateIndex = ubsAmountStates.findIndex((state) => {
-        return state?.id == doc.data().uf;
-      });
-      if (stateIndex !== -1) {
-        //State exists: icrement State amount UBS
-        ubsAmountStates[stateIndex].amount += 1;
-        //Search for the City in the array
-        const cityIndex = ubsAmountCities.findIndex((city) => {
-          return city?.id == doc.data().city;
+      const snapshot = await getCountFromServer(q)
+
+      //Get the amount of BHUs on for this state
+      const count = snapshot.data().count;
+
+      //Update the amount on the database
+      await setDoc(doc(db, 'ubsAmountStates', state.id.toString()), {
+        amount: count
+      })
+
+      //Get the cities inside those states
+      const cities = await axios.get(
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${state.id}/municipios`,
+      );
+
+      //Get the amount of BHUs for each city
+      const citiesPromises = cities.data.map(async(city) => {
+        //Get the city ID, convert to string, remove the last number
+        const cityIDSlice = city.id.toString().slice(0, -1);
+        //Convert to value again
+        const cityID = +cityIDSlice;
+
+        //Query the city's BHUs
+        const q2 = query(collection(db, 'ubs'), where('city', '==', cityID))
+
+        const snapshot2 = await getCountFromServer(q2);
+
+        //Get the amount of BHUs for this city
+        const count2 = snapshot2.data().count;
+
+        //Update the amount on the database
+        await setDoc((doc(db, 'ubsAmountCities', cityID.toString())), {
+          amount: count2
         });
-        if (cityIndex !== -1) {
-          //City exists: icrement City amount UBS
-          ubsAmountCities[cityIndex].amount += 1;
-        } else {
-          //City doesnt exists: create and push the new City
-          ubsAmountCities.push({
-            id: doc.data().city,
-            amount: 1,
-          });
-        }
-      } else {
-        //State doesnt exists: create and push the new State and the new City
-        ubsAmountStates.push({
-          id: doc.data().uf,
-          amount: 1,
-        });
-        ubsAmountCities.push({
-          id: doc.data().city,
-          amount: 1,
-        });
+      })
+
+      try {
+        Promise.all(citiesPromises)
+      } catch(err) {
+        console.log('Error while trying to update the ubsCount amount for the cities');
+        console.log(err)
       }
-    });
+    })
 
-    //Push to the database
     try {
-      const promisesStates = ubsAmountStates.map(async (state) => {
-        await setDoc(doc(db, 'ubsAmountStates', state.id.toString()), {
-          amount: state.amount,
-        });
-      });
-      const promisesCities = ubsAmountCities.map(async (city) => {
-        await setDoc(doc(db, 'ubsAmountCities', city.id.toString()), {
-          amount: city.amount,
-        });
-      });
-      //Handle all the promises
-      await Promise.all(promisesStates);
-      await Promise.all(promisesCities);
+      Promise.all(statesPromises)
     } catch (err) {
-      console.log('Error while trying to update the ubsCount amount');
+      console.log('Error while trying to update the ubsCount amount for the states');
+      console.log(err)
     }
   };
 
@@ -255,12 +259,7 @@ export default (props) => {
   };
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
 
     const currentUser = async () => {
       const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
@@ -272,11 +271,13 @@ export default (props) => {
   return (
     <>
       <DashedCircle />
-      <Header
-        text={'Administrativo - Upload'}
-        onPress={() => props.navigation.goBack()}
-        pointerEvents={isLoading ? 'none' : 'auto'}
-      />
+      <SafeAreaView>
+        <Header
+          text={'Administrativo - Upload'}
+          onPress={() => props.navigation.goBack()}
+          pointerEvents={isLoading ? 'none' : 'auto'}
+        />
+      </SafeAreaView>
       {user ? (
         <Container>
           <View style={{ marginTop: '5%' }}>
@@ -366,9 +367,9 @@ export default (props) => {
               <Text style={{ fontFamily: fonts.spartanBold }}>formatação padrão</Text>
             </SimpleText>
 
-            <TouchableOpacity style={{ marginBottom: 40 }} onPress={downloadDefaultExcel}>
+            <Pressable style={{ marginBottom: 40 }} onPress={downloadDefaultExcel}>
               <TouchableText>Baixe aqui</TouchableText>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </Container>
       ) : null}

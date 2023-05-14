@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StatusBar } from 'react-native';
-import * as NavigationBar from 'expo-navigation-bar';
 import { Icon } from '@rneui/themed';
 
 import { Container, LogoView, Subtitle, Buttons, AdminBtn, extraStyles } from './styles';
 import Wave from '../../components/Waves/Wave';
 import DashedWave from '../../components/Waves/DashedWave';
-import { buttonOpacity } from '../../defaultStyles';
+import { buttonOpacity, navBarConfig } from '../../defaultStyles';
 import { LargeButton, SmallButton } from '../../components/common';
 
 const B = (props) => <Text style={{ fontWeight: '900', fontSize: 15 }}>{props.children}</Text>;
@@ -15,11 +14,7 @@ export default (props) => {
   const [transition, setTransition] = useState({ n: false, type: '' });
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('absolute');
-      await NavigationBar.setBackgroundColorAsync('rgba(0,0,0,0.01)');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
+    navBarConfig();
 
     const unsubscribe = props.navigation.addListener('focus', () => {
       setTransition({ n: true, type: 'from' });

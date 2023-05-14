@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Switch } from 'react-native';
-import * as NavigationBar from 'expo-navigation-bar';
+import { ActivityIndicator, SafeAreaView, Switch } from 'react-native';
 import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase.config';
 
 import { Container, SwitchView } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
-import { colors, buttonOpacity } from '../../defaultStyles';
+import { colors, buttonOpacity, navBarConfig } from '../../defaultStyles';
 import { AddButton, Card, List } from '../../components/common';
 import Modal from '../../components/Modal';
 
@@ -28,12 +27,7 @@ export default (props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
   }, []);
 
   const fetchData = async () => {
@@ -171,7 +165,9 @@ export default (props) => {
   return (
     <>
       <DashedCircle />
-      <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
+      <SafeAreaView>
+        <Header text={'Administrativo - Contas'} onPress={() => props.navigation.goBack()} />
+      </SafeAreaView>
       <Container>
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.orange} style={{ marginTop: 50 }} />

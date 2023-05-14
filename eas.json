@@ -1,6 +1,7 @@
 {
   "cli": {
-    "version": ">= 3.6.0"
+    "version": ">= 3.12.0",
+    "promptToConfigurePushNotifications": false
   },
   "build": {
     "development": {
@@ -9,26 +10,21 @@
         "gradleCommand": ":app:assembleDebug"
       },
       "ios": {
-        "buildConfiguration": "Debug",
-        "resourceClass": "m1-medium"
+        "buildConfiguration": "Debug"
       }
     },
     "preview": {
-      "distribution": "internal",
-      "ios": {
-        "resourceClass": "m1-medium"
-      }
+      "distribution": "internal"
     },
-    "production": {
-      "android": {
-        "buildType": "apk"
-      },
-      "ios": {
-        "resourceClass": "m1-medium"
-      }
-    }
+    "production": {}
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "aplicativoprojetoeuquero@gmail.com",
+        "ascAppId": "6448930823",
+        "appleTeamId": "Z6HBBRZZ84"
+      }
+    }
   }
 }

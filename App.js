@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import MainStack from './src/stacks/MainStack';
-import * as NavigationBar from 'expo-navigation-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 
@@ -12,6 +11,7 @@ import {
   Spartan_700Bold,
   Spartan_900Black,
 } from '@expo-google-fonts/spartan';
+import { navBarConfig } from './src/defaultStyles';
 
 export default () => {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -19,9 +19,7 @@ export default () => {
   useEffect(() => {
     async function prepare() {
       try {
-        await NavigationBar.setPositionAsync('absolute');
-        await NavigationBar.setBackgroundColorAsync('rgba(0,0,0,0.01)');
-        await NavigationBar.setButtonStyleAsync('light');
+        navBarConfig('absolute', 'rgba(0,0,0,0.01)', 'light')
 
         await SplashScreen.preventAutoHideAsync();
 

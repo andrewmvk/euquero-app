@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView } from 'react-native';
 import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
-import * as NavigationBar from 'expo-navigation-bar';
 
 import Header from '../../components/Header';
-import { colors } from '../../defaultStyles';
+import { colors, navBarConfig } from '../../defaultStyles';
 import { Container, Period, TextView, UBSName } from './styles';
 import ScorecardsCard from '../../components/ScorecardsCard';
 import { EmptyListMessage, Map } from '../../components/common';
@@ -65,12 +64,7 @@ export default (props) => {
   };
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
     fetchData().then(() => setIsLoading(false));
   }, []);
 

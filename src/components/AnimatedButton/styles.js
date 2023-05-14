@@ -4,7 +4,7 @@ import { colors, fonts, fontSize } from '../../defaultStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
-export const SelectButton = styled.TouchableOpacity`
+export const SelectButton = styled.Pressable`
   justify-content: center;
   align-items: center;
   width: ${screenWidth * 0.8}px;

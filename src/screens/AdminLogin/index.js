@@ -11,7 +11,6 @@ import {
 import { auth, db } from '../../services/firebase.config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
-import * as NavigationBar from 'expo-navigation-bar';
 
 import {
   Container,
@@ -28,7 +27,7 @@ import Wave from '../../components/Waves/Wave';
 import DashedWave from '../../components/Waves/DashedWave';
 import Modal from '../../components/Modal';
 import { SmallButton, InputBox } from '../../components/common';
-import { colors, shadow } from '../../defaultStyles';
+import { colors, navBarConfig, shadow } from '../../defaultStyles';
 import { Icon } from 'react-native-elements';
 
 export default (props) => {
@@ -45,11 +44,7 @@ export default (props) => {
   });
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('absolute');
-      await NavigationBar.setBackgroundColorAsync('rgba(0,0,0,0.01)');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
+    navBarConfig();
 
     const unsubscribeFocus = props.navigation.addListener('focus', () => {
       navBarConfig();

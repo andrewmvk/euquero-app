@@ -1,13 +1,12 @@
 import React, { useEffect, useCallback } from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView } from 'react-native';
+import { ActivityIndicator, Alert, Keyboard, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import * as NavigationBar from 'expo-navigation-bar';
 
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { AddButton, EmptyListMessage } from '../../components/common';
-import { colors, shadow } from '../../defaultStyles';
+import { colors, navBarConfig, shadow } from '../../defaultStyles';
 import { Container, SearchArea, SearchInput, SearchInputText } from './styles';
 import EditableCard from '../../components/EditableCard';
 import { collection, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
@@ -39,12 +38,7 @@ export default (props) => {
   };
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
 
     const unsubscribe = props.navigation.addListener('focus', async () => {
       const currentUserSnap = await getDoc(doc(db, 'users', auth.currentUser.uid));
@@ -183,6 +177,7 @@ export default (props) => {
         <SearchArea>
           <SearchInput style={{ ...shadow }}>
             <SearchInputText
+              onSubmitingEdit={() => Keyboard.dismiss()}
               placeholder="Buscar Indicador"
               onChangeText={(t) => search(t)}
               placeholderTextColor="#C4C4C4"
@@ -231,11 +226,11 @@ export default (props) => {
                     />
                   );
                 })}
+                <AddButton small relative onPress={handleNewCriteria} />
               </>
             ) : (
               <EmptyListMessage alterText />
             )}
-            {criteria.length > 0 ? <AddButton small relative onPress={handleNewCriteria} /> : null}
           </ScrollView>
         )}
       </Container>

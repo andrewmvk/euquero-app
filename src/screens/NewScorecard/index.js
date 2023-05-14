@@ -7,15 +7,15 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
-import * as NavigationBar from 'expo-navigation-bar';
 
 import { DropdownSelection, RegisterButton } from '../../components/common';
 import DashedCircle from '../../components/DashedCircle';
 import Header from '../../components/Header';
 import { ButtonText, IDModalButton, Input, InputArea, InputBox, Title } from './styles';
 import { auth, db } from '../../services/firebase.config';
-import { colors, shadow } from '../../defaultStyles';
+import { colors, navBarConfig, shadow } from '../../defaultStyles';
 import NumberSelectionModal from '../../components/NumberSelectionModal';
 
 export default (props) => {
@@ -179,12 +179,7 @@ export default (props) => {
   };
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
 
     const unsubscribe = props.navigation.addListener('focus', async () => {
       setIsLoading({ loading: true, main: true });
@@ -197,7 +192,9 @@ export default (props) => {
   return (
     <>
       <DashedCircle />
-      <Header text={'Administrativo - Indicadores'} onPress={() => props.navigation.goBack()} />
+      <SafeAreaView>
+        <Header text={'Administrativo - Indicadores'} onPress={() => props.navigation.goBack()} />
+      </SafeAreaView>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={{ flex: 1, height: '100%' }}>
           <ScrollView style={{ height: '90%' }} contentContainerStyle={{ alignItems: 'center' }}>

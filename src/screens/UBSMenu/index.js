@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import * as NavigationBar from 'expo-navigation-bar';
 
 import {
   Container,
@@ -14,7 +13,7 @@ import {
 } from './styles';
 import { Icon } from 'react-native-elements';
 import Header from '../../components/Header';
-import { buttonOpacity, colors, fonts, fontSizeNoUnits, shadow } from '../../defaultStyles';
+import { buttonOpacity, colors, fonts, fontSizeNoUnits, navBarConfig, shadow } from '../../defaultStyles';
 import { Map } from '../../components/common';
 import { ScrollView } from 'react-native';
 
@@ -29,12 +28,7 @@ export default (props) => {
   const headerName = `${routeParams.stateName} - ${routeParams.cityName} - ${routeParams.ubsName}`;
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
   }, []);
 
   const handleNavigate = (item, page) => {

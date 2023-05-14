@@ -4,9 +4,8 @@ import { ActivityIndicator, Keyboard, TouchableWithoutFeedback } from 'react-nat
 import axios from 'axios';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
-import * as NavigationBar from 'expo-navigation-bar';
 
-import { colors, shadow } from '../../defaultStyles';
+import { colors, navBarConfig, shadow } from '../../defaultStyles';
 import { Container, SearchInput, SearchInputText, SearchArea } from './styles';
 import Header from '../../components/Header';
 import DashedCircle from '../../components/DashedCircle';
@@ -61,12 +60,7 @@ export default (props) => {
 
   useEffect(() => {
     setIsLoading(true);
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
     fetchData().then(() => setIsLoading(false));
   }, []);
 
@@ -133,7 +127,7 @@ export default (props) => {
           ) : (
             <List
               data={brazilianStates}
-              notRegistredData={noUbsStates}
+              notRegisteredData={noUbsStates}
               handleCardPress={handleCardPress}
               safeArea={80}
             />

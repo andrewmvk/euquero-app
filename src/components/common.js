@@ -807,7 +807,7 @@ export const List = (props) => {
         keyExtractor={(item) => item.id}
         ListEmptyComponent={EmptyListMessage}
         ListFooterComponent={
-          props.notRegistredData ? <InDevelopmentCard data={props.notRegistredData} /> : null
+          props.notRegisteredData ? <InDevelopmentCard data={props.notRegisteredData} /> : null
         }
       />
     </View>

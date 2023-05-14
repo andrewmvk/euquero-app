@@ -223,10 +223,10 @@ export default (props) => {
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
       <TouchableCard
-        style={{ ...shadow }}
+        style={{ ...shadow, marginBottom: props?.type == 'services' ? 20 : 0 }}
         activeOpacity={buttonOpacity}
         onPress={props.onPress ? props.onPress : null}
-        disabled={props.onPress === undefined ? true : false}
+        disabled={props.onPress === undefined ? props?.type == 'services' ? false : true : false}
       >
         {isLoading ? (
           <ActivityIndicator

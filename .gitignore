@@ -61,3 +61,8 @@ web-build/
 dist/
 
 .env
+
+# Custom
+ios/
+app.json
+eas.json

@@ -1,21 +1,20 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, SafeAreaView, Text } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, Platform, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import Constants from 'expo-constants'
 
 import { colors, fonts, buttonOpacity } from '../defaultStyles';
 
 export default (props) => {
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        {
-          position: props.position,
-          marginTop: getStatusBarHeight() + getStatusBarHeight() * 0.5,
-        },
-      ]}
-    >
+    <View style={[
+      styles.container,
+      {
+        position: props.position,
+        marginTop: Platform.OS == 'android' ? getStatusBarHeight() + getStatusBarHeight() * 0.5 : props.position ? Constants.statusBarHeight : 0,
+      },
+    ]}>
       <TouchableOpacity {...props} activeOpacity={buttonOpacity} style={styles.arrowBack}>
         <Icon
           name="chevron-back-outline"
@@ -25,7 +24,7 @@ export default (props) => {
       </TouchableOpacity>
       {props.text ? <Text style={styles.text} numberOfLines={1}>{`${props.text}`}</Text> : null}
       {props.children ? props.children : null}
-    </SafeAreaView>
+    </View>
   );
 };
 

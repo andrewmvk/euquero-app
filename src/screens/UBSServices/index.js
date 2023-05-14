@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.config';
-import * as NavigationBar from 'expo-navigation-bar';
 import { ScrollView, ActivityIndicator } from 'react-native';
 
 import { ServiceCard, Map, EmptyListMessage } from '../../components/common';
 import Header from '../../components/Header';
 import { Container, Period, TextView, UBSName } from './styles';
-import { colors } from '../../defaultStyles';
+import { colors, navBarConfig } from '../../defaultStyles';
 
 export default (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,12 +16,7 @@ export default (props) => {
   const ubsId = +routeParams.ubsID;
 
   useEffect(() => {
-    const navBarConfig = async () => {
-      await NavigationBar.setPositionAsync('relative');
-      await NavigationBar.setBackgroundColorAsync('#f2f2f2');
-      await NavigationBar.setButtonStyleAsync('dark');
-    };
-    navBarConfig();
+    navBarConfig('relative', '#f2f2f2');
 
     const fetchData = async () => {
       setIsLoading(true);
