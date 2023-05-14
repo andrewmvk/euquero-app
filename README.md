@@ -146,12 +146,10 @@ eas whoami
 ```shell
 npm install -g eas-cli
 ```
-***
-* Caso as mudanças foram nos arquivos nativos (./android/ ou ./ios/ por exemplo) faça a build:
+* Faça a build:
 ```shell
 eas build --platform [android/ios]
 ```
-***
 * Envie as mudanças para a PlayStore / App Store
 ```shell
 eas submit --platform [android/ios] --latest
