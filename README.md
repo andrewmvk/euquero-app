@@ -80,11 +80,11 @@ When in the terminal, choose how you want to open the APP: <br/>
       <li>./<a href="https://drive.google.com/drive/folders/1oNviB_Bh6GmejO1rScuOAnMuv_Y7VX72?usp=share_link">android</a></li>
       <li>./<a href="https://drive.google.com/file/d/1CakbUQ36x8DsUGrXmrsAWlGkc_wjRJCf/view?usp=share_link">app.json</a></li>
       <li>./<a href="https://drive.google.com/file/d/12-q7LBLovIkUkWSUbBp_IYi5UF3nWc_d/view?usp=share_link">eas.json</a></li>
+      <li>../<a href="https://drive.google.com/file/d/1H44BT7vp8aGmY6uBpz3MSL-mXcQs1m9t/view?usp=sharing">pc-api-91...de0.json</a>
     </ul>
   </li>
   <li> iOS <img style="height: 16px;" src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="iOS icons created by Pixel perfect - Flaticon"/> 
     <ul>
-      <li>./<a href="https://drive.google.com/file/d/1fDNZxRUWRh-PhKBY-Lf5ubzRNTB9sssm/view?usp=share_link">ios</a></li>
       <li>./<a href="https://drive.google.com/file/d/1lCHnrobMWGfmcZxt1vyw-aFwGvEz_g-z/view?usp=share_link">app.json</a></li>
       <li>./<a href="https://drive.google.com/file/d/1_dZZq-vmKcdUU8deolYZod8_NRxi91ax/view?usp=share_link">eas.json</a></li>
     </ul>
@@ -132,8 +132,13 @@ android {
     <string>6</string> //<- incremente esta versão depois de qualquer mudança
   </plist>
 ```
+#### 3° Mudanças importantes:
 
-#### 3° Faça login no EAS-CLI utilizando a conta do Expo:
+* <img style="height: 20px;" src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="Android icons created by Pixel perfect - Flaticon" /> O arquivo `pc-api-91...de0.json` pode ser colocado em qualquer lugar, mas será necessário modificar a localização do arquivo (URI) em eas.json (`submit.production.android.serviceAccountKeyPath`), este arquivo é importante para enviar a build ao Google, sem ele não é possível realizar uma atualização.
+
+* <img style="height: 20px;" src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="iOS icons created by Pixel perfect - Flaticon"/> Para o iOS é necessário refazer o arquivo `ios/`, para isso utilize o comando `npx expo prebuild` antes de tudo, isso é um comando único, só será necessário caso haja uma mudança grande de versões no APP, caso aconteça, é necessário remover a pasta e utilizar o comando novamente.
+
+#### 4° Faça login no EAS-CLI utilizando a conta do Expo:
 * <em>Utilize os dados que estão no bloco de notas dentro da <a href="https://drive.google.com/drive/folders/18Bqf2jlvbuQVDf-RRa67pAkS2-l1WqTm?usp=share_link">pasta desta demanda</a> no Google Drive da ELO.</em>
 ```shell
 eas login
