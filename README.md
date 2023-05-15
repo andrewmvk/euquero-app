@@ -77,10 +77,11 @@ When in the terminal, choose how you want to open the APP: <br/>
 <ul>
   <li> Android <img style="height: 16px;" src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="Android icons created by Pixel perfect - Flaticon" />
     <ul>
-      <li>./<a href="https://drive.google.com/drive/folders/1oNviB_Bh6GmejO1rScuOAnMuv_Y7VX72?usp=share_link">android</a></li>
-      <li>./<a href="https://drive.google.com/file/d/1CakbUQ36x8DsUGrXmrsAWlGkc_wjRJCf/view?usp=share_link">app.json</a></li>
-      <li>./<a href="https://drive.google.com/file/d/12-q7LBLovIkUkWSUbBp_IYi5UF3nWc_d/view?usp=share_link">eas.json</a></li>
-      <li>../<a href="https://drive.google.com/file/d/1H44BT7vp8aGmY6uBpz3MSL-mXcQs1m9t/view?usp=sharing">pc-api-91...de0.json</a>
+      <li>./<a href="https://drive.google.com/file/d/1sn6QZOmwj97cUx_za9pPymSHAPvhttuJ/view?usp=sharing">app.json</a></li>
+      <li>./<a href="https://drive.google.com/file/d/1UHdN7H62iWuWOd61aV7qW9vx-CpH3mgN/view?usp=sharing">eas.json</a></li>
+      <li>./<a href="https://drive.google.com/file/d/11BnqhFcpeanKqX9Awp_iJRcZ9vyD9Kri/view?usp=sharing">credentials.json</a></li>
+      <li>./<a href="https://drive.google.com/file/d/1CqJaRaKr1wHHSLwEPN_aLEQxmM29BRTa/view?usp=sharing">relase.keystore</a></li>
+      <li>../<a href="https://drive.google.com/file/d/1H44BT7vp8aGmY6uBpz3MSL-mXcQs1m9t/view?usp=sharing">pc-api-91...de0.json</a></li>
     </ul>
   </li>
   <li> iOS <img style="height: 16px;" src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="iOS icons created by Pixel perfect - Flaticon"/> 
@@ -111,17 +112,6 @@ When in the terminal, choose how you want to open the APP: <br/>
   }
 }
 ```
-* <img style="height: 20px;" src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="Android icons created by Pixel perfect - Flaticon" /> Em <em><strong>root/android/app/build.gradle</strong></em>, procure por <code>versionCode</code> e <code>versionName</code>
-```gradle
-android {
-  //...
-  defaultConfig {
-    //...
-    versionCode 7 //<- incremente esta versão depois de qualquer mudança
-    versionName "1.1.2" //<- incremente esta versão depois de qualquer mudança
-  }
-}
-```
 * <img style="height: 20px;" src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="iOS icons created by Pixel perfect - Flaticon"/> Em <em><strong>root/ios/EuQuero/Info.plist</strong></em> procure por <code>CFBundleShortVersionString</code> e <code>CFBundleVersion</code>
 ```javascript
   <plist version="1.0">
@@ -133,11 +123,10 @@ android {
     <string>6</string> //<- incremente esta versão depois de qualquer mudança
   </plist>
 ```
+
 #### 3° Mudanças importantes:
-
-* <img style="height: 20px;" src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="Android icons created by Pixel perfect - Flaticon" /> O arquivo `pc-api-91...de0.json` pode ser colocado em qualquer lugar, mas será necessário modificar a localização do arquivo (URI) em eas.json (`submit.production.android.serviceAccountKeyPath`), este arquivo é importante para enviar a build ao Google, sem ele não é possível realizar uma atualização.
-
-* <img style="height: 20px;" src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="iOS icons created by Pixel perfect - Flaticon"/> Para o iOS é necessário refazer o arquivo `ios/`, para isso utilize o comando `npx expo prebuild` antes de tudo, isso é um comando único, só será necessário caso haja uma mudança grande de versões no APP, caso aconteça, é necessário remover a pasta e utilizar o comando novamente.
+* <img style="height: 20px;" src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="Android icons created by Pixel perfect - Flaticon" /> O arquivo `pc-api-91...de0.json` e o `release.keystore` podem ser colocados em qualquer lugar, mas será necessário modificar a localização dos arquivos (URI) em 'eas.json' (`submit.production.android.serviceAccountKeyPath`) e em 'credentials.json' (`android.keystore.keystorePath`) respectivamente, estes arquivos são importantes para enviar a build ao Google, sem eles não é possível realizar uma atualização (submit).
+* <img style="height: 20px;" src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="iOS icons created by Pixel perfect - Flaticon"/> Para o iOS é necessário refazer o arquivo `ios/`, para isso utilize o comando `npx expo prebuild --platform ios` antes de tudo. Este é um comando único, ou seja, só será necessário novamente caso haja uma mudança grande de versões no APP (dependências, SDK e por ai vai), caso aconteça, é necessário remover a pasta e utilizar o comando novamente.
 
 #### 4° Faça login no EAS-CLI utilizando a conta do Expo:
 * <em>Utilize os dados que estão no bloco de notas dentro da <a href="https://drive.google.com/drive/folders/18Bqf2jlvbuQVDf-RRa67pAkS2-l1WqTm?usp=share_link">pasta desta demanda</a> no Google Drive da ELO.</em>
@@ -148,7 +137,8 @@ Para verificar o login foi realizado com sucesso:
 ```
 eas whoami
 ```
-#### 4° Faça o Build da aplicação e Envie:
+
+#### 5° Faça o Build da aplicação e Envie:
 ```shell
 npm install -g eas-cli
 ```
@@ -160,6 +150,7 @@ eas build --platform [android/ios]
 ```shell
 eas submit --platform [android/ios] --latest
 ```
+
 <em>OBS.: nunca se esqueça de incrementar a versão, isso não é uma boa prática, é algo necessário para que as mudanças realmente façam efeito na build</em>
 
 ## Team - Contributors
