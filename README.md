@@ -81,6 +81,7 @@ When in the terminal, choose how you want to open the APP: <br/>
       <li>./<a href="https://drive.google.com/file/d/1UHdN7H62iWuWOd61aV7qW9vx-CpH3mgN/view?usp=sharing">eas.json</a></li>
       <li>./<a href="https://drive.google.com/file/d/11BnqhFcpeanKqX9Awp_iJRcZ9vyD9Kri/view?usp=sharing">credentials.json</a></li>
       <li>./<a href="https://drive.google.com/file/d/1CqJaRaKr1wHHSLwEPN_aLEQxmM29BRTa/view?usp=sharing">relase.keystore</a></li>
+      <li>./<a href="https://drive.google.com/file/d/1fFWgafjKOohmewJgWxVOyrVNjvcBia5f/view?usp=sharing">package.json</a></li>
       <li>../<a href="https://drive.google.com/file/d/1H44BT7vp8aGmY6uBpz3MSL-mXcQs1m9t/view?usp=sharing">pc-api-91...de0.json</a></li>
     </ul>
   </li>
