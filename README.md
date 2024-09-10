@@ -1,6 +1,6 @@
 # Eu Quero App <img style="height: 30px;" src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="Android icons created by Pixel perfect - Flaticon"/> & <img style="height: 30px;" src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="iOS icons created by Pixel perfect - Flaticon"/>
 
-This is the Android version of the mobile application ["Eu Quero"](https://euquero.ufma.br), a brazilian's developed app to simplify the Basic Health Unit (BHU) in Brazil, developed with **[Expo](https://expo.dev)** and **[React Native](https://reactnative.dev)**.
+Mobile application ["Eu Quero"](https://euquero.ufma.br), a brazilian's developed app to simplify the Basic Health Unit (BHU) in Brazil, developed with **[Expo](https://expo.dev)** and **[React Native](https://reactnative.dev)**.
 
 <p align="center">
   <br>
@@ -13,8 +13,8 @@ In Brazil the Health Service is public and we have a lot of BHU, but most of the
 More than this, the app aims mostly to strengthening the maternal and child health care system over the first 1000 days in Brazil with more information about the quality in their local health centre through scorecards as said before. <br/>
 Click [here](https://euquero.ufma.br) to see more information about the Eu Quero (in portuguese).
 
-## Status: 🟢 Published
-The APP is published in Android and iOS, you can download it by searching it's name in the AppStore or PlayStore.
+## Status: 🔴 Published but removed ?
+The APP is published in Android and iOS, you could download it by searching on PlayStore or AppStore - but the app seems to be disabled in both platforms, this might be a decision made by the client so they can add all BHUs before the total release of it (or they simply just don't want to continue with the project)
 
 ## Technologies 💻
 The project is developed with:
